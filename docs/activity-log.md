@@ -31,3 +31,11 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - scripts/machine-sync.sh
   - scripts/memory-watcher.mjs
   - scripts/setup-memory-hooks.sh
+
+## 2026-08-25 19:36 — `009b293`
+**fix: mark hook and scripts executable for non-Windows clones**
+
+  - .githooks/post-commit
+  - scripts/machine-sync.sh
+  - scripts/memory-watcher.mjs
+  - scripts/setup-memory-hooks.sh

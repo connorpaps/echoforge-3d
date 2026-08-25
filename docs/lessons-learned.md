@@ -22,3 +22,17 @@
 - **Fix:** `git init -b main`, added `origin` → `https://github.com/connorpaps/echoforge-3d.git`, installed the full MEMORY_SETUP.md memory system (knowledge/handoff/lessons/activity-log, post-commit hook, setup + machine-sync + watcher scripts), and pushed the initial commit.
 - **Avoid in future:** run the `knowledge.md` bootstrap check (`git config core.hooksPath`) at the start of every session, especially after cloning on a new machine.
 - **Status:** fixed
+
+## 2026-08-25 19:36 — `009b293`
+**fix: mark hook and scripts executable for non-Windows clones**
+
+  - Files:
+    - .githooks/post-commit
+    - scripts/machine-sync.sh
+    - scripts/memory-watcher.mjs
+    - scripts/setup-memory-hooks.sh
+- **Symptom:** initial commit recorded the git hook and scripts as mode 100644, so the executable bit would be lost on Linux/macOS clones.
+- **Root cause:** on Windows, a local `chmod +x` before the commit did not propagate the exec bit into the git index.
+- **Fix:** ran `git update-index --chmod=+x` on the hook and scripts, then committed (now mode 100755).
+- **Avoid in future:** after creating hook/script files, set the exec bit via `git update-index --chmod=+x` before committing (or verify with `git ls-files --stage`).
+- **Status:** fixed
