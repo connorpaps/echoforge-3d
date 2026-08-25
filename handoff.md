@@ -9,11 +9,13 @@ EchoForge 3D is a browser-based 3D creative suite: draw 2D topographic elevation
 
 ## Work completed this session (2026-08-25)
 
-<!-- The agent appends a numbered entry per session:
-
-### 1. <TITLE>
-- What changed, why, and what validation ran.
--->
+### 1. GitHub wiring + full memory system installation
+- Initialized git on `main`, wired `origin` → `https://github.com/connorpaps/echoforge-3d.git`, pushed all files.
+- Installed the complete MEMORY_SETUP.md cross-session memory system: `knowledge.md` (canonical, Freebuff reads this), `AGENTS.md` (merged memory protocol into existing project guide), `handoff.md` (session log), `docs/lessons-learned.md` (structured error log), `docs/activity-log.md` (auto-generated commit log).
+- Plumbed `.githooks/post-commit` (auto-logs every commit + auto-captures fix/error commits into lessons), `scripts/setup-memory-hooks.sh` (idempotent enabler), `scripts/machine-sync.sh` (session-start machine-swap detection), `scripts/memory-watcher.mjs` (optional Node file-save watcher), and `.gitattributes` (LF on scripts for Windows safety).
+- Created `.gitignore` covering memory logs, Freebuff local state, Node/Python artifacts.
+- Enriched one auto-captured lesson from a real `fix(...)` test commit (executable bit on hook/scripts wasn't captured by git on Windows).
+- All plumbing verified: hook setup clean, activity-log appended on every commit, lessons auto-capture fired on a fix commit and was enriched, skip guard prevents feedback loops, machine-sync exits 0, watcher smoke test passed, `.gitignore` catch correct.
 
 ## Current repository state
 
@@ -26,6 +28,16 @@ EchoForge 3D is a browser-based 3D creative suite: draw 2D topographic elevation
 
 ## Validation completed this session
 
+- `git config core.hooksPath` → `.githooks` ✅
+- `bash scripts/setup-memory-hooks.sh` — all 9 memory files present ✅
+- `.gitattributes` present with `*.sh text eol=lf` ✅
+- `docs/activity-watch.log` and `docs/.last-machine` gitignored ✅
+- `bash scripts/machine-sync.sh` — exits 0, no auto-pull (remote empty) ✅
+- `node scripts/memory-watcher.mjs` — smoke test: detected and logged a file-save event ✅
+- Post-commit hook: activity-log appended on every commit, lessons auto-capture fired on a `fix(...)` commit ✅
+- Skip guard: committing only `docs/activity-log.md` produces zero diff ✅
+- Hook/script exec bit: corrected from 100644 → 100755 in git index ✅
+- `git push -u origin main` — went through (GCM) ✅
 - `pnpm typecheck` — n/a (no frontend scaffold yet)
 - `pnpm test` — n/a (no frontend scaffold yet)
 
