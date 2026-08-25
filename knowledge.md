@@ -1,0 +1,46 @@
+# Project knowledge
+
+## Project
+- EchoForge 3D — a multimodal spatial worldcrafting engine and in-browser 3D creative suite.
+- Tech stack: Next.js 15 (App Router), React 19, Three.js / WebGPU (TSL), React Three Fiber, Rapier3D Wasm, Web Audio API (HRTF), FastAPI, PyTorch (CUDA FP16), Transformers.js, Kokoro-82M.
+- Frontend lives under `src/` (App Router pages, R3F viewport, 2D topographic canvas, Zustand stores, Web Workers). Backend is a FastAPI microservice under `backend/` (VRAM manager, trimesh decimation, model download script, tests).
+
+## Session protocol (AI memory system)
+
+This repo uses git-tracked files as its cross-session AI memory. **Freebuff reads this file (`knowledge.md`) automatically at the start of every session**; Cursor reads `AGENTS.md` instead. Follow this ritual every session:
+
+- **Bootstrap check:** Verify the memory system is active — run `git config core.hooksPath`. If it is not `.githooks`, run `bash scripts/setup-memory-hooks.sh` before doing anything else. If memory files are missing but `MEMORY_SETUP.md` exists, replicate them from `MEMORY_SETUP.md`.
+- **Machine sync check:** Run `bash scripts/machine-sync.sh` — detects machine swaps (via `docs/.last-machine`), re-enables hooks here, fixes old `master` clones, and pulls the latest memory files when the working tree is clean.
+- **Session start:** Read `handoff.md` first (last session's work + next steps), then this file, then `docs/lessons-learned.md` (expanding any auto-captured "needs enrichment" entries), then check `git status --short`, `git log --oneline -10`, and the tail of `docs/activity-log.md` (auto-log of every commit).
+- **During work:** Log non-obvious decisions, new commands, and gotchas into this file as they are discovered. **After fixing an error, making a mistake, or finding a gotcha, append a structured entry to `docs/lessons-learned.md` immediately** (Symptom / Root cause / Fix / Avoid in future / Status) — the post-commit hook auto-captures fix/error commits as placeholders, but the agent must not rely on that alone. **After completing a substantial change, append a brief "Work completed" note to `handoff.md` immediately — do not wait for session end.**
+- **Session end:** Append a date-stamped "Work completed" section to `handoff.md` (what changed, why, validation run). Update this file with any new rules/commands/architecture facts. **Review `docs/lessons-learned.md` and expand any auto-captured placeholder entries** (root cause + avoid-in-future, then remove the marker). Keep the memory files lean (< ~200 lines); prune stale content.
+- **Wrap-up signals:** If the user says the session is ending (e.g. "wrap up", "done for today", "that's all", "update the handoff"), update `handoff.md` + this file **even if not explicitly asked** — do not wait to be told.
+- Update `AGENTS.md` only when a rule must also bind Cursor/other tools — this file stays the single source of truth.
+
+**Automatic memory (no input needed):** a git `post-commit` hook (`.githooks/post-commit`) appends every commit to `docs/activity-log.md` and auto-captures fix/error commits into `docs/lessons-learned.md`; `node scripts/memory-watcher.mjs` (optional) logs every file save to `docs/activity-watch.log` (gitignored). These are mechanical records — the agent still owns writing the *why* into `handoff.md`/this file.
+
+## Commands
+- Install (frontend): `pnpm install`
+- Install (backend): `pip install -r backend/requirements.txt`
+- Development (frontend): `pnpm dev` (Next.js on http://localhost:3000)
+- Development (backend): `uvicorn backend.main:app --reload --port 8000`
+- Test (frontend): `pnpm test`
+- Test (backend): `pytest backend/tests`
+- E2E: `pnpm test:e2e` (Playwright WebGL/WebGPU runner)
+- Typecheck/lint: `pnpm typecheck` / `pnpm lint`
+- Build: `pnpm build`
+- Download AI model weights: `python backend/scripts/download_models.py`
+
+## Architecture and behavior
+- **Source of truth:** consult `docs/01_PRD.md` through `docs/08_TASKS.md` before writing new features; visual tokens live in `DESIGN.md`; the task roadmap is `docs/08_TASKS.md`.
+- Frontend uses `pnpm`, not `npm`.
+- Machine learning inference in the browser runs in dedicated Web Workers (never the main thread).
+- Backend heavy models route through `SequentialVRAMManager`; never load multiple heavy PyTorch models concurrently on CUDA.
+- Raw 3D mesh outputs are decimated to <20,000 faces and get convex collision hulls baked via `trimesh` before client transmission.
+
+## Constraints and gotchas
+- **Zero unvetted dependencies:** never run `npm install`/`pip install` for packages not in `docs/03_TECH_SPEC.md` without developer authorization.
+- **VRAM budget:** stop and audit if backend CUDA allocation exceeds 6.0 GB.
+- **Design adherence:** all UI must match `DESIGN.md`; no generic AI purple gradients or pure `#000000` backgrounds.
+- **Diagnose first:** log root cause before patching; 3 consecutive identical build/test failures = stop and report.
+- Never commit secrets (`.env` files). Never hand-edit `node_modules`, `.next/`, or other build output.

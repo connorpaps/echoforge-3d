@@ -1,0 +1,38 @@
+# Auto-memory local watcher log (raw per-save events; the commit log is tracked)
+docs/activity-watch.log
+
+# Local machine marker (hostname of the last machine the repo was used on)
+docs/.last-machine
+
+# Freebuff local state (not part of the project)
+.freebuff/
+
+# Dependencies / package managers
+node_modules/
+.pnpm-store/
+
+# Next.js build output
+.next/
+out/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Tooling / build artifacts
+.audit/
+.agents/
+.vite/
+coverage/
+.playwright-cli/
+
+# OS noise
+.DS_Store
+Thumbs.db
