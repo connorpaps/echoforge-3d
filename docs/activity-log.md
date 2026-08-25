@@ -39,3 +39,9 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - scripts/machine-sync.sh
   - scripts/memory-watcher.mjs
   - scripts/setup-memory-hooks.sh
+
+## 2026-08-25 19:37 — `3eb8358`
+**docs: enrich auto-captured lesson and record activity log**
+
+  - docs/activity-log.md
+  - docs/lessons-learned.md
