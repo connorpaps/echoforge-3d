@@ -45,3 +45,8 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
 
   - docs/activity-log.md
   - docs/lessons-learned.md
+
+## 2026-08-25 19:40 — `0f0483f`
+**docs: log memory setup session in handoff file**
+
+  - handoff.md
