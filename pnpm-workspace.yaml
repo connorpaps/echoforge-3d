@@ -1,0 +1,7 @@
+# pnpm 11 approved dependency build scripts (ERR_PNPM_IGNORED_BUILDS fix)
+allowBuilds:
+  esbuild: true
+  onnxruntime-node: true
+  protobufjs: true
+  sharp: true
+  unrs-resolver: true
