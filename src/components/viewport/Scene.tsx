@@ -1,8 +1,12 @@
 'use client';
 
 import { Grid, OrbitControls, Stats } from '@react-three/drei';
+import { Physics } from '@react-three/rapier';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
+import { FirstPersonRig } from '@/components/player/FirstPersonRig';
+import { PlayerController } from '@/components/player/PlayerController';
+import { TerrainCollider } from '@/components/viewport/TerrainCollider';
 import { TerrainMesh } from '@/components/viewport/TerrainMesh';
 import { useSceneStore } from '@/lib/stores/useSceneStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
@@ -40,13 +44,20 @@ function TelemetryLoop() {
 
 export function Scene() {
   const hasTerrain = useSceneStore((s) => s.terrainHeightmap !== null);
+  const activeMode = useSceneStore((s) => s.activeMode);
 
   return (
     <>
       <color attach="background" args={['#08090a']} />
       <hemisphereLight args={['#5e6ad2', '#08090a', 0.55]} />
       <directionalLight position={[10, 15, 8]} intensity={1.2} />
-      {hasTerrain ? <TerrainMesh /> : <Ground />}
+
+      <Physics gravity={[0, -9.81, 0]}>
+        {hasTerrain ? <TerrainMesh /> : <Ground />}
+        <TerrainCollider />
+        <PlayerController />
+      </Physics>
+
       <Grid
         position={[0, 0.01, 0]}
         args={[64, 64]}
@@ -60,7 +71,13 @@ export function Scene() {
         fadeStrength={1}
         infiniteGrid={false}
       />
-      <OrbitControls makeDefault enableDamping dampingFactor={0.08} />
+      <OrbitControls
+        makeDefault
+        enableDamping
+        dampingFactor={0.08}
+        enabled={activeMode === 'editor'}
+      />
+      <FirstPersonRig />
       <Stats className="stats-overlay" />
       <TelemetryLoop />
     </>

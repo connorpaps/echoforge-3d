@@ -1,6 +1,12 @@
 /** Grid resolution shared by the terrain mesh, physics collider, and store. */
 export const TERRAIN_SIZE = 128;
 
+/** World-space footprint of the terrain (meters, centered at origin). */
+export const TERRAIN_WORLD_SIZE = 64;
+
+/** World-space vertical extent of the displaced terrain (meters). */
+export const TERRAIN_HEIGHT_SCALE = 4;
+
 /**
  * Normalize raw depth values into 0..1 elevations. A perfectly flat input
  * yields a flat zero heightmap (no divide-by-zero).
@@ -101,6 +107,29 @@ export function invertElevation(elevation: Float32Array): void {
   for (let i = 0; i < elevation.length; i++) {
     elevation[i] = 1 - elevation[i];
   }
+}
+
+/**
+ * Sample the world-space terrain elevation at a point (meters). Returns 0
+ * for flat ground when no heightmap exists. Used by the player controller
+ * for grounded checks and by the physics collider mapping.
+ */
+export function terrainHeightAt(
+  heightmap: Float32Array | null,
+  size: number,
+  worldX: number,
+  worldZ: number,
+): number {
+  if (!heightmap) return 0;
+  const col = Math.round(
+    (worldX / TERRAIN_WORLD_SIZE + 0.5) * (size - 1),
+  );
+  const row = Math.round(
+    (worldZ / TERRAIN_WORLD_SIZE + 0.5) * (size - 1),
+  );
+  const c = Math.max(0, Math.min(size - 1, col));
+  const r = Math.max(0, Math.min(size - 1, row));
+  return heightmap[r * size + c] * TERRAIN_HEIGHT_SCALE;
 }
 
 /**

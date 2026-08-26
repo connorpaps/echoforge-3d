@@ -1,6 +1,7 @@
 'use client';
 
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { CrosshairHud } from '@/components/player/CrosshairHud';
 import { BottomBar } from '@/components/workspace/BottomBar';
 import { LeftDrawer } from '@/components/workspace/LeftDrawer';
 import { TopBar } from '@/components/workspace/TopBar';
@@ -39,8 +40,9 @@ export function Workstation() {
               <PanelResizeHandle className="w-px shrink-0 bg-border-subtle transition-colors hover:bg-accent-primary/50" />
             </>
           )}
-          <Panel defaultSize={70} minSize={60} className="min-w-0">
+          <Panel defaultSize={70} minSize={60} className="relative min-w-0">
             <ViewportCanvas />
+            {activeMode === 'play' && <CrosshairHud />}
           </Panel>
         </PanelGroup>
       </div>

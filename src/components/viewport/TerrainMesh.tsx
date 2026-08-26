@@ -6,11 +6,11 @@ import { positionLocal, texture, vec3 } from 'three/tsl';
 import { MeshStandardNodeMaterial } from 'three/webgpu';
 import { useSceneStore } from '@/lib/stores/useSceneStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
-import { TERRAIN_SIZE } from '@/lib/terrain/heightmap';
+import {
+  TERRAIN_HEIGHT_SCALE,
+  TERRAIN_SIZE,
+} from '@/lib/terrain/heightmap';
 import { heightmapToDataTexture } from '@/lib/terrain/heightmapTexture';
-
-/** World-space vertical extent of the displaced terrain. */
-export const TERRAIN_HEIGHT_SCALE = 4;
 
 /**
  * Terrain mesh displaced in real time by a TSL node material sampling the
