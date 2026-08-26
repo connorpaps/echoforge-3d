@@ -39,3 +39,6 @@ Thumbs.db
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Local Hugging Face model cache (large binary weights)
+.hf-cache/
