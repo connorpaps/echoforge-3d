@@ -1394,3 +1394,113 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - src/lib/physics/rapierHeightfield.ts
   - src/lib/stores/usePlayerStore.ts
   - src/lib/terrain/heightmap.ts
+
+## 2026-08-25 23:02 — `a38e6f1`
+**docs: close out phase 1 plan and update session memory**
+
+  - docs/activity-log.md
+  - docs/lessons-learned.md
+  - docs/plans/2026-08-25-phase-1-foundation.md
+  - handoff.md
+  - knowledge.md
+
+## 2026-08-26 00:59 — `5a1fcda`
+**Phase 2 (2.1-2.4): FastAPI backend, VRAM manager, TripoSR + SDXL-Turbo endpoints**
+
+  - backend/__init__.py
+  - backend/config.py
+  - backend/main.py
+  - backend/pytest.ini
+  - backend/requirements.txt
+  - backend/routers/.gitkeep
+  - backend/routers/__init__.py
+  - backend/routers/generate.py
+  - backend/routers/health.py
+  - backend/routers/progress.py
+  - backend/services/.gitkeep
+  - backend/services/__init__.py
+  - backend/services/image_utils.py
+  - backend/services/mesh_processing.py
+  - backend/services/progress_bus.py
+  - backend/services/sdxl_service.py
+  - backend/services/tsr_service.py
+  - backend/services/vram_manager.py
+  - backend/shims/__init__.py
+  - backend/shims/torchmcubes_stub.py
+  - backend/tests/.gitkeep
+  - backend/tests/conftest.py
+  - backend/tests/test_generate.py
+  - backend/tests/test_health.py
+  - backend/tests/test_image_utils.py
+  - backend/tests/test_mesh_processing.py
+  - backend/tests/test_progress_bus.py
+  - backend/tests/test_vram_manager.py
+  - backend/vendor/README.md
+  - backend/vendor/tsr/LICENSE
+  - backend/vendor/tsr/bake_texture.py
+  - backend/vendor/tsr/models/isosurface.py
+  - backend/vendor/tsr/models/nerf_renderer.py
+  - backend/vendor/tsr/models/network_utils.py
+  - backend/vendor/tsr/models/tokenizers/image.py
+  - backend/vendor/tsr/models/tokenizers/triplane.py
+  - backend/vendor/tsr/models/transformer/attention.py
+  - backend/vendor/tsr/models/transformer/basic_transformer_block.py
+  - backend/vendor/tsr/models/transformer/transformer_1d.py
+  - backend/vendor/tsr/system.py
+  - backend/vendor/tsr/utils.py
+
+## 2026-08-26 01:23 — `f21e938`
+**Phase 2 (2.5): frontend generation UI with live progress + VRAM meter**
+
+  - e2e/fixtures/concept.png
+  - e2e/generation-journey.spec.ts
+  - src/app/globals.css
+  - src/components/generation/GeneratingPill.test.tsx
+  - src/components/generation/GeneratingPill.tsx
+  - src/components/generation/GenerationPanel.test.tsx
+  - src/components/generation/GenerationPanel.tsx
+  - src/components/generation/ResultToast.test.tsx
+  - src/components/generation/ResultToast.tsx
+  - src/components/generation/VramMeter.tsx
+  - src/components/workspace/LeftDrawer.tsx
+  - src/components/workspace/PromptBar.tsx
+  - src/components/workspace/TopBar.tsx
+  - src/components/workspace/Workstation.tsx
+  - src/lib/api/generate.test.ts
+  - src/lib/api/generate.ts
+  - src/lib/stores/useGenerationStore.test.ts
+  - src/lib/stores/useGenerationStore.ts
+  - src/lib/stores/useUiStore.ts
+
+## 2026-08-26 01:30 — `9aa3559`
+**docs: close out phase 2 plan and update session memory**
+
+  - docs/plans/2026-08-26-phase-2-backend-ai.md
+  - handoff.md
+  - knowledge.md
+
+## 2026-08-26 16:57 — `ca26b91`
+**fix: live-app session — worker boot, black viewport, and generated-mesh pipeline**
+
+  - backend/config.py
+  - backend/services/image_utils.py
+  - backend/services/mesh_processing.py
+  - backend/tests/test_image_utils.py
+  - backend/tests/test_mesh_processing.py
+  - backend/vendor/tsr/models/nerf_renderer.py
+  - docs/lessons-learned.md
+  - handoff.md
+  - knowledge.md
+  - src/components/generation/GeneratedEntityBridge.tsx
+  - src/components/viewport/Scene.tsx
+  - src/components/viewport/SceneEntities.tsx
+  - src/components/viewport/Viewport3D.tsx
+  - src/components/workspace/LeftDrawer.tsx
+  - src/components/workspace/Workstation.tsx
+  - src/lib/generation/spawn.test.ts
+  - src/lib/generation/spawn.ts
+  - src/lib/viewport/cameraRef.ts
+  - src/workers/depth.worker.ts
+  - src/workers/speech.worker.ts
+  - src/workers/tts.worker.ts
+  - src/workers/workerRegistry.ts

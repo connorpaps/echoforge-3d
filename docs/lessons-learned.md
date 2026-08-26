@@ -101,3 +101,4 @@
 - **Fix:** three dtype casts patched into `backend/vendor/tsr/system.py`; `backend/shims/torchmcubes_stub.py` prefers PyMCubes (C++ wheel) with a skimage fallback and is registered in `sys.modules`. fp16 + `chunk_size=16384` + resolution 192 took extraction from ~200s to ~3s.
 - **Avoid in future:** when vendoring an inference pipeline, keep a patch list in the vendor README; prefer pure-wheel backends (PyMCubes) over source-only CUDA extensions on Windows.
 - **Status:** fixed
+
