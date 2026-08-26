@@ -2,7 +2,7 @@
 
 import { KeycapBadge } from '@/components/ui/KeycapBadge';
 import { StatusPill } from '@/components/ui/StatusPill';
-import { TelemetryText } from '@/components/ui/TelemetryText';
+import { VramMeter } from '@/components/generation/VramMeter';
 import { useSceneStore } from '@/lib/stores/useSceneStore';
 
 export function TopBar() {
@@ -14,7 +14,7 @@ export function TopBar() {
         <h1 className="text-sm font-semibold tracking-tight text-text-primary">
           EchoForge 3D
         </h1>
-        <TelemetryText>VRAM: --/8GB</TelemetryText>
+        <VramMeter />
       </div>
 
       <div className="flex items-center gap-4">

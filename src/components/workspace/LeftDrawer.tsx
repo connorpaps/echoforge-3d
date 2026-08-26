@@ -3,6 +3,7 @@
 import { GlassPanel } from '@/components/ui/GlassPanel';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { TopoCanvas } from '@/components/canvas/TopoCanvas';
+import { GenerationPanel } from '@/components/generation/GenerationPanel';
 import { PromptBar } from '@/components/workspace/PromptBar';
 
 /**
@@ -22,6 +23,9 @@ export function LeftDrawer() {
 
       {/* Voice & text prompt input (Task 1.3) */}
       <PromptBar />
+
+      {/* Generative asset controls (Task 2.5) */}
+      <GenerationPanel />
 
       {/* Scene entity inspector */}
       <GlassPanel className="flex-1 p-3">

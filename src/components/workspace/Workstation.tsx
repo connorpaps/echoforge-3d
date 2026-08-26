@@ -1,6 +1,8 @@
 'use client';
 
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
+import { GeneratingPill } from '@/components/generation/GeneratingPill';
+import { ResultToast } from '@/components/generation/ResultToast';
 import { CrosshairHud } from '@/components/player/CrosshairHud';
 import { BottomBar } from '@/components/workspace/BottomBar';
 import { LeftDrawer } from '@/components/workspace/LeftDrawer';
@@ -43,6 +45,9 @@ export function Workstation() {
           <Panel defaultSize={70} minSize={60} className="relative min-w-0">
             <ViewportCanvas />
             {activeMode === 'play' && <CrosshairHud />}
+            {/* Non-blocking generation HUD (Task 2.5) */}
+            <GeneratingPill />
+            <ResultToast />
           </Panel>
         </PanelGroup>
       </div>
