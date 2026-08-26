@@ -1,0 +1,2987 @@
+{
+  "version": 1,
+  "skills": {
+    "Erlang Concurrency": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/erlang/skills/erlang-concurrency/SKILL.md",
+      "computedHash": "349a63954b355bbb2564907789be495e63aba968daf5020d137f4b44a18cd3dc"
+    },
+    "Erlang Distribution": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/erlang/skills/erlang-distribution/SKILL.md",
+      "computedHash": "16bc6540157dbb12779197dee0ca0b3e98bf477874b0865fba415929091f7128"
+    },
+    "Erlang OTP Behaviors": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/erlang/skills/erlang-otp-behaviors/SKILL.md",
+      "computedHash": "a7416680f077c3d1ee6e22d04ff1456a5baa7d7a14be6658958097b7e05c942a"
+    },
+    "Gleam Actor Model": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/gleam/skills/gleam-actor-model/SKILL.md",
+      "computedHash": "5af6d2301cae3568658a7e889d882099752142d5c6f14da33bb4491c4037724f"
+    },
+    "Gleam Erlang Interop": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/gleam/skills/gleam-interop/SKILL.md",
+      "computedHash": "ac013aed622e3d36f97c6a1a6a07a05a42c22b863387228449611b93da84ebca"
+    },
+    "Gleam Type System": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/gleam/skills/gleam-type-system/SKILL.md",
+      "computedHash": "c24bcc4be83ce83468e9a6d1d91ae12a558673a821fa10e6bc348b0f76b8cfe2"
+    },
+    "Kotlin Coroutines": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/kotlin/skills/kotlin-coroutines/SKILL.md",
+      "computedHash": "c04f754a9f19b7749edead8e2cfeb2057431b13feeeb91c61c8a690c1ef4f2c8"
+    },
+    "Kotlin DSL Patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/kotlin/skills/kotlin-dsl-patterns/SKILL.md",
+      "computedHash": "478324a95370a0390775ca05fe33d7217535946424e8a08a12a4a81fd66c29d0"
+    },
+    "Kotlin Null Safety": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/kotlin/skills/kotlin-null-safety/SKILL.md",
+      "computedHash": "e25e94dc59519bc239009648966702491fb6e3eb475cf125c17db9a6d49eac91"
+    },
+    "Lua C Integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/lua/skills/lua-c-integration/SKILL.md",
+      "computedHash": "82e4a065930d6f28e4c8361a7ddc5f15726f736020fcef2da3f10bc8dc967d8a"
+    },
+    "Lua Coroutines": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/lua/skills/lua-coroutines/SKILL.md",
+      "computedHash": "67a8b24fe9f98d76129274617939b5a912b48c58b827ead51c151ab91e1c00f8"
+    },
+    "Lua Tables Patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/lua/skills/lua-tables-patterns/SKILL.md",
+      "computedHash": "dfb2e9de65f7e565bf13896e2550493b98a976ec2d2cc870578b5f952941245b"
+    },
+    "Nim C Interop": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/nim/skills/nim-c-interop/SKILL.md",
+      "computedHash": "e7f1e785f1e901c3f6a51574fbd32b4654b4ebe2c7458a89a0198908cbfcd24a"
+    },
+    "Nim Memory Management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/nim/skills/nim-memory-management/SKILL.md",
+      "computedHash": "31c1fdb0719681a797e64276b47d3a75cd41ada8b6d3bd0a51f466e7b9436786"
+    },
+    "Nim Metaprogramming": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/nim/skills/nim-metaprogramming/SKILL.md",
+      "computedHash": "6aa9fe1621fedef48332babe27aed987f6a79b6b702354d3acb9e582f8302301"
+    },
+    "Objective-C ARC Patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/objective-c/skills/objc-arc-patterns/SKILL.md",
+      "computedHash": "8c0548248b671d67b13c6e867d47f0517a703a2a1ce7b1c3aebc46c5c2516d88"
+    },
+    "Objective-C Blocks and GCD": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/objective-c/skills/objc-blocks-gcd/SKILL.md",
+      "computedHash": "9b8389f88a59de4434e37d8db9f7112bcf43f2570f9c31fc9b790de5502b97af"
+    },
+    "Objective-C Protocols and Categories": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/objective-c/skills/objc-protocols-categories/SKILL.md",
+      "computedHash": "4b65be1ebde96e47890e121685537cf7634c49f06b4e412859625b602ea657e3"
+    },
+    "PHP Composer and Autoloading": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/php/skills/php-composer-autoloading/SKILL.md",
+      "computedHash": "b39bbbdef736f3aa2a95124ac203f928ef0699cb5e8d92fadb05d2a23a6ff3de"
+    },
+    "PHP Modern Features": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/php/skills/php-modern-features/SKILL.md",
+      "computedHash": "c38c6d79df3103bc6fec06f47d681312bb088872401e5ce797a13597d420100a"
+    },
+    "PHP Security Patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/php/skills/php-security-patterns/SKILL.md",
+      "computedHash": "720760c1ed4d153cd91e473a8a4699851b631a7c598d465076a1f0f8ead26f13"
+    },
+    "Scala Collections": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/scala/skills/scala-collections/SKILL.md",
+      "computedHash": "7bbe75f4ced6f695ad3d8407e87bfef41135f09f70a6c7445cb9058b213490ea"
+    },
+    "Scala Functional Patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/scala/skills/scala-functional-patterns/SKILL.md",
+      "computedHash": "67ebb395a11527d0493c66997bf70cf033dacff175ff33f7cc88982ff0182107"
+    },
+    "Scala Type System": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/scala/skills/scala-type-system/SKILL.md",
+      "computedHash": "52b409d52ed757ac1cbc13b598d99f53020309c1dacffb9a61218283f63e5ea3"
+    },
+    "Swift Concurrency": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/swift/skills/swift-concurrency/SKILL.md",
+      "computedHash": "795a1fceb3da5724f9a644e7dd9d497d558e5007fefa327640514145e7e6edcb"
+    },
+    "Swift Optionals Patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/swift/skills/swift-optionals-patterns/SKILL.md",
+      "computedHash": "a6f66ed4938c2b3c56d45ab6c081dc7dfef9d7d297d7cdb9dcffddd9e0df11ff"
+    },
+    "Swift Protocol-Oriented Programming": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/swift/skills/swift-protocol-oriented/SKILL.md",
+      "computedHash": "b4b744f9bdfea317724f9cef5041eb44104fc71bc6fb01c434f589ba2ba226b3"
+    },
+    "absinthe-resolvers": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/absinthe-graphql/skills/absinthe-resolvers/SKILL.md",
+      "computedHash": "b7f31dd9444fdf0b275cc78143cc3e222fe6746bf8a9923aa05802d783971ca7"
+    },
+    "absinthe-schema": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/absinthe-graphql/skills/absinthe-schema/SKILL.md",
+      "computedHash": "d9627b32a8f79755aa6407dc1b5fdb775ef2bef4384adf00b3ccc05849acb7c0"
+    },
+    "absinthe-subscriptions": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/absinthe-graphql/skills/absinthe-subscriptions/SKILL.md",
+      "computedHash": "018c1dd67a5915c67dd9b28583e7fe0df762a097216ea8c5c3ae2bd7cea0100d"
+    },
+    "act-docker-setup": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/act/skills/act-docker-setup/SKILL.md",
+      "computedHash": "237dc639e3c973203724d54294baf7311bc87c1f5b1b7083c283a67ebc32e386"
+    },
+    "act-local-testing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/act/skills/act-local-testing/SKILL.md",
+      "computedHash": "5b7b307bb0d4702944964a68ca42cb0d06133fabb1848ec0b96f8f2876bf1819"
+    },
+    "act-workflow-syntax": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/act/skills/act-workflow-syntax/SKILL.md",
+      "computedHash": "15790d9cf0cb1f2717772bf3ef3d653537e2182b5a6f15898a4de2300c1fbdce"
+    },
+    "add-uint-support": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/add-uint-support/SKILL.md",
+      "computedHash": "cc3234a42c53bb8d2432c8218deae5c8f5d7626c83d6a3795ca4450c213bffbb"
+    },
+    "ameba-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/ameba/skills/ameba-configuration/SKILL.md",
+      "computedHash": "430b97006aa7bf173f65da61af479798701e1194078e0db2a934720f9b90c7f2"
+    },
+    "ameba-custom-rules": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/ameba/skills/ameba-custom-rules/SKILL.md",
+      "computedHash": "36dcae0a53e730177257600103cdbbe55a07d6939ceebf238d918940b23a670c"
+    },
+    "ameba-integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/ameba/skills/ameba-integration/SKILL.md",
+      "computedHash": "d1975432d589e8886c52868f1bc12e317ec865d1b13797616263007d21408cee"
+    },
+    "analyze-performance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/sentry/skills/analyze-performance/SKILL.md",
+      "computedHash": "cfbd30458c6cf51cee509d3cae18022b403e09cd921e0b4b750277122cb8eff7"
+    },
+    "android-architecture": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/android/skills/android-architecture/SKILL.md",
+      "computedHash": "7d457e78fe590817ef0b8131a928b4cbb52b3e35a36ae58beb4990a8e94e880f"
+    },
+    "android-jetpack-compose": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/android/skills/jetpack-compose/SKILL.md",
+      "computedHash": "11ab9a1ee4ebfb46cea085b9183539a2a9e5b7d5a897bea544297d42ee1b6fc5"
+    },
+    "android-kotlin-coroutines": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/android/skills/kotlin-coroutines/SKILL.md",
+      "computedHash": "1ab0e7128a55d5eac3260c148d2d12d4910c555e3fce025686a7c1299a9813cd"
+    },
+    "angular-dependency-injection": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/angular/skills/angular-dependency-injection/SKILL.md",
+      "computedHash": "43a1e9ad7dce290247dbd21ad8e9f81749577dcf1affeee9e8abb8a48a877410"
+    },
+    "angular-rxjs-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/angular/skills/angular-rxjs-patterns/SKILL.md",
+      "computedHash": "312ed5424cbf5272caa27a74caee0a72340e31cfedaf6512e84be0c3e9077390"
+    },
+    "angular-signals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/angular/skills/angular-signals/SKILL.md",
+      "computedHash": "c90ba10c5edc5569d5b10ed218a74ad718cbfdfd5d293f8a993f9f8634499ecc"
+    },
+    "ansible-inventory": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/ansible/skills/ansible-inventory/SKILL.md",
+      "computedHash": "78520220efdd8183b8e00f89bd0bffa1aa359640a3008dd09bb8bfd4a07178bd"
+    },
+    "ansible-playbooks": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/ansible/skills/ansible-playbooks/SKILL.md",
+      "computedHash": "79b3dfa07ad001f48edd102e3850f05c1d172741b07b4eb8642ab1669d9c7f17"
+    },
+    "ansible-roles": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/ansible/skills/ansible-roles/SKILL.md",
+      "computedHash": "ec92a68394cdcf512d142cd038d9029f971c59058f7120fa9e80b7510d18b436"
+    },
+    "aoti-debug": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/aoti-debug/SKILL.md",
+      "computedHash": "e053d0ce80886ad1eefb649d6edf43c3f0b1558b26dfaa3cb9c16ec1b8f82820"
+    },
+    "api-design": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "skillPath": "skills/api-design/SKILL.md",
+      "computedHash": "f3c716e9ee0a1076496629807ee311c1b81b358e84d86956abcbc91e6b995e8f"
+    },
+    "apollo-caching-strategies": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/apollo-graphql/skills/apollo-caching-strategies/SKILL.md",
+      "computedHash": "fc950b932ca6e70672406d16e3f84498c1e696a49f4621941e51d9bb21e0e18a"
+    },
+    "apollo-client-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/apollo-graphql/skills/apollo-client-patterns/SKILL.md",
+      "computedHash": "df6dcaacb0cb575cad1f2002dd445a9419a1d61dd56c71489beaa2308bded62d"
+    },
+    "apollo-server-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/apollo-graphql/skills/apollo-server-patterns/SKILL.md",
+      "computedHash": "9aa50e0b136c8ca71ed7fd4e76f485e6ed31f8c2c5f710b08164e0e6509df30e"
+    },
+    "architect": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/architect/SKILL.md",
+      "computedHash": "c5c37ec2b63a1f52ca5265219480c6c2bc1cda91c1356be9f89a9675e7b40457"
+    },
+    "at-dispatch-v2": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/at-dispatch-v2/SKILL.md",
+      "computedHash": "46e9f2dcbfa638b029ff9a0ebc3f3003a59ab0700e9843afb0c3ddbd3f9e8081"
+    },
+    "atomic-design-atoms": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/atomic-design/skills/atomic-design-atoms/SKILL.md",
+      "computedHash": "d1c78defeb806045959e93b6eaa208eb7fbd727359fbd5d62c2f58501981df16"
+    },
+    "atomic-design-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/atomic-design/skills/atomic-design-fundamentals/SKILL.md",
+      "computedHash": "ae644e79c53f1b450aaf5fd662459da1d66402112230e5b8d4881f8deff981ba"
+    },
+    "atomic-design-integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/atomic-design/skills/atomic-design-integration/SKILL.md",
+      "computedHash": "c393ca6011f672f5c528a9b562c8fe8523812460da4ba532d8dcabccd86fa078"
+    },
+    "atomic-design-molecules": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/atomic-design/skills/atomic-design-molecules/SKILL.md",
+      "computedHash": "df3e117c595fd59396547b6b15af42170afae4dde4b20fdca20f56568229bdfb"
+    },
+    "atomic-design-organisms": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/atomic-design/skills/atomic-design-organisms/SKILL.md",
+      "computedHash": "d3dfc22e19de1afe10347544448ec1a6ea093b3a732faf1d5f733c9251a21b3c"
+    },
+    "atomic-design-quarks": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/atomic-design/skills/atomic-design-quarks/SKILL.md",
+      "computedHash": "5177b777f8436fe34ecd0fa6d847405e4530e06d66d0726bc0fec9d2393efba8"
+    },
+    "atomic-design-templates": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/atomic-design/skills/atomic-design-templates/SKILL.md",
+      "computedHash": "a831d72415dc102dd0965f63ff6f79b9ae26bb4345b151e2bdba3cddc88a06b8"
+    },
+    "baseline-restorer": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/baseline-restorer/SKILL.md",
+      "computedHash": "0ea0c24288115eb62219b4240a5c20585364aa53021c2e0f99bfda0f7d5d33f9"
+    },
+    "bdd-collaboration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/bdd/skills/bdd-collaboration/SKILL.md",
+      "computedHash": "6aba2931b047b79f392ea9f5001b01dcf1a7a1dfdf20b1709b5c2a18b4e5a32d"
+    },
+    "bdd-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/bdd/skills/bdd-patterns/SKILL.md",
+      "computedHash": "1b970c58f8865325d322d79408c3f73004c6a1bff4bda02421513fefcc732bc7"
+    },
+    "bdd-principles": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/bdd/skills/bdd-principles/SKILL.md",
+      "computedHash": "9368502ec7bbfb405ae988a7ec47d4fe114a4fb71fb20909239b4e4cac457f47"
+    },
+    "bdd-scenarios": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/bdd/skills/bdd-scenarios/SKILL.md",
+      "computedHash": "f16b0e8e672a23c96d79c5e44e84ceab5db41475dbfdceb2be34ed59f51ed7ee"
+    },
+    "biome-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/biome/skills/biome-configuration/SKILL.md",
+      "computedHash": "58a3a35edee3b92e4287fb1061d39de4bcace4fb3f9539fb0252463a77b6eed2"
+    },
+    "biome-formatting": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/biome/skills/biome-formatting/SKILL.md",
+      "computedHash": "4a1c377ec4f8b4819225a692616d4464a44d36917511cc4b64ec1374bf6c57f2"
+    },
+    "biome-linting": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/biome/skills/biome-linting/SKILL.md",
+      "computedHash": "89f047eadd99db1b223c38721cd680cb0c2263830d7be8c23fedf28f7fce7958"
+    },
+    "blueprints-maintenance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/blueprints/skills/blueprints-maintenance/SKILL.md",
+      "computedHash": "ae74b7e2c847668e4c786aa886757a648bfc750b968923758ca25a3fd793265e"
+    },
+    "blueprints-organization": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/blueprints/skills/blueprints-organization/SKILL.md",
+      "computedHash": "e694eac4a8498227db0b8a4ecf19bbcb674e783d35678a8c2835d8742dc5100a"
+    },
+    "blueprints-writing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/blueprints/skills/blueprints-writing/SKILL.md",
+      "computedHash": "877af43d12d5795fef8f97f6a33ddfcd0143a3e6a2c0ae86f292ee1600238c27"
+    },
+    "boy-scout-rule": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/boy-scout-rule/SKILL.md",
+      "computedHash": "0494d8790f2ad4e0be06ae59fcea317c6650f6aae0e9254fb3c9529fed4dcd3b"
+    },
+    "brainstorming": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/brainstorming/SKILL.md",
+      "computedHash": "0eb8e9ba100985eb4da20c46807268cafd72ec1c4ea58132edf9be6c469867fe"
+    },
+    "brandkit": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/brandkit/SKILL.md",
+      "computedHash": "735007879f5110aeae1e981a53fe74a12afde70347f9773dacd50e4697a091bf"
+    },
+    "bun-bundler": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/bun/skills/bun-bundler/SKILL.md",
+      "computedHash": "006743976dc3157c5477a74132af03d2d19c21b8352250d2ba11c20a67ceaada"
+    },
+    "bun-package-manager": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/bun/skills/bun-package-manager/SKILL.md",
+      "computedHash": "43d274046ec0f4f2abea11ab2d1d151429df793069ec5f67bedb7e4966981bb7"
+    },
+    "bun-runtime": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/bun/skills/bun-runtime/SKILL.md",
+      "computedHash": "40ce06bbaf8568605424389586e4efca1905ae0aa29ee478a1f7e868a27f6525"
+    },
+    "bun-sqlite": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/bun/skills/bun-sqlite/SKILL.md",
+      "computedHash": "b7b4f992ced2fcf622f0b26aa63e292477149a0d494b3529be992be201cb123b"
+    },
+    "bun-testing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/bun/skills/bun-testing/SKILL.md",
+      "computedHash": "eb6f90dbaea72b640b9a7cf07b5d30230207dcfa21af899311c9934487569c1c"
+    },
+    "c-data-structures": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/c/skills/c-data-structures/SKILL.md",
+      "computedHash": "81fd00854dd94c4fe067fc9ca564bd92ac2e013d03002eb6adba2f610c57093f"
+    },
+    "c-memory-management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/c/skills/c-memory-management/SKILL.md",
+      "computedHash": "dc678c99c3121a2f5e497515a1a6b0154df4c27f3a3c10feed1f1d0129d9d3b3"
+    },
+    "c-systems-programming": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/c/skills/c-systems-programming/SKILL.md",
+      "computedHash": "e9ef9066ffbcf4c865106cf0b480b8255f95ec91747d2fdf0960393c4f4a3e24"
+    },
+    "check-releases": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/sentry/skills/check-releases/SKILL.md",
+      "computedHash": "75c4ef588de7254ada3ae1c681ea93a9a4dc1e4f39e82076d6b9301391ce2e71"
+    },
+    "checkstyle-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/checkstyle/skills/checkstyle-configuration/SKILL.md",
+      "computedHash": "2399d6b9647c8989349a2c2ddc93a3b5d54c0a603e130d56c1e7740827b6a5dc"
+    },
+    "checkstyle-custom": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/checkstyle/skills/checkstyle-custom/SKILL.md",
+      "computedHash": "40e2bd3b7870cd3499647ba4ddaed0b803f0c5cd72daf737e3c8775ebb4af7d1"
+    },
+    "checkstyle-rules": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/checkstyle/skills/checkstyle-rules/SKILL.md",
+      "computedHash": "c3f0ce8457c1b2023d674023fddd2ed1d6bef042fbde1802b2cc848e77eaa148"
+    },
+    "ci-metrics": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/ci-metrics/SKILL.md",
+      "computedHash": "cd17cc01bf789d99c53fbe29b67d2bb979dfdb514b37a7602337a5b3bf7bd47f"
+    },
+    "claude-agent-sdk-agent-creation": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/claude-agent-sdk/skills/agent-creation/SKILL.md",
+      "computedHash": "2844c619f25806fb91c1c5356ed820fb4ac354ba50421318686bf7944b728607"
+    },
+    "claude-agent-sdk-context-management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/claude-agent-sdk/skills/context-management/SKILL.md",
+      "computedHash": "63bf0715a31acbe13eebe85005b816d90037c1f9df51a6df0b04dbc4f9bbd8d1"
+    },
+    "claude-agent-sdk-tool-integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/claude-agent-sdk/skills/tool-integration/SKILL.md",
+      "computedHash": "1d39f957cdba17571d5046d46d140a6768f4f172eefa44c4a1ce083fd2a900d7"
+    },
+    "clippy-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/clippy/skills/clippy-configuration/SKILL.md",
+      "computedHash": "0902fec4e5627083bc4fcf2957a44f263b962dd1a7682e216b5b042472f91d73"
+    },
+    "clippy-custom": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/clippy/skills/clippy-custom/SKILL.md",
+      "computedHash": "3bf52bde90cd0e2271a5185128cdcda36be8a4626fb7aa3ee868399bda0680fa"
+    },
+    "clippy-lints": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/clippy/skills/clippy-lints/SKILL.md",
+      "computedHash": "578655e3ac9dfa08b761f5c599ae256c20142c1c220e1677a3503c41f1fa4da4"
+    },
+    "cocoapods-podspec-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cocoapods/skills/podspec-fundamentals/SKILL.md",
+      "computedHash": "18ed0b259a60e07f7179fb9afad2c716b858a96a6c42751b93f647ee9a8ab0fa"
+    },
+    "cocoapods-privacy-manifests": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cocoapods/skills/privacy-manifests/SKILL.md",
+      "computedHash": "21621b9406741a0293c3e64e7d960de114d8b00313991709e53dd852701f324e"
+    },
+    "cocoapods-publishing-workflow": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cocoapods/skills/publishing-workflow/SKILL.md",
+      "computedHash": "0fe513d930b8a5b29cd128519f73493a2b0af703f1a7abc803c1204e097b2a5b"
+    },
+    "cocoapods-subspecs-organization": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cocoapods/skills/subspecs-organization/SKILL.md",
+      "computedHash": "5db4757e42ef465445f186be9b72501c5a247968387f5508182d3dcf07105065"
+    },
+    "cocoapods-test-specs": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cocoapods/skills/test-specs/SKILL.md",
+      "computedHash": "b8238c926cd8bb5ae65beae39370a8fb85fc9c1f6ef16a55642a7facbf224cdb"
+    },
+    "code-annotation-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/notetaker/skills/code-annotation-patterns/SKILL.md",
+      "computedHash": "1384a4968609b28282a724b1883cbe45a647d388bb746326692b092c6086ad57"
+    },
+    "code-review": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/code-review/SKILL.md",
+      "computedHash": "a4812e721d14bea80051dbf5ccdd7c050b443a7aea9ad98da45c036f1d90167e"
+    },
+    "comment": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/clickup/skills/comment/SKILL.md",
+      "computedHash": "966cd1103864e497cb1478ef1b15f19dd47cec46a65c1c6a1e32046c993e9354"
+    },
+    "complete": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/clickup/skills/complete/SKILL.md",
+      "computedHash": "323bbee8180bb14e18e07f58fc9ef584d961d979fbab1c8c00c2daad70bbdaa2"
+    },
+    "cpp-modern-features": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/cpp/skills/cpp-modern-features/SKILL.md",
+      "computedHash": "423c8035cbf2e5130ead35b7367ca7bb2408eaea5d588e41c88cca18a12a2a5a"
+    },
+    "cpp-smart-pointers": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/cpp/skills/cpp-smart-pointers/SKILL.md",
+      "computedHash": "9d005f496f5c4060355b465595ca02695cd67926f5c80f4fa6cc8fa9dd048d3a"
+    },
+    "cpp-templates-metaprogramming": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/cpp/skills/cpp-templates-metaprogramming/SKILL.md",
+      "computedHash": "864ccc64113f6ea1c82e613328652da907f6819ab4a99639275f5eda28c53a08"
+    },
+    "create": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/clickup/skills/create/SKILL.md",
+      "computedHash": "b23565089693f90df769388eb3679216620f9e9f31906eddf2245858416df961"
+    },
+    "create-blueprint": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/blueprints/skills/create-blueprint/SKILL.md",
+      "computedHash": "16125db9af5fd6d0e266d6a74792ea6b2e4b4c1f1cdd3bc4e7ec7c2440a49099"
+    },
+    "create-issue": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/github/skills/create-issue/SKILL.md",
+      "computedHash": "2d5e498f1c87ac3289e87bb3acb26cbf51f58f9f2c6d8780ddff03b09878f600"
+    },
+    "create-mr": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/gitlab/skills/create-mr/SKILL.md",
+      "computedHash": "1d60fa1601cfef6cbdddf894f15b45956ba6ddee5bd8146e70dfc58721925e9a"
+    },
+    "create-pr": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/github/skills/create-pr/SKILL.md",
+      "computedHash": "46930ae750826fda6c5422fda43668e1b36cc80622519e9b2f5c1228bb97a306"
+    },
+    "create-sop": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/agent-sop/skills/create-sop/SKILL.md",
+      "computedHash": "58cd3ae7c002e23c06adce8a84b3e75341a0d3b360aaf8d1eca1b456496f3b16"
+    },
+    "credo-checks": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/credo/skills/credo-checks/SKILL.md",
+      "computedHash": "8e84beb7ceb8fc526a7af1ff27aba8087c9599aeb78a0074903bccdb30bd49df"
+    },
+    "credo-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/credo/skills/credo-configuration/SKILL.md",
+      "computedHash": "02347af1960fac1b49b6d4ddc9de4fb55cefba71be60b57368f3a2b3ca96d27b"
+    },
+    "credo-custom-checks": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/credo/skills/credo-custom-checks/SKILL.md",
+      "computedHash": "6ed39798a0f78086a2b4ab5f899626bdc9cdbe6a788bcef8925072cd6e6c52fc"
+    },
+    "crystal-concurrency": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/crystal/skills/crystal-concurrency/SKILL.md",
+      "computedHash": "9c396a8f4eec237d2958216e1dd8779736fbf747e1852b4ac246533b6df5368b"
+    },
+    "crystal-engineer": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/crystal/skills/crystal-engineer/SKILL.md",
+      "computedHash": "7d8d4301efe5bf7a37297c4ab439799cda5dca1b362f944bafb6347b32020384"
+    },
+    "crystal-macros": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/crystal/skills/crystal-macros/SKILL.md",
+      "computedHash": "786c47c07136073df7b0a99aaeed103c4ac70b67e5f925f3a09dba95822c33d1"
+    },
+    "csharp-async-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/csharp/skills/csharp-async-patterns/SKILL.md",
+      "computedHash": "7e7454ae5af7ee250e40e66cf22dba6bac8d778d4c3a007fc50bf10367e00044"
+    },
+    "csharp-linq": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/csharp/skills/csharp-linq/SKILL.md",
+      "computedHash": "4509f4ef1df8372779e7e6eb175781163e6edfb9c437efad911ae7bd7ecacf73"
+    },
+    "csharp-nullable-types": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/csharp/skills/csharp-nullable-types/SKILL.md",
+      "computedHash": "d05519d24ea9166506a3302d2642a7ad4722506a87e13c0424a3bd61ac4f9f3c"
+    },
+    "cucumber-best-practices": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cucumber/skills/cucumber-best-practices/SKILL.md",
+      "computedHash": "6678e974427c4dac2296d7be52b496fb3af9100125ca2ac5afa0296ac471894c"
+    },
+    "cucumber-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cucumber/skills/cucumber-fundamentals/SKILL.md",
+      "computedHash": "4f982276d37c20253697244ec0cf730e0924d27c066bdfcdbd67096556531996"
+    },
+    "cucumber-step-definitions": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cucumber/skills/cucumber-step-definitions/SKILL.md",
+      "computedHash": "46d44230197ad9afff0a45a114a30015facaa01885d9e86eb26fbe969fc1ca37"
+    },
+    "cuda-index-width": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/cuda-index-width/SKILL.md",
+      "computedHash": "5fd59b51446cb5db13c7954a90ac8df8ebed5527d174ed6a006267fc82d2d8a7"
+    },
+    "cypress-advanced": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cypress/skills/cypress-advanced/SKILL.md",
+      "computedHash": "369e5d2476fd2a7b4d7d6805868e2f9ccee83f320fa0da960ff0219d43fe46db"
+    },
+    "cypress-ci-cd": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cypress/skills/cypress-ci-cd/SKILL.md",
+      "computedHash": "a932f7b40a7eb1d8551ac69356dc9c0d623444a7bd9d51a22aafdea72ea4608d"
+    },
+    "cypress-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/cypress/skills/cypress-fundamentals/SKILL.md",
+      "computedHash": "f4827783a78f95538839f1818e96617e96ab81943c9c1e771ef882af4beb049b"
+    },
+    "debug": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/debug/SKILL.md",
+      "computedHash": "c453b68da226dd7b46460562cf59f0635fd3c8609070a7480d13b6feba65eda8"
+    },
+    "deploy-to-vercel": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/deploy-to-vercel/SKILL.md",
+      "computedHash": "03e0eaaa9bf13ba1e7ffa387f5893de6f324c0868c627001f179395a8feaa7c9"
+    },
+    "design-taste-frontend": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill/SKILL.md",
+      "computedHash": "899b84384f74f540ea5284d9b2e9234e050998b42eacc805410b518d4226c0b3"
+    },
+    "design-taste-frontend-v1": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/taste-skill-v1/SKILL.md",
+      "computedHash": "0a226c13d69639553cf8a7c40aa5527b026820f8ddaf7a6b263988e32ab44a27"
+    },
+    "develop": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/develop/SKILL.md",
+      "computedHash": "ad5dd002288ba04d288e489b1abede9e932d38352ed46cbe16bbe0dc790ee5a5"
+    },
+    "dialyzer-analysis": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/dialyzer/skills/dialyzer-analysis/SKILL.md",
+      "computedHash": "1acd8cbf22c47f4dfdecbc4c3f1e5497a3acdce99f005c1403fec941ac3fa182"
+    },
+    "dialyzer-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/dialyzer/skills/dialyzer-configuration/SKILL.md",
+      "computedHash": "37294f3224b4246c9250ff3aad0c518291e9703f10cd35cca6b9eb7fc8d149a4"
+    },
+    "dialyzer-integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/dialyzer/skills/dialyzer-integration/SKILL.md",
+      "computedHash": "ef65b8a9ce6505cbbea1f843248fa0b444c27d18520a74c6bbc35ef4872d7c00"
+    },
+    "dispatching-parallel-agents": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/dispatching-parallel-agents/SKILL.md",
+      "computedHash": "b011107f17188e0b2898bb1856b5bac8b49537cc86e737c82126558a235bd62a"
+    },
+    "distributed-triage": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/distributed-triage/SKILL.md",
+      "computedHash": "f8080492de42abbc0a5edf3f2d1147ec5d870abaf25ce783ed44f831b183b636"
+    },
+    "django-cbv-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/django/skills/django-cbv-patterns/SKILL.md",
+      "computedHash": "01eeacbb9d2633cf6cfa7235d241fe91f75ed1c24d2f665afce4842c4670e57c"
+    },
+    "django-orm-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/django/skills/django-orm-patterns/SKILL.md",
+      "computedHash": "d405220628c8c22d0aca1560ad50deba6de9a4d0f1fbefcfc2a55e50b5acf506"
+    },
+    "django-rest-framework": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/django/skills/django-rest-framework/SKILL.md",
+      "computedHash": "ad0044e5047bcd30d48daad14486ba3128c51418aa451de90ce01b3f31a140a8"
+    },
+    "docker-compose-basics": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/docker-compose/skills/docker-compose-basics/SKILL.md",
+      "computedHash": "9fddec50771f03d2f36ca758bcc40c1cdc4a59e78aa9f5d7bb767baa1e00894b"
+    },
+    "docker-compose-networking": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/docker-compose/skills/docker-compose-networking/SKILL.md",
+      "computedHash": "2e44bc739e143f26f3474e7cd8f0c4c806157d293ded9b2f3f193a0eff6d28f9"
+    },
+    "docker-compose-production": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/docker-compose/skills/docker-compose-production/SKILL.md",
+      "computedHash": "71eabff15298ed1751cf7a6e71e3b27269eaff07e8084dbdf8de5fff813044f6"
+    },
+    "docstring": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/docstring/SKILL.md",
+      "computedHash": "b155b482a57c224e091a302187b5745b19975c557d7e88ab2274ffa9e9898c06"
+    },
+    "document": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/document/SKILL.md",
+      "computedHash": "5b1f22dc88e6a2bc321c27cc93bf9befb00bc5a228ad541d973d39dadacbb58d"
+    },
+    "document-public-apis": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/document-public-apis/SKILL.md",
+      "computedHash": "a877a7f5a4730dab28c8e3b7b6a342880398abca43e6dfa44fff189892ad68d0"
+    },
+    "documentation-linking": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/notetaker/skills/documentation-linking/SKILL.md",
+      "computedHash": "91e8e7aa0c216927a6cd2c225cee41854bbfe731d5ad8702ea40fb89310fb9fd"
+    },
+    "ecto-changesets": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/ecto/skills/ecto-changesets/SKILL.md",
+      "computedHash": "5a31ed370e2fbaaec18227b6c5e0194c127fda20ce1e4e94fcdd4ab67a0f6bce"
+    },
+    "ecto-query-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/ecto/skills/ecto-query-patterns/SKILL.md",
+      "computedHash": "250152ce96821e125dc3a73fa609669372c7266a6cc6c9df0a62c7e761dc30be"
+    },
+    "ecto-schema-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/ecto/skills/ecto-schema-patterns/SKILL.md",
+      "computedHash": "22b1512cfa767197b63d10029d634b740f302d93fd9e9a9025b9bea30b33e061"
+    },
+    "ecto-schemas": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/ecto/skills/ecto-schemas/SKILL.md",
+      "computedHash": "8e6e67c3bc8e6791e11723e90e5b528dc8f5a0e787a76aefaa20afd5794d2974"
+    },
+    "effect-concurrency": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/effect/skills/effect-concurrency/SKILL.md",
+      "computedHash": "8e693c0b41d7e601cc35c3e55d567cf3188d2806c446041d860e81f9bc6c580c"
+    },
+    "effect-core-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/effect/skills/effect-core-patterns/SKILL.md",
+      "computedHash": "adc1a702c12a0bf431ecfeae0e877c40873288834c4a4908389cc7ff37dad086"
+    },
+    "effect-dependency-injection": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/effect/skills/effect-dependency-injection/SKILL.md",
+      "computedHash": "49c42dc0342c3bdf5a1003c52cc83debfc8906c5c769637ba0f25de091d28d51"
+    },
+    "effect-error-handling": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/effect/skills/effect-error-handling/SKILL.md",
+      "computedHash": "b508b316965a03bd52fabb86d1e32e727d6c88a5c86ad313048329640da7f182"
+    },
+    "effect-resource-management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/effect/skills/effect-resource-management/SKILL.md",
+      "computedHash": "92647780c03504c25f9d62dd8240373c6ab475c8790b1c0fada54df6e39a6f7e"
+    },
+    "effect-schema": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/effect/skills/effect-schema/SKILL.md",
+      "computedHash": "25c83f49a378e1ddd66803ace3d0591554d2069f4a1cbce4f5125730d1069c52"
+    },
+    "effect-testing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/effect/skills/effect-testing/SKILL.md",
+      "computedHash": "cc85e5d67f1bbf304c3fbb472ac32298709d866604b10627cb35d45930a17240"
+    },
+    "elixir-ecto-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/elixir/skills/elixir-ecto-patterns/SKILL.md",
+      "computedHash": "0480e7915911ca02c57e8e1e51a808a49380523f196e017b97002f753e242f4e"
+    },
+    "elixir-otp-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/elixir/skills/elixir-otp-patterns/SKILL.md",
+      "computedHash": "a14155a974cb277c8db5347694aa64d5afed601b86ebc168890f234c266ae180"
+    },
+    "elixir-pattern-matching": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/elixir/skills/elixir-pattern-matching/SKILL.md",
+      "computedHash": "0520f8276788870f21dfdc73ff78fa5400c7f3c1d7677c64750c506b13237962"
+    },
+    "eslint-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/eslint/skills/eslint-configuration/SKILL.md",
+      "computedHash": "3be542e57974377573d7d80de213e496d5c7120face6a165ba1ef571510e95c7"
+    },
+    "eslint-custom": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/eslint/skills/eslint-custom/SKILL.md",
+      "computedHash": "8a640776fff832d11b31101be23304c2c3ee2d302d2e3e88a20947161db04573"
+    },
+    "eslint-rules": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/eslint/skills/eslint-rules/SKILL.md",
+      "computedHash": "1e6faffae00825dbf46cc2033e5804fdc7c2e81c9d55709f2ece61a69eb87de3"
+    },
+    "executing-plans": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/executing-plans/SKILL.md",
+      "computedHash": "78a07800ee99a5861ae10be59d79fad085fdca10444e8aaeb2691597e357cff8"
+    },
+    "explain": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/explain/SKILL.md",
+      "computedHash": "2cf861a337cd0bd856aa10b5c1be64ade97325079b0ddafb37208a9cb0b5d76b"
+    },
+    "explicit-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/explicit-configuration/SKILL.md",
+      "computedHash": "06884bdcf0b528e2427370e4c71f53998e92f354bac9c8de12c76173fb1426b8"
+    },
+    "expo-build": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/expo/skills/expo-build/SKILL.md",
+      "computedHash": "8b37fe5a24848060d76da5fd91280bc2edf47e38bb7f1e7d3453017187c91334"
+    },
+    "expo-config": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/expo/skills/expo-config/SKILL.md",
+      "computedHash": "375887ec4366ed6ba2e74c5217197200c158f23a179a12f3f9ff387e5ea8baba"
+    },
+    "expo-modules": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/expo/skills/expo-modules/SKILL.md",
+      "computedHash": "86557310a4143bb63de783b9eb044e6d525193f702a86998d41aa9b8a46ac5b0"
+    },
+    "expo-router": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/expo/skills/expo-router/SKILL.md",
+      "computedHash": "6f2839313f1e500d8dccb81f140c36057b5bcff46dc10f577d1f05b874ed8f6c"
+    },
+    "expo-updates": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/expo/skills/expo-updates/SKILL.md",
+      "computedHash": "8d5df71783197d4f04a7fc74e1f4b2785e21fff40a3320d5a2148cc9471ec4c4"
+    },
+    "fastapi-async-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/fastapi/skills/fastapi-async-patterns/SKILL.md",
+      "computedHash": "d0c1d5dcdee3459acb609b23b815396e99c315d7c96a1f9d1c5d2b1931ef62cf"
+    },
+    "fastapi-dependency-injection": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/fastapi/skills/fastapi-dependency-injection/SKILL.md",
+      "computedHash": "6bb04059881038b1bf058695afa796c39c4d7039a9e8ce325cf0e6f7d6fca4fb"
+    },
+    "fastapi-validation": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/fastapi/skills/fastapi-validation/SKILL.md",
+      "computedHash": "a9e70d263b0a41d7141c23054610ecc47ff13670a0b505627b52784773a459ab"
+    },
+    "figma-analyze-frame": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/figma/skills/figma-analyze-frame/SKILL.md",
+      "computedHash": "e4618bca6fdd210500998d5a46f3e41e3955ad740b03fc5856100c2491e50707"
+    },
+    "figma-extract-tokens": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/figma/skills/figma-extract-tokens/SKILL.md",
+      "computedHash": "c25fac813a3ef7340fd7d3f73681fc93577b016814496490a587fb17cc05768e"
+    },
+    "figma-generate-component": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/figma/skills/figma-generate-component/SKILL.md",
+      "computedHash": "eca092ec39086e1510c97296ec76ca2e95a407b92cded23932bd61ec3c057c91"
+    },
+    "figma-sync-design-system": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/figma/skills/figma-sync-design-system/SKILL.md",
+      "computedHash": "0ce01c2d59e06f95d985cb0861dfd82ac742c2a994b821c93b654e322cc37835"
+    },
+    "finishing-a-development-branch": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/finishing-a-development-branch/SKILL.md",
+      "computedHash": "4f571e7befb8b0946d9d7770232c818812412e9ab1dfb811f847edfba1fc6275"
+    },
+    "fix": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/fix/SKILL.md",
+      "computedHash": "35e7c9426768a0c2c5cb7348af21909c3ac5c83aac7839a432d704d6a89835cd"
+    },
+    "fix-issue": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/fix-issue/SKILL.md",
+      "computedHash": "0bcd2cfa0191c299a9c2495252780cfe7ae347ba4b2dbda64f5f24c53e877d53"
+    },
+    "fnox-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/fnox/skills/configuration/SKILL.md",
+      "computedHash": "b4538ac76726e4cb2c05cba8cc84e2c31552f8c5bf955803dfba277166accddb"
+    },
+    "fnox-providers": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/fnox/skills/providers/SKILL.md",
+      "computedHash": "1f326a5a49fc2f47ad7c979704abd7106edab8b164abb732062a73258f6ef315"
+    },
+    "fnox-security-best-practices": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/fnox/skills/security-best-practices/SKILL.md",
+      "computedHash": "67d58b50c5c5ca49e23584fa175c3911aefdc6c538817cd94b0a4a8f294a946b"
+    },
+    "full-output-enforcement": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/output-skill/SKILL.md",
+      "computedHash": "524f7c7950c3fde726101613f630140411c7d080e63be718687f4b38f919be81"
+    },
+    "generate-blueprints": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/blueprints/skills/generate-blueprints/SKILL.md",
+      "computedHash": "d6609f7725904a4f67a7284275b1f3e03a343e564e8bf0b1476f61bee7eb6ac3"
+    },
+    "git-storytelling-branch-strategy": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/git-storytelling/skills/git-branch-strategy/SKILL.md",
+      "computedHash": "03c3eb4db0007278f8e75e36ca70082808b7dc78939663fdd1ee789344f6da4c"
+    },
+    "git-storytelling-commit-messages": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/git-storytelling/skills/git-commit-messages/SKILL.md",
+      "computedHash": "b5fb08fe1df95e3e24c6eee61e120a394efa4d4a76a05ef0323e0de70d0537b7"
+    },
+    "git-storytelling-commit-strategy": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/git-storytelling/skills/commit-strategy/SKILL.md",
+      "computedHash": "72eced59c3e1fc838805392fddc673d21d2cbac8beffef74b051e2e29ad9a3cd"
+    },
+    "git-worktrees-worktree-management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/git-worktrees/skills/worktree-management/SKILL.md",
+      "computedHash": "2bf5cb1412d80e8af2699933b86e9cb8b61947f51189681e79b8b7a2542d91b9"
+    },
+    "gitlab-ci-artifacts-caching": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/gitlab-ci/skills/artifacts-caching/SKILL.md",
+      "computedHash": "85c9e9ecbf760c488f0b3e87b2ef64309860ae33a8753ced911f20c934fb0ed7"
+    },
+    "gitlab-ci-best-practices": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/gitlab-ci/skills/cicd-best-practices/SKILL.md",
+      "computedHash": "f1d88eacca9e16d2113d5035e23ea7a67ca17a4d7b153c7572959833f6cb026a"
+    },
+    "gitlab-ci-job-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/gitlab-ci/skills/job-configuration/SKILL.md",
+      "computedHash": "059fc815e52659924e7a443cecd742d013fa99bf01be8b7fb6093701dd8b45f2"
+    },
+    "gitlab-ci-pipeline-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/gitlab-ci/skills/pipeline-configuration/SKILL.md",
+      "computedHash": "703ca900ad54005fc104119f7612d7036ea3a10d8a88af11779b81aa62e30afa"
+    },
+    "gitlab-ci-variables-secrets": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/gitlab-ci/skills/variables-secrets/SKILL.md",
+      "computedHash": "6b4b93fb57859d29030aeb7779a2c738724a7665c1e5c8ff906c884f9ee30a9c"
+    },
+    "gluestack-accessibility": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/gluestack/skills/gluestack-accessibility/SKILL.md",
+      "computedHash": "4dbd76a675a973d6c7e2ae0f71fec7b599bc770c7dbc4d23839d87ac07ecac87"
+    },
+    "gluestack-components": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/gluestack/skills/gluestack-components/SKILL.md",
+      "computedHash": "d7a935a022f55f039a2a5673d9b4541f3b7d94b965b8ed1a95a1be0c5f3ca4b2"
+    },
+    "gluestack-mcp-tools": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/gluestack/skills/gluestack-mcp-tools/SKILL.md",
+      "computedHash": "8a5e538253383645b471c89544a32a65def73dd0cc419b92c0bc0ec092e07b61"
+    },
+    "gluestack-theming": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/gluestack/skills/gluestack-theming/SKILL.md",
+      "computedHash": "dc849d017152ebad478f64f22e19b225a8e8e51c629b90fb6e9efd34bd3f953d"
+    },
+    "go-concurrency": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/go/skills/go-concurrency/SKILL.md",
+      "computedHash": "9756bb168346c9cc68baf3e7ecd50c761275ed2916957c332f5abca90fe2ecf6"
+    },
+    "go-error-handling": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/go/skills/go-error-handling/SKILL.md",
+      "computedHash": "89dbb61b21da3746ea9bc12d99e867f10d30ba14073bcca42dac8f8312e7838f"
+    },
+    "go-interfaces": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/go/skills/go-interfaces/SKILL.md",
+      "computedHash": "d0fb40f0dbf95484998fe362a51bc862c4211e25a9a53c4368fec51915c2bd24"
+    },
+    "gpt-taste": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/gpt-tasteskill/SKILL.md",
+      "computedHash": "7bd1bfdda0e51016ca222693401a65fc0dd9bf9487e0bd5b1740ba510f6f963a"
+    },
+    "graphql-inspector-audit": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/graphql-inspector/skills/graphql-inspector-audit/SKILL.md",
+      "computedHash": "609d19401e68d08a30534b836df76b84fdbdd191cf11d2e354ad790d8b1bc66a"
+    },
+    "graphql-inspector-ci": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/graphql-inspector/skills/graphql-inspector-ci/SKILL.md",
+      "computedHash": "8e81872ab83f9764e008bd276f126effeb41153b24a9cd7561696c9f138b9da0"
+    },
+    "graphql-inspector-diff": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/graphql-inspector/skills/graphql-inspector-diff/SKILL.md",
+      "computedHash": "1f1399a7198b174825fa7b175d650db13a7f3e550ccf929b092e6e2cd5ac57f5"
+    },
+    "graphql-inspector-validate": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/graphql-inspector/skills/graphql-inspector-validate/SKILL.md",
+      "computedHash": "376389b7d44b6de8af88676b38cf9e282f7a88a3a40395ced0319999befa8dc2"
+    },
+    "graphql-performance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/graphql/skills/graphql-performance/SKILL.md",
+      "computedHash": "71f3389e2e71a77cccdce1f03602b337f933d161c581cb3cb148ce159c414e80"
+    },
+    "graphql-resolvers": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/graphql/skills/graphql-resolvers/SKILL.md",
+      "computedHash": "bc65741fab7541b79f17a6448168e055686d1f6cc235232248ec1d5284d9ded1"
+    },
+    "graphql-schema-design": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/graphql/skills/graphql-schema-design/SKILL.md",
+      "computedHash": "68ea2070cd4806a32a5857a2e10849ac727944d31fb457799bfdd961eec03438"
+    },
+    "grill-me": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/productivity/grill-me/SKILL.md",
+      "computedHash": "5e0c683385eafd83f106ac6c9d67dfbbfe5aa4b3fe65aad114eb1055a99c818f"
+    },
+    "helm-charts": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/helm/skills/helm-charts/SKILL.md",
+      "computedHash": "3f528634c00df10212df9325f092ad2272ba5dfe006e5510b1316e3c34c9e47b"
+    },
+    "helm-templates": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/helm/skills/helm-templates/SKILL.md",
+      "computedHash": "3f0aa761d65f61831a5d305edb8a6c16fe347db4d88c872eb8aaf4333ce5b29d"
+    },
+    "helm-values": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/helm/skills/helm-values/SKILL.md",
+      "computedHash": "ef964a92427bc710d86dd3b1f26f1feb6927a2dda0de313c97ff9d10475907ce"
+    },
+    "hf-cli": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/hf-cli/SKILL.md",
+      "computedHash": "89f15ee97218cba43a89b542c0f6b2684b1d7cedb4d0feb6f261b6e8740ccda8"
+    },
+    "hf-cloud-aws-context-discovery": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/hf-cloud-aws-context-discovery/SKILL.md",
+      "computedHash": "98701f0010e7549a5675cf271fcf3450c2461c1ed265d38c444cb8b4ee729087"
+    },
+    "hf-cloud-python-env-setup": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/hf-cloud-python-env-setup/SKILL.md",
+      "computedHash": "b9060c151e862d9dbc18c19882d38770365b83fab7ab6cb71527fe7a0b1dc243"
+    },
+    "hf-cloud-sagemaker-deployment-planner": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/hf-cloud-sagemaker-deployment-planner/SKILL.md",
+      "computedHash": "b56a546a7100e316fb6ecdc155ed995ed5edcec22260082f8448d51d4e7643e9"
+    },
+    "hf-cloud-sagemaker-iam-preflight": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/hf-cloud-sagemaker-iam-preflight/SKILL.md",
+      "computedHash": "ae48158d6ce61db246518a949c0800e09bf038192e20100256cc50b3625e6acc"
+    },
+    "hf-cloud-sagemaker-production-defaults": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/hf-cloud-sagemaker-production-defaults/SKILL.md",
+      "computedHash": "a1797de427ebb1676a05618ad913d8c69400c95ab143271db3d4839532b003fe"
+    },
+    "hf-cloud-serving-image-selection": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/hf-cloud-serving-image-selection/SKILL.md",
+      "computedHash": "7224e12edab272075c0c7e8e705aaf8f5879f195fdef650fcab74e714bb537d2"
+    },
+    "hf-mem": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/hf-mem/SKILL.md",
+      "computedHash": "09de3deaf8a6399ede5f144551142a4a3a705c5bd0bb83938d585169d2685f0f"
+    },
+    "high-end-visual-design": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/soft-skill/SKILL.md",
+      "computedHash": "f730e4132775f13eea19e3dc39afc6bb453cfc0498872b127ad8f0d47cfd802d"
+    },
+    "huggingface-best": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-best/SKILL.md",
+      "computedHash": "31eeb3a90dc9562122929138784c065998defa8f6985a759f04b09e8873a4520"
+    },
+    "huggingface-community-evals": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-community-evals/SKILL.md",
+      "computedHash": "51b42948064ee943df2995af543c7d011d0786eb8ee04392eb9ea60e359833b2"
+    },
+    "huggingface-datasets": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-datasets/SKILL.md",
+      "computedHash": "d28d1ee4a61133ab6c1e12c74094681c2026c7e656784bd09831f91618fd0120"
+    },
+    "huggingface-gradio": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-gradio/SKILL.md",
+      "computedHash": "176783c67b865fa77395b45776a34ea67214911d8ed6a188da661d59a1197a8b"
+    },
+    "huggingface-llm-trainer": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-llm-trainer/SKILL.md",
+      "computedHash": "8be6c56dfe7705d44fecb2707aaae2540f93281ef72580a2c2ab1a961b476af9"
+    },
+    "huggingface-local-models": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-local-models/SKILL.md",
+      "computedHash": "3cbaf709aa2712d7ec028d1a376557e49bdb37395708a7c152f95398eb0e4e5b"
+    },
+    "huggingface-lora-space-builder": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-lora-space-builder/SKILL.md",
+      "computedHash": "ee4cc2e2bbdf2b7afd0f509b9ac7f0ee6a68bbcbacb34b99731fe68b83a26da7"
+    },
+    "huggingface-paper-publisher": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-paper-publisher/SKILL.md",
+      "computedHash": "996d4a2a9d46e04396da4e47c4e82e830c79053acaac56b6b9beb6951f6c375a"
+    },
+    "huggingface-papers": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-papers/SKILL.md",
+      "computedHash": "2ebe1d72b530d4d3cef0d6345d3f5cc892446af73efe0227038def6a1a3cd658"
+    },
+    "huggingface-spaces": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-spaces/SKILL.md",
+      "computedHash": "fcab17ea835b76b600fcb350ef426da614511a79a1c119f684ebe07068c0cdc2"
+    },
+    "huggingface-tool-builder": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-tool-builder/SKILL.md",
+      "computedHash": "af775b66feb5b2df24d7a5dd512a46e6b406244dd54ae69dd50caf99c63d8f83"
+    },
+    "huggingface-trackio": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-trackio/SKILL.md",
+      "computedHash": "0c1997781ab76c10cd04d68bf107af973e25e2ab2a76c2d17dbf8164731ced70"
+    },
+    "huggingface-vision-trainer": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-vision-trainer/SKILL.md",
+      "computedHash": "16b4be9f325dfcb0b01e8c7a3514dc437558e74a93a7c6ddf8636baa94fcf5b1"
+    },
+    "huggingface-zerogpu": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/huggingface-zerogpu/SKILL.md",
+      "computedHash": "94f89502a679c5bb899617014cd1d801771941d2cc5824d6bdcccb892047356f"
+    },
+    "image-to-code": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/image-to-code-skill/SKILL.md",
+      "computedHash": "3d2ac14d956fdafc5500d2108b90895e134d847f9f199e7f1d18bf1f814cf7c8"
+    },
+    "imagegen-frontend-mobile": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/imagegen-frontend-mobile/SKILL.md",
+      "computedHash": "7c1d1dc59cd0df4063b8621af543bf5dea1d576b261507e17b0323c69680b048"
+    },
+    "imagegen-frontend-web": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/imagegen-frontend-web/SKILL.md",
+      "computedHash": "27255c7c50181e58add156b2aa2bd5325285b85f04027e4c8b73742d98d7be0a"
+    },
+    "impeccable": {
+      "source": "pbakaus/impeccable",
+      "sourceType": "github",
+      "skillPath": ".agents/skills/impeccable/SKILL.md",
+      "computedHash": "464b4d2c4a2a961a71684c0086cdcc226ba1635983f9cc6e6d3ca6362914b9cb"
+    },
+    "incident-response": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/sentry/skills/incident-response/SKILL.md",
+      "computedHash": "f354246c02b05ee007938ec6d6a9b61942c500d68516198841716b56491f595d"
+    },
+    "industrial-brutalist-ui": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/brutalist-skill/SKILL.md",
+      "computedHash": "e66e5a2a8b73cef79ab6546459c665e8b983645689c5f3772f7eed8b9f1e8e0e"
+    },
+    "ink-component-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/ink/skills/ink-component-patterns/SKILL.md",
+      "computedHash": "643fce8ce780aea1673952661643a29a0cefeb94c9206b7d246dde555c7f13b1"
+    },
+    "ink-hooks-state": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/ink/skills/ink-hooks-state/SKILL.md",
+      "computedHash": "cbc3d750c71af24fdc42c6903f3b121d3257fc9a82c8adb718a693015aa68c41"
+    },
+    "ink-layout-styling": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/ink/skills/ink-layout-styling/SKILL.md",
+      "computedHash": "9f32848018a59e768e183446ebbbd9e082d3f723a9c45c11d95b9b15aade1827"
+    },
+    "investigate-errors": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/sentry/skills/investigate-errors/SKILL.md",
+      "computedHash": "604aedbad827f09b5fdb453420351c2c0fe0563c791319f0cf24415d5bdf78e2"
+    },
+    "ios-swift-concurrency": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/ios/skills/swift-concurrency/SKILL.md",
+      "computedHash": "4f3f6b939d9f7842cf0d30ac9e12b8396a2ee579cf4b24b49aa92864c786e5c0"
+    },
+    "ios-swiftui-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/ios/skills/swiftui-patterns/SKILL.md",
+      "computedHash": "d54ae61c51c6ed0579d3afda3df55e884d8b57690cbb7414307c6636c184d633"
+    },
+    "ios-uikit-architecture": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/ios/skills/uikit-architecture/SKILL.md",
+      "computedHash": "ce5400287bd0fae91be2e844ba50228384e24f89553b61d711aa05def4ed038d"
+    },
+    "issue": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/linear/skills/issue/SKILL.md",
+      "computedHash": "72b4029c1e54920acc7e27bc15cffc527f6a0afcb0847f3402a7902d4bdda131"
+    },
+    "java-concurrency": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/java/skills/java-concurrency/SKILL.md",
+      "computedHash": "7835b570ff8bdb0d28eb096af16f85630145c3fdb6b2053186e1fffade1f80a2"
+    },
+    "java-generics": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/java/skills/java-generics/SKILL.md",
+      "computedHash": "b8e955013ba13e6f05cbdffa93a88002a7f6cc7a372a5d327638a400caab34c3"
+    },
+    "java-streams-api": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/java/skills/java-streams-api/SKILL.md",
+      "computedHash": "6d755ad66b3bb661f7c208114769ec4f66f486d0fd47521e68e3c22ede181293"
+    },
+    "jest-advanced": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/jest/skills/jest-advanced/SKILL.md",
+      "computedHash": "9ad0ce18ecb333afa488ec5ad1b37d6c34563405f936b069e0dc5d5e2dda3e2f"
+    },
+    "jest-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/jest/skills/jest-configuration/SKILL.md",
+      "computedHash": "925685a3948bbdffe8f4be14bbe21d6ab2a36130d214a6c9ed5da4fede196917"
+    },
+    "jest-testing-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/jest/skills/jest-testing-patterns/SKILL.md",
+      "computedHash": "23d7d5286a880effa9c65538d78fe685503b9a5db82bddd12499efcba5bf5054"
+    },
+    "junit-extensions": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/junit/skills/junit-extensions/SKILL.md",
+      "computedHash": "e260cd454b7f80b6d02ee9970cc46606047819602121e176f1cc359e0e5fffd7"
+    },
+    "junit-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/junit/skills/junit-fundamentals/SKILL.md",
+      "computedHash": "d5f0d647f731746cd424f703f0b167ebc233b477438d3853aca816f29e7ba835"
+    },
+    "junit-parameterized": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/junit/skills/junit-parameterized/SKILL.md",
+      "computedHash": "4d2b45d43225c6b1251725af269d032f8916df5f36068d84a564965b313017a5"
+    },
+    "kubernetes-manifests": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/kubernetes/skills/kubernetes-manifests/SKILL.md",
+      "computedHash": "94114fd923d6e83f809b3720bfd68260d1564ab2d2665abd2df835de25f13809"
+    },
+    "kubernetes-resources": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/kubernetes/skills/kubernetes-resources/SKILL.md",
+      "computedHash": "080433f374fcde957ad61193cfba4bba3d6b9b919dd2552d13f568a7826e70dc"
+    },
+    "kubernetes-security": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/kubernetes/skills/kubernetes-security/SKILL.md",
+      "computedHash": "888b2f4ebbd96c0ba6faf7bc02b1e52d4571179fb4082b39446cef59d0bf2a4f"
+    },
+    "kustomize-basics": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/kustomize/skills/kustomize-basics/SKILL.md",
+      "computedHash": "0b9ce0b821b01339f153796bf829b4a2b1c6173310fc47524b1869a83d62c37b"
+    },
+    "kustomize-generators": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/kustomize/skills/kustomize-generators/SKILL.md",
+      "computedHash": "987a314f6753b5dc46f614d8eafded8ed271d2e262b17deb835f26a01414d76a"
+    },
+    "kustomize-overlays": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/kustomize/skills/kustomize-overlays/SKILL.md",
+      "computedHash": "9ef3f4ed1aa4adecbfd10df36f4028013a54736e6c2545a0db2fe6d6e20253ee"
+    },
+    "legacy-code-safety": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/legacy-code-safety/SKILL.md",
+      "computedHash": "426e498699624ca6313741ceb078c8a82d849a6a2d243c8a8c99984808e6a5b1"
+    },
+    "load-mr-context": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/gitlab/skills/load-mr-context/SKILL.md",
+      "computedHash": "783e81ddde0031226493aa8bc0c6bc7fd30bc2a750c3824dd0966d8d04b43ed3"
+    },
+    "load-pr-context": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/github/skills/load-pr-context/SKILL.md",
+      "computedHash": "84bc071820053faf33d9c186dc02c85eeef1a572d7961c15a2a577ec5a47dda5"
+    },
+    "markdown-documentation": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/markdown/skills/markdown-documentation/SKILL.md",
+      "computedHash": "478d1ae904c8daf6db2ce9ce5d8906561f3f7c1d6be755675fcb67e39527346b"
+    },
+    "markdown-syntax-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/markdown/skills/markdown-syntax-fundamentals/SKILL.md",
+      "computedHash": "9df394563b077f2c6f2fb436e101dba80050b71d06daab60a07cdff894d58753"
+    },
+    "markdown-tables": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/markdown/skills/markdown-tables/SKILL.md",
+      "computedHash": "eb4267034b04fe70ff58bffcbe2d026e233a18bc35a2d0860f195a658f122378"
+    },
+    "markdownlint-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/markdown/skills/markdownlint-configuration/SKILL.md",
+      "computedHash": "c319536f8f27602bbf4d7f88cefefdde8ad682d596404f7f7ecca0a6a5c325e6"
+    },
+    "markdownlint-custom-rules": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/markdown/skills/markdownlint-custom-rules/SKILL.md",
+      "computedHash": "58fe75e114829cfafe61941e8466d6ca4b19c8a6a9ab191edf4d0bca93517eae"
+    },
+    "markdownlint-integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/markdown/skills/markdownlint-integration/SKILL.md",
+      "computedHash": "f25fc8b19e7947a7040c9f79a058e7dfb05d8515627e749e47a8b8d94d8fd9f7"
+    },
+    "maven-build-lifecycle": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/maven/skills/maven-build-lifecycle/SKILL.md",
+      "computedHash": "7855b6cd27c5fdf3b1e7c6acddcd66b4f5ecc780970ea72a229c3969c53a2582"
+    },
+    "maven-dependency-management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/maven/skills/maven-dependency-management/SKILL.md",
+      "computedHash": "d4b81032230c595840a74e0e3a6694d22bd5b78600cf7af5bb0327b87ec0d4b5"
+    },
+    "maven-plugin-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/maven/skills/maven-plugin-configuration/SKILL.md",
+      "computedHash": "f1772e8b771ae107e45fd8bce51447a3b809c9459b244beb587857cad9018e3a"
+    },
+    "metal-kernel": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/metal-kernel/SKILL.md",
+      "computedHash": "4c00a8d2cde7d85d2ac73cda75783e5609f593ef5c8173a14bd9242c130d2785"
+    },
+    "migrate-radix-to-base": {
+      "source": "shadcn/ui",
+      "sourceType": "github",
+      "skillPath": "skills/migrate-radix-to-base/SKILL.md",
+      "computedHash": "4fdc31bf287f674ba6bf91a648120f7b34cd7ef370f998f2cc116fed067789c5"
+    },
+    "minimalist-ui": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/minimalist-skill/SKILL.md",
+      "computedHash": "7e88897e0371184e97a82b8d9ef080323c13f21eb067b58ef71eb05173a08ac2"
+    },
+    "mise-environment-management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/mise/skills/environment-management/SKILL.md",
+      "computedHash": "501e3ee9ab3ab13154d64704369d2a08ced4f079166ae49af13b8f24fd85698c"
+    },
+    "mise-task-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/mise/skills/task-configuration/SKILL.md",
+      "computedHash": "cbd10403dd0cf4b7b33cd714df1617cea5b964fb9d654f5e6273c61a18e1e32a"
+    },
+    "mise-tool-management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/mise/skills/tool-management/SKILL.md",
+      "computedHash": "a64233eaf3fb4d28cb8817d84ca75626fc2745ef2b8b9404efefcc4fa7ef106d"
+    },
+    "mocha-assertions": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/mocha/skills/mocha-assertions/SKILL.md",
+      "computedHash": "beca93d5e6a85b640ea55f35a25c7f61bd39f6cec8c3d8c7f0762d6713c22e23"
+    },
+    "mocha-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/mocha/skills/mocha-configuration/SKILL.md",
+      "computedHash": "8b095f48f1d2550d0b7fc518763c132d5a3562790b9c7d8859e203b6ed1298b3"
+    },
+    "mocha-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/mocha/skills/mocha-fundamentals/SKILL.md",
+      "computedHash": "4ebe651ccf64a8e882d1aaf8f6b8618e98a3c070028c2907156b5051748a9297"
+    },
+    "monitor-pipeline": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/gitlab/skills/monitor-pipeline/SKILL.md",
+      "computedHash": "2e3c4fc1626388736188d6f57b960911c74731fef841e21dfbeedffc6ab987ad"
+    },
+    "monorepo-architecture": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/monorepo/skills/monorepo-architecture/SKILL.md",
+      "computedHash": "472d715c5085075b8bbc6ce99e5c76e72609d1f12263d9bb89e4ef5bcc37594a"
+    },
+    "monorepo-tooling": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/monorepo/skills/monorepo-tooling/SKILL.md",
+      "computedHash": "51d7b9ebe258987b456c3b150aa45ce1f91435527d56ab1c7131f11e0f5be579"
+    },
+    "monorepo-workflows": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/monorepo/skills/monorepo-workflows/SKILL.md",
+      "computedHash": "be981ec7f4bfa2a99519fc68aefe7faee3c1be065e3c950264a2e1248e2276aa"
+    },
+    "my-issues": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/linear/skills/my-issues/SKILL.md",
+      "computedHash": "4df5b4ad2e052575545b4e4d6c309c6a7140b71b50083fd80de11cc5b8044fd7"
+    },
+    "my-tasks": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/clickup/skills/my-tasks/SKILL.md",
+      "computedHash": "ff97a58dcba82890d1139fb8017a795e2f59e129cbccc6736aad21709e6c687f"
+    },
+    "my-tickets": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/jira/skills/my-tickets/SKILL.md",
+      "computedHash": "da7c91a1deab90e01349de8b46dd1414274696c507c4de2d986ae7bac6b181a9"
+    },
+    "nestjs-dependency-injection": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/nestjs/skills/nestjs-dependency-injection/SKILL.md",
+      "computedHash": "fc368e0e1a6ef15a0ac76428d64f076f262b1bccb6f3cb4485354ce83a212911"
+    },
+    "nestjs-guards-interceptors": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/nestjs/skills/nestjs-guards-interceptors/SKILL.md",
+      "computedHash": "3f05d67f2d235dea0fa87634f79168810bd1fd3956f628caa44f2100b9e57f4d"
+    },
+    "nestjs-testing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/nestjs/skills/nestjs-testing/SKILL.md",
+      "computedHash": "5d0e81ad49ed00703dda2377a8c59432e8baefe9ca72cb5afe56b0a8ff4ed1be"
+    },
+    "nextjs-app-router": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/nextjs/skills/nextjs-app-router/SKILL.md",
+      "computedHash": "c7ffcc4edbe5d15d3364e066c865e8c4f52088ec73cde49f32303b6485d79fe8"
+    },
+    "nextjs-data-fetching": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/nextjs/skills/nextjs-data-fetching/SKILL.md",
+      "computedHash": "fc2a09dc69f0f6e5178a165e37114764f9e5d024daaaf7b22bac1ab9fe50c495"
+    },
+    "nextjs-server-components": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/nextjs/skills/nextjs-server-components/SKILL.md",
+      "computedHash": "2c30b7a52961096b2b42d73efc42221c23a55d5e308c99541880bcce0dab32d2"
+    },
+    "notetaker-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/notetaker/skills/note-taking-fundamentals/SKILL.md",
+      "computedHash": "d4da127388a73623424829650eb2c906b43f54a3bcae84027d62735a243e17ba"
+    },
+    "oop-encapsulation": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/oop/skills/oop-encapsulation/SKILL.md",
+      "computedHash": "197ffce99da28d719b4523b700a65e9f20631941abe752955089e846a090373d"
+    },
+    "oop-inheritance-composition": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/oop/skills/oop-inheritance-composition/SKILL.md",
+      "computedHash": "b3d4a4725677860a09ca37bbcf65fe0468f8009273164ea427db5f1b761da808"
+    },
+    "oop-polymorphism": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/oop/skills/oop-polymorphism/SKILL.md",
+      "computedHash": "4dbf28b2618ce935a219e6e67e6195baf6bc6627547828908d8731f12ec05819"
+    },
+    "optimize": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/optimize/SKILL.md",
+      "computedHash": "66167ff4fd624f1b49697eb307458cfb25d5eead363e760f328dd29c81da663c"
+    },
+    "orthogonality-principle": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/orthogonality-principle/SKILL.md",
+      "computedHash": "455afacd08229e9162f80273def2428df34977921f702b51f91f81df628126e0"
+    },
+    "phoenix-controllers": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/phoenix/skills/phoenix-controllers/SKILL.md",
+      "computedHash": "16db12c4ed34d66f95838033a26c9916242e582ac8ad85785981c9aa0298a97c"
+    },
+    "phoenix-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/phoenix/skills/phoenix-patterns/SKILL.md",
+      "computedHash": "3e802fca2e9fd91874b95c2d01d731bac21b9fda4d66c2cb4ac5cf1b2a1c8efd"
+    },
+    "phoenix-routing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/phoenix/skills/phoenix-routing/SKILL.md",
+      "computedHash": "8d23586d66591ea7703c3aa86067b6d2226ed0a673502fe92ad9632c2cffb07a"
+    },
+    "phoenix-views-templates": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/phoenix/skills/phoenix-views-templates/SKILL.md",
+      "computedHash": "36fd3ec5840788fd90deb9c099ccd3e870c119c82df4fb3b5333dde6d1a8bd30"
+    },
+    "plan": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/plan/SKILL.md",
+      "computedHash": "b84fe4f6da0d192eb12f8be85b973fdea9df9d7687134dd74a709c0ff98820e6"
+    },
+    "playwright-bdd-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/playwright-bdd/skills/playwright-bdd-configuration/SKILL.md",
+      "computedHash": "51147056374e4c9ae1c021a98806d35a02a4c351cf00e89d8483a11dff5468c6"
+    },
+    "playwright-bdd-gherkin-syntax": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/playwright-bdd/skills/playwright-bdd-gherkin-syntax/SKILL.md",
+      "computedHash": "b3c049376aaf6808271fe7a6c65ae146ffb0a10d61438aa73ed0c529cb390e0a"
+    },
+    "playwright-bdd-step-definitions": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/playwright-bdd/skills/playwright-bdd-step-definitions/SKILL.md",
+      "computedHash": "9c190e6c2172796d00932bb92dcccebab871907dc9773b32c5c1a66670de467c"
+    },
+    "playwright-fixtures-and-hooks": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/playwright/skills/playwright-fixtures-and-hooks/SKILL.md",
+      "computedHash": "048ea54d3860c1a03481d14f7cfeb8b6b42ffafd2aba5334ea26dc4d7923228f"
+    },
+    "playwright-page-object-model": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/playwright/skills/playwright-page-object-model/SKILL.md",
+      "computedHash": "5ac367f50b942aab49515dd3ca85773c8555c6df27869052fd40fc448abd008e"
+    },
+    "playwright-test-architecture": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/playwright/skills/playwright-test-architecture/SKILL.md",
+      "computedHash": "d9622a4ddd2a56f3b50bf7277117d3df00c4987e0dd07348517034f6c8c768dc"
+    },
+    "pr-review": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/pr-review/SKILL.md",
+      "computedHash": "d386ac99347a7c7c6a931672592b1034e91d0a3b3860e89ce4c07b923efa435e"
+    },
+    "prettier-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/prettier/skills/prettier-configuration/SKILL.md",
+      "computedHash": "cca8d1f0e778e7a7e13adb61f01a023d9e4b0dee95f07a0354a27d4f94d4af81"
+    },
+    "prettier-integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/prettier/skills/prettier-integration/SKILL.md",
+      "computedHash": "dd2031e60037cc5738dd70e65758022def5c9fc8541ee0c7c1a95b92d613c380"
+    },
+    "prettier-plugins": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/prettier/skills/prettier-plugins/SKILL.md",
+      "computedHash": "a9593a034617489ce33e3d7592dc5e95fe28264579e08c5ac517ec5b17f3f0a9"
+    },
+    "professional-honesty": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/professional-honesty/SKILL.md",
+      "computedHash": "f73cb02617397313feafdcb1e90238d42b091e3de6cb615b4ad83d08b1dec5d9"
+    },
+    "project-memory": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/project-memory/SKILL.md",
+      "computedHash": "0420428c782a735954df8c97e5305531776779f1418a1da403681a0d453e5191"
+    },
+    "proof-of-work": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/proof-of-work/SKILL.md",
+      "computedHash": "cca222b3d722a5c69a50a61c3ee2b03ce5ebe9834969e7f30ba4e40b80f09b94"
+    },
+    "pt2-bug-basher": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/pt2-bug-basher/SKILL.md",
+      "computedHash": "dd5fc68b054a0f8cb915f988d77338863ac3e45bd99ebf7099ff2030bfbdfa81"
+    },
+    "pulumi-basics": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/pulumi/skills/pulumi-basics/SKILL.md",
+      "computedHash": "004c8adb4b545e5b0d334592d9327b9de4b9466ecb8a9b222d827cb06aa55390"
+    },
+    "pulumi-components": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/pulumi/skills/pulumi-components/SKILL.md",
+      "computedHash": "972b293f412540aca7a13407803b9a857a66f60c09329df706bf13baaca574f1"
+    },
+    "pulumi-stacks": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/pulumi/skills/pulumi-stacks/SKILL.md",
+      "computedHash": "a2584084e7d683a6ef3cdf334e45a3ae080391da95677c3ca5f6e03f0e3061c7"
+    },
+    "pylint-checkers": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/pylint/skills/pylint-checkers/SKILL.md",
+      "computedHash": "45d5b2f2afc56635be3c6c9407044473fe53c598b9c928cda9f11d4971ac4c3a"
+    },
+    "pylint-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/pylint/skills/pylint-configuration/SKILL.md",
+      "computedHash": "905369511dc9544ca665b6a532fc93e5adbc42a87961f0f9a5d385733e3af270"
+    },
+    "pylint-integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/pylint/skills/pylint-integration/SKILL.md",
+      "computedHash": "4cc2632c6241441aa25091699eedfe6fcaa17a30c6b588a355b646cbe488fe22"
+    },
+    "pyrefly-type-coverage": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/pyrefly-type-coverage/SKILL.md",
+      "computedHash": "f54277266cf118e0010be2bb2639f5326d8881d9255c5442096979fcb1e8bf86"
+    },
+    "pytest-advanced": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/pytest/skills/pytest-advanced/SKILL.md",
+      "computedHash": "12dbcf38edf72078825ae174c8ea1ac19cf7c30b47cef4afdf9d3c9442e0f05f"
+    },
+    "pytest-fixtures": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/pytest/skills/pytest-fixtures/SKILL.md",
+      "computedHash": "4cb2e85109c4b6c4636e19b4b6c5728cd9964e24895c74e79965730267e5a93e"
+    },
+    "pytest-plugins": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/pytest/skills/pytest-plugins/SKILL.md",
+      "computedHash": "5240fb69c5d5f3050edcecf1afc04c19dc1b2aae42ff1aa1bcc315698f99aa84"
+    },
+    "python-async-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/python/skills/python-async-patterns/SKILL.md",
+      "computedHash": "b9ddd7768f9930f4455b4f4e4cbe8631c1457860d6d68ef529b7673844622c64"
+    },
+    "python-data-classes": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/python/skills/python-data-classes/SKILL.md",
+      "computedHash": "7264b0b5a50d1481b9ecd41057e3f21ee6bf75efbbc725eebc41dc7b8acc147b"
+    },
+    "python-type-system": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/python/skills/python-type-system/SKILL.md",
+      "computedHash": "3178328b1a166e8b3b1e2d0de36b1d7da375cdf0ed497db0a94521f12cb753cd"
+    },
+    "query-events": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/sentry/skills/query-events/SKILL.md",
+      "computedHash": "904ea9a38314a4f3c2b76957756bd6d2276f824b4d6f7a54650d46a21aa68e91"
+    },
+    "r3f-animation": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-animation/SKILL.md",
+      "computedHash": "c9e9ec609496aa89f44757212e220f601ca1387e38644a47603c5fb415eb2bb5"
+    },
+    "r3f-fundamentals": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-fundamentals/SKILL.md",
+      "computedHash": "45fdccb223eb747d7194d200e3f219820ada0cc6fa0226103de96261a22fdb3c"
+    },
+    "r3f-geometry": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-geometry/SKILL.md",
+      "computedHash": "2ab2668ab8e03769efe4a8962533b7e23d8f5fbd46c87f26101572ca63441014"
+    },
+    "r3f-interaction": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-interaction/SKILL.md",
+      "computedHash": "702bc09fc0c20a325b93bacd5fc1361eae04b46dcb90534c04bd3c87a5cf52d7"
+    },
+    "r3f-lighting": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-lighting/SKILL.md",
+      "computedHash": "1ceb9cb1c883419c880a470c7b15597683f2051f3ec6d193723a14285b18baf9"
+    },
+    "r3f-loaders": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-loaders/SKILL.md",
+      "computedHash": "efc962e611bbde7f7c1b2d9ba8259b36c72c6adffc3f0a7d4f73354c4d9a2fde"
+    },
+    "r3f-materials": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-materials/SKILL.md",
+      "computedHash": "f8143ce23054807308dea32cb20e21b9d903909f87bc601a73cf19cb96136b05"
+    },
+    "r3f-physics": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-physics/SKILL.md",
+      "computedHash": "0c3021872a32f7ce3a87d0ab1a260380de0b21b0d13a2ac64108ff1db13aaa5f"
+    },
+    "r3f-postprocessing": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-postprocessing/SKILL.md",
+      "computedHash": "6dcd0f2df52c1e8b2f4805d6ace1a43738c58a06d4ee2f884b665c504647a00c"
+    },
+    "r3f-shaders": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-shaders/SKILL.md",
+      "computedHash": "160c354cf7dfe915c81107bf1253ad3e4550f79dc9572186099dd422d51c6d07"
+    },
+    "r3f-textures": {
+      "source": "EnzeD/r3f-skills",
+      "sourceType": "github",
+      "skillPath": "skills/r3f-textures/SKILL.md",
+      "computedHash": "62a1e9279a81566d4606ff915dbf81d068e4112755771aa9ba45ee533e0c0d2f"
+    },
+    "rails-action-controller-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/rails/skills/rails-action-controller-patterns/SKILL.md",
+      "computedHash": "e92cb748a5c0f5917f17bd8d5a4e7c0c8be25f629f2d10dc6a8c661a093c12c6"
+    },
+    "rails-active-record-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/rails/skills/rails-active-record-patterns/SKILL.md",
+      "computedHash": "a579da0af9f30785dd6c4dde56b771a4bcadd0eb2aece692a6d7bd2fb7297beb"
+    },
+    "rails-hotwire": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/rails/skills/rails-hotwire/SKILL.md",
+      "computedHash": "4f7ba78375f795ec967ff6d6c6c9252b4244e9ba0291db2eaf91411ea57ebbc9"
+    },
+    "react-context-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react/skills/react-context-patterns/SKILL.md",
+      "computedHash": "9ac392659047d37f228b8e089c5eab5e418bd3227901e823e97ad761e9c0cc4a"
+    },
+    "react-hooks-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react/skills/react-hooks-patterns/SKILL.md",
+      "computedHash": "703f6f93b305c8081f4dd28789978ee970e24019ca96ed89bd72be372da5146c"
+    },
+    "react-native-components": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native/skills/react-native-components/SKILL.md",
+      "computedHash": "f471c09c93e7d404fd5f8f4536d33de1fb354dd8e7ca5dc500b19a1633f25445"
+    },
+    "react-native-native-modules": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native/skills/react-native-native-modules/SKILL.md",
+      "computedHash": "1fb1da3ee132ccda5db57af3131b7ff375a52e1186bf8833a303fa8b6bb6fadd"
+    },
+    "react-native-navigation": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native/skills/react-native-navigation/SKILL.md",
+      "computedHash": "4af2576ad2342b80fc6810344c0e96a0d89c61e8a9c0a1c23ad2a12cd7cfaa17"
+    },
+    "react-native-performance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native/skills/react-native-performance/SKILL.md",
+      "computedHash": "7dcbc6ec889dd6ca6a5fe9209c4be0cb9c280f41f13bd3aeadc3d08e20a33d52"
+    },
+    "react-native-platform": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native/skills/react-native-platform/SKILL.md",
+      "computedHash": "5c5f7828a41bd05cbe793f70d8d978fe56d6d62866e7a95fb7873b6b3a0bb460"
+    },
+    "react-native-styling": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native/skills/react-native-styling/SKILL.md",
+      "computedHash": "4a5be3ca528dad57afc7ab855182101635a992de31e8d8ff0f95cfd136f0f319"
+    },
+    "react-native-web-core": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native-web/skills/react-native-web-core/SKILL.md",
+      "computedHash": "45b0871b384bae567dfbbb87a42699af3099ba7fa4403d1cb9bb0349ae814316"
+    },
+    "react-native-web-navigation": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native-web/skills/react-native-web-navigation/SKILL.md",
+      "computedHash": "036235cdebc9e8a9bb4c33200152931344d6ab0030790342b64cc89670a8ae92"
+    },
+    "react-native-web-performance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native-web/skills/react-native-web-performance/SKILL.md",
+      "computedHash": "45077597a9f563435e4bbd311ae094cdb3d832cf98ecaece829f55dd432f68d5"
+    },
+    "react-native-web-styling": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native-web/skills/react-native-web-styling/SKILL.md",
+      "computedHash": "eed29420864eb945dc8effbd15c7e6eda0fa840d15340b49e13eb430b62f72dc"
+    },
+    "react-native-web-testing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react-native-web/skills/react-native-web-testing/SKILL.md",
+      "computedHash": "aa024df95c147680df91043b413d6c6cec67dfcdc282a6bdc47834b0edc9c7d0"
+    },
+    "react-performance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/react/skills/react-performance/SKILL.md",
+      "computedHash": "59fde858aeae0d3466e9581752830802e3dfe46538c9d51a850933ec661ab798"
+    },
+    "reactflow-custom-nodes": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/reactflow/skills/reactflow-custom-nodes/SKILL.md",
+      "computedHash": "7ebe18b68c0cfa999b2eff40f8c22740b4feb07e535e2558213cb9d7097e138e"
+    },
+    "reactflow-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/reactflow/skills/reactflow-fundamentals/SKILL.md",
+      "computedHash": "bc09c94662a96d75f272152ab600e935fd100268dbc0f8b8e17086f24144d02b"
+    },
+    "receiving-code-review": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/receiving-code-review/SKILL.md",
+      "computedHash": "59361179fc9225173e0c145ffd9bafbf9fdbf8b43ce3dc308497a0b4f83a6063"
+    },
+    "redesign-existing-projects": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/redesign-skill/SKILL.md",
+      "computedHash": "47eced3e960a2c961d3cbee11fa1216264f589344b586a5cbd03967cd6b9c54b"
+    },
+    "refactor": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/refactor/SKILL.md",
+      "computedHash": "c909c2041ce629adc45a734545805394c0ba55c2a165efc59049fc7e9cb12cdd"
+    },
+    "relay-fragments-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/relay/skills/relay-fragments-patterns/SKILL.md",
+      "computedHash": "f2318001b61234131bedb0d9719131c0dd4e372b6c29ea2020f05b982c688bb2"
+    },
+    "relay-mutations-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/relay/skills/relay-mutations-patterns/SKILL.md",
+      "computedHash": "65eda2c5bc2b9caa2924bfcd0c73a339140ee888429c3f3bc029a8f63faa8089"
+    },
+    "relay-pagination": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/relay/skills/relay-pagination/SKILL.md",
+      "computedHash": "2f348163eeefcccd7d38694f1f156bfd4760c7866610da170f9851ad89302f01"
+    },
+    "requesting-code-review": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/requesting-code-review/SKILL.md",
+      "computedHash": "004f340ae65811095d6a9bb0a759c87d0a8085c5e705dbb019b011626293d2e9"
+    },
+    "resume-from-pr": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/github/skills/resume-from-pr/SKILL.md",
+      "computedHash": "7164662cd5c89a04a5a7faff01534fd41b2e413a1200f76daa45f9f9c01a26c8"
+    },
+    "review": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/review/SKILL.md",
+      "computedHash": "7930e3af3d6294e6bcee31f1a2e076e920484338d9f2f7107dbf7d677e482c25"
+    },
+    "review-mr": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/gitlab/skills/review-mr/SKILL.md",
+      "computedHash": "233c5230ceb3243aa05ef4e493780c629da766076008f964e44bddd4a320ba6d"
+    },
+    "review-pr": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/github/skills/review-pr/SKILL.md",
+      "computedHash": "4a833577985b3ecf3c86566ecf0ef349f5acd0b0d79c26394fb6ae0beeb45a6e"
+    },
+    "rspec-advanced": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/rspec/skills/rspec-advanced/SKILL.md",
+      "computedHash": "e48c313baaf6c5f9472ce54bd9b1faca2673efcbc611a4fe7481138d688aeaf0"
+    },
+    "rspec-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/rspec/skills/rspec-fundamentals/SKILL.md",
+      "computedHash": "69e85d62159679726c7e83fcaac33cb3b8f678768aa70fb929e296cc653e7969"
+    },
+    "rspec-mocking": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/rspec/skills/rspec-mocking/SKILL.md",
+      "computedHash": "139901b4d78ff3f53230e3c5460fcb287b0d7e4e945275af6c77564e97cfa9af"
+    },
+    "rubocop-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/rubocop/skills/rubocop-configuration/SKILL.md",
+      "computedHash": "fbe083cd74814b1e20f61a3b662c0bc0b8b7e3278bf453164215dccc00142285"
+    },
+    "rubocop-cops": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/rubocop/skills/rubocop-cops/SKILL.md",
+      "computedHash": "a66b18d5ab9d6fff18d5bf913f1f04f8dc5f5013f1a4297d32858657e2b65e5e"
+    },
+    "rubocop-integration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/rubocop/skills/rubocop-integration/SKILL.md",
+      "computedHash": "2bc513dd8c073293e8e4e7f5f4488a019fe215e1919ef522f0ccc416a5695129"
+    },
+    "ruby-blocks-procs-lambdas": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/ruby/skills/ruby-blocks-procs-lambdas/SKILL.md",
+      "computedHash": "16292710cc48f5960e910132077efa0f3f804d75e2cb17c53f618d480cb57a02"
+    },
+    "ruby-gems-bundler": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/ruby/skills/ruby-gems-and-bundler/SKILL.md",
+      "computedHash": "4156d752d582c2b70e35e56e17213f8612eaa15a3a72fe6d9d49a52aeb8f00d1"
+    },
+    "ruby-metaprogramming": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/ruby/skills/ruby-metaprogramming/SKILL.md",
+      "computedHash": "1af210558e6eab65f7a3452488d87c4467968a1e04d17ca2fc750c28952dac3e"
+    },
+    "ruby-oop": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/ruby/skills/ruby-object-oriented-programming/SKILL.md",
+      "computedHash": "10909b7862e7e0389e854286bdcf4da70f96c95c7fdbb909fb69387e04d1012f"
+    },
+    "ruby-standard-library": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/ruby/skills/ruby-standard-library/SKILL.md",
+      "computedHash": "c4dd36f5152c29d32078b0acb800d6fe2e7285120fce350f851685aa4d20953f"
+    },
+    "runbooks-incident-response": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/runbooks/skills/incident-response/SKILL.md",
+      "computedHash": "8482ebac2d8711aec7adcde87abddab07cff659a336137e2733e300396489915"
+    },
+    "runbooks-structure": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/runbooks/skills/runbook-structure/SKILL.md",
+      "computedHash": "6d2eac958760612601f5cbf4f05bbe7b74b4b414ddbe2b13b2b8546098bb4018"
+    },
+    "runbooks-troubleshooting-guides": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/runbooks/skills/troubleshooting-guides/SKILL.md",
+      "computedHash": "7b82ec39052dab8d97a58e22b0c22ac6012ddd412b01b053b647ad4aaa9bee25"
+    },
+    "rust-async-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/rust/skills/rust-async-patterns/SKILL.md",
+      "computedHash": "f742cd6b0a1439d291210c446ade3f2adaabc19084308d413b47a6056d450632"
+    },
+    "rust-error-handling": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/rust/skills/rust-error-handling/SKILL.md",
+      "computedHash": "461eff1e976c9e07865e889fd38f1de6a8987c961b1d79c0abade9f454a6b06f"
+    },
+    "rust-ownership-system": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/rust/skills/rust-ownership-system/SKILL.md",
+      "computedHash": "bafb115cb2cf274e882d683946395af4f1ab94563d777e53de4a5eadd48efc94"
+    },
+    "scratch-workspace": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/scratch/skills/scratch-workspace/SKILL.md",
+      "computedHash": "33f536e6b3d4503cfca5ef9d9b4404f731f2d2dd674c903b8a093487bd4c1d78"
+    },
+    "scrub-issue": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/scrub-issue/SKILL.md",
+      "computedHash": "12d4953eeb13d842acafd1a99dfe4f832c274b09a17b9916483d949a0c4ca53d"
+    },
+    "search": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/clickup/skills/search/SKILL.md",
+      "computedHash": "eff390c2709af089c46e79524fa408de066c6b22663b8a3d93dbad0ff461a716"
+    },
+    "search-code": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/github/skills/search-code/SKILL.md",
+      "computedHash": "a5547848ee54e9a136ec2698b52dc6e620c254716afc2b7beb4d106dd57dc2bd"
+    },
+    "sentry-alerts-issues": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/sentry/skills/alerts-issues/SKILL.md",
+      "computedHash": "282bb63f7739d8dc28aefe585c86653b0bf4b4c6c4041cdccb98d8d48762dc5e"
+    },
+    "sentry-error-capturing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/sentry/skills/error-capturing/SKILL.md",
+      "computedHash": "0c7e7a6be3d2dc3939a529a74d09933c3d02a1ea71c5ff8b62ab256c0c3c90a8"
+    },
+    "sentry-performance-monitoring": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/sentry/skills/performance-monitoring/SKILL.md",
+      "computedHash": "3ce0b0494077ad84c112dbb1f0bce74ad61877f79ec801191416c1e5f8774be5"
+    },
+    "sentry-release-management": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/sentry/skills/release-management/SKILL.md",
+      "computedHash": "a08dcbf31725d0970c7415519a4872578c7687e33bec96edd748472be417aaee"
+    },
+    "sentry-sdk-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/sentry/skills/sdk-configuration/SKILL.md",
+      "computedHash": "f3b112a4860e7aeb0c2809f117b101b211d10ce1badfdaf76d509342145106c6"
+    },
+    "shadcn": {
+      "source": "shadcn/ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "computedHash": "f99ef49d9909d380ca683ceb8dc8c25775c20ee38140112c394e037d8c11ee18"
+    },
+    "shell-best-practices": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/shfmt/skills/shell-best-practices/SKILL.md",
+      "computedHash": "97ce7d5854291743646b4607a967934e2cb82df92a67de4756008c5990bf7b5a"
+    },
+    "shell-error-handling": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/shellcheck/skills/shell-error-handling/SKILL.md",
+      "computedHash": "93b20af08b5643f0d0ff774b4ba1e66c19add4bb128b69e877e596f5c54d03d0"
+    },
+    "shell-portability": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/shellcheck/skills/shell-portability/SKILL.md",
+      "computedHash": "47517e2e9aa081a0da55c25052e38cf1985e420fc1da6f799b838a9655ddb6ad"
+    },
+    "shell-scripting-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/shellcheck/skills/shell-scripting-fundamentals/SKILL.md",
+      "computedHash": "bde947db9f0f21a3e883530a7cbda73c6914ec4cabc0312c049f105349fe1e34"
+    },
+    "shfmt-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/shfmt/skills/shfmt-configuration/SKILL.md",
+      "computedHash": "f1fb5cec3c26621ac2740beefcc6a0fea58597409733acf9d0e4509a530f9f41"
+    },
+    "shfmt-formatting": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/validation/shfmt/skills/shfmt-formatting/SKILL.md",
+      "computedHash": "a041d2e34c7ebee5c5bd7dffc7edd7b092af8f00ebda4abac47fc3e16791e4ba"
+    },
+    "silent-execution": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/silent-execution/SKILL.md",
+      "computedHash": "57d6414aa00ca6ca1463c377dafc4aa10b1959271cd7ea7030615d61b0b70a6b"
+    },
+    "simplicity-principles": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/simplicity-principles/SKILL.md",
+      "computedHash": "8401248132eef0d3041ccc26c0816d6bb663415f5760717a8046fda9c80cf2df"
+    },
+    "sip-authentication-security": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/sip/skills/sip-authentication-security/SKILL.md",
+      "computedHash": "088a55af9a1697ddc7cc383ea7bf82c426d05a15f0de56132d35b9a62a58a327"
+    },
+    "sip-media-negotiation": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/sip/skills/sip-media-negotiation/SKILL.md",
+      "computedHash": "84c8e9b76cb97ab2dd08e2f848d8819a553d835c3bc533ace8cf4185bb0d8b6b"
+    },
+    "sip-protocol-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/sip/skills/sip-protocol-fundamentals/SKILL.md",
+      "computedHash": "9088c509da070c87bbad07ec8d0f3ffca8ba00538c434ea153dfb8cd6b4c065a"
+    },
+    "skill-writer": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/skill-writer/SKILL.md",
+      "computedHash": "5059bf429782542c97c70dfdef3d12a3a3e9a34eb6c61ee42d15863896706cae"
+    },
+    "solid-principles": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/solid-principles/SKILL.md",
+      "computedHash": "3188df08407dd45dddbed592cb27e8c156f802999f88c9ad08b0fbf090f220bb"
+    },
+    "sop-authoring": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/agent-sop/skills/sop-authoring/SKILL.md",
+      "computedHash": "e3c5d2bbe86354aceac9834d142c9bc2fbc06f1e046e2766429946573b62af41"
+    },
+    "sop-maintenance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/agent-sop/skills/sop-maintenance/SKILL.md",
+      "computedHash": "d40ff1f7647a92d1c20b5c418eb7474dd87586b03b881a6e1bee3ab81a8957cf"
+    },
+    "sop-rfc2119": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/agent-sop/skills/sop-rfc2119/SKILL.md",
+      "computedHash": "b9a555e78faed254dea6d867c02de84816eea11fd8b2457efb848881c888a8c1"
+    },
+    "sop-structure": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/agent-sop/skills/sop-structure/SKILL.md",
+      "computedHash": "2bd6c59385656622eea7cbcbeade80943a08368af754851f10ac1749aef8c99e"
+    },
+    "sre-incident-response": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/disciplines/site-reliability-engineering/skills/sre-incident-response/SKILL.md",
+      "computedHash": "8b6f0b24f9a49a18fc391e4332886fc36aca68499edc30cb2cbb1c0e48d45069"
+    },
+    "sre-monitoring-and-observability": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/disciplines/site-reliability-engineering/skills/sre-monitoring/SKILL.md",
+      "computedHash": "13c7144bc3817d09ab8b6e8eef0e3624c97e59fbcd71432a6dfc9e7b4ce1bb42"
+    },
+    "sre-reliability-engineering": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/disciplines/site-reliability-engineering/skills/sre-reliability/SKILL.md",
+      "computedHash": "2a3c443913c2181e7957248f2bdab25c4b08e8e992c3a9a89e40edb8a40cdbfd"
+    },
+    "start": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/clickup/skills/start/SKILL.md",
+      "computedHash": "be44a0e7f13327fdcdd0fd616fc4b50ef75b68c7d8230b15ccdb4d0e9e9a964b"
+    },
+    "stitch-design-taste": {
+      "source": "Leonxlnx/taste-skill",
+      "sourceType": "github",
+      "skillPath": "skills/stitch-skill/SKILL.md",
+      "computedHash": "c96b580192b34167efa01f460bbc669ff4315cf97f3cf6ff85ded8029aa720b8"
+    },
+    "storybook-args-controls": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/storybook/skills/storybook-args-controls/SKILL.md",
+      "computedHash": "94daa6b5ae681620162fca6804a6104e41d59f073765c030357c52e1292f0d87"
+    },
+    "storybook-component-documentation": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/storybook/skills/storybook-component-documentation/SKILL.md",
+      "computedHash": "3bb8d6fc62be3dd7d71196985333caf5ed0a61f225bfc2389b9df793530be1b3"
+    },
+    "storybook-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/storybook/skills/storybook-configuration/SKILL.md",
+      "computedHash": "c0f43c05823b8739917d3ada3acc353da4baa4186357defc877b4a1d20519ebb"
+    },
+    "storybook-play-functions": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/storybook/skills/storybook-play-functions/SKILL.md",
+      "computedHash": "2f05acd65738ce830fdbee5cd336625ecac53b6ff01fa53e37757cf5a4b8ce24"
+    },
+    "storybook-story-writing": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/storybook/skills/storybook-story-writing/SKILL.md",
+      "computedHash": "8f9e1241e22e0dc92c8c8d64687b73c1d895f51fb6073c7987e2a2a1bb850053"
+    },
+    "structural-design-principles": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/structural-design-principles/SKILL.md",
+      "computedHash": "49dbae53d09d80e19262e1d79dbd7f594f9c8de966f9a5329f432e6b5a7574b5"
+    },
+    "subagent-driven-development": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/subagent-driven-development/SKILL.md",
+      "computedHash": "988e6ae6fa0e6a3ab7cba613662d75e80f193259576f2ede379461bfc40aa7d7"
+    },
+    "svelteflow-custom-nodes": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/svelteflow/skills/svelteflow-custom-nodes/SKILL.md",
+      "computedHash": "9ea2e3d83fe0d5267159877c781ac11d4a79b8a3f4f187880485e53d852ba675"
+    },
+    "svelteflow-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/svelteflow/skills/svelteflow-fundamentals/SKILL.md",
+      "computedHash": "fa8cd34b9093ebaf658489b7d166a17b592cfdec9c902825e99af1d526b19b83"
+    },
+    "syncpack-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/syncpack/skills/syncpack-configuration/SKILL.md",
+      "computedHash": "974a340d7d804cde8422f672b5b654b8b919e498220760eef68c769d775b81cb"
+    },
+    "syncpack-version-groups": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/syncpack/skills/syncpack-version-groups/SKILL.md",
+      "computedHash": "aa8a8a960612223076270c50b437c0a2a13b17d88928d0e61b2bbe6d5af29ed6"
+    },
+    "systematic-debugging": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/systematic-debugging/SKILL.md",
+      "computedHash": "a2750dfbaed1690da73b120254892c4f926b4576cb82eb16fc877783941fe39b"
+    },
+    "tailwind-components": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/tailwind/skills/tailwind-components/SKILL.md",
+      "computedHash": "d8e731d5f2d90f1085207a645d2182ea609ccea504ac64f541a205fe94133eb9"
+    },
+    "tailwind-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/tailwind/skills/tailwind-configuration/SKILL.md",
+      "computedHash": "7fa80339cabb7d321e93bc775d4ad432d8bb22606feb072321ee539156bf48d7"
+    },
+    "tailwind-performance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/tailwind/skills/tailwind-performance/SKILL.md",
+      "computedHash": "bb2656d769bb507b7eb58e09c99c54fa9bcb61da6bc2233712e6e60af25edf37"
+    },
+    "tailwind-responsive-design": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/tailwind/skills/tailwind-responsive-design/SKILL.md",
+      "computedHash": "af0bb020cb20b61a1268a04d899573a3a2000c1d32bcc9ac6353f7b30c52d7c6"
+    },
+    "tailwind-utility-classes": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/tailwind/skills/tailwind-utility-classes/SKILL.md",
+      "computedHash": "091853f22b578da38ea0cae70fdb9d257633880e501b9f952f02c422de3264b5"
+    },
+    "task": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/clickup/skills/task/SKILL.md",
+      "computedHash": "98c42fa340fb47543c8a66f91b5e9c5f73118c72d042cd4d804abd32894f3fc7"
+    },
+    "tensorflow-data-pipelines": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/tensorflow/skills/tensorflow-data-pipelines/SKILL.md",
+      "computedHash": "5d00aa0b4f4958ba0d11378741b43b70faa76bd426546643c0429efc05a9cda8"
+    },
+    "tensorflow-model-deployment": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/tensorflow/skills/tensorflow-model-deployment/SKILL.md",
+      "computedHash": "4d5045d57745f5b55b9eacb1e0c818ca22ab686ba4343c8c28d194b13fd5a6d2"
+    },
+    "tensorflow-neural-networks": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/specialized/tensorflow/skills/tensorflow-neural-networks/SKILL.md",
+      "computedHash": "20d56198fe6c0ce66960f555e908663a97b418dd58ab1a5947bf95b484c1f2ef"
+    },
+    "terraform-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/terraform/skills/terraform-configuration/SKILL.md",
+      "computedHash": "31924fdef16bebe47bab79c469912cdc3a1d96dd106ce1db32ce2df8dea7a27e"
+    },
+    "terraform-modules": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/terraform/skills/terraform-modules/SKILL.md",
+      "computedHash": "273829f6d5628317700840c5e9fd0632899093feaff41c92821a58ddc852601a"
+    },
+    "terraform-state": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/terraform/skills/terraform-state/SKILL.md",
+      "computedHash": "c448ede7d9ede5fc2cef8f5c81270e26a273da8ddb4803debe449abc25558cf8"
+    },
+    "test": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/test/SKILL.md",
+      "computedHash": "920735cc3b4227348949798034f9d0a48678fbeee9fb9dc50a886a6cbe188b23"
+    },
+    "test-driven-development": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/patterns/tdd/skills/test-driven-development/SKILL.md",
+      "computedHash": "5ea32ea84248515c6bd64992780cab8f342e00d985f9935335e5be4f72d2cb70"
+    },
+    "testng-data-driven": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/testng/skills/testng-data-driven/SKILL.md",
+      "computedHash": "e267552c95162c5a444905f49d262a36ab968acdb34e9acac35497e4674edb78"
+    },
+    "testng-fundamentals": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/testng/skills/testng-fundamentals/SKILL.md",
+      "computedHash": "282a25e29fe0190d1b620ea60b1ff06a0953b987f3acb7adaa4892d9fbdfb442"
+    },
+    "testng-parallel": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/testng/skills/testng-parallel/SKILL.md",
+      "computedHash": "9e51ce3933e0bd2fbd5f9bf0757d10f7c051359d50f6af76340b410fd3b1f74d"
+    },
+    "ticket": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/jira/skills/ticket/SKILL.md",
+      "computedHash": "d8dd9cef95457b77822020103a688cce359afe5a98c5a597ef60ae08fbd916bd"
+    },
+    "token-efficiency": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/core/skills/token-efficiency/SKILL.md",
+      "computedHash": "a749ddb874ff8bc3227a5a53a87ea5f58d0c92de8137d6247b04f96890ca68df"
+    },
+    "train-sentence-transformers": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/train-sentence-transformers/SKILL.md",
+      "computedHash": "a4cb483748d9ca2b9d3faa1340e3896389a95798a5dae1aeef13df2b1c31af56"
+    },
+    "transformers-js": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/transformers-js/SKILL.md",
+      "computedHash": "1fca591721276bc2bc240759320a10ed5165602c9dd639265d359acee5fb6388"
+    },
+    "triaging-issues": {
+      "source": "pytorch/pytorch",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/triaging-issues/SKILL.md",
+      "computedHash": "be1e26bc9e04748eb425aad839bf3a07af1158f4f8b3a13c1fc7d2256b979322"
+    },
+    "trl-training": {
+      "source": "huggingface/skills",
+      "sourceType": "github",
+      "skillPath": "skills/trl-training/SKILL.md",
+      "computedHash": "fe269c4624638e85b9bfece55cf55b978d52b908d0f6e611626fa9445d2052f7"
+    },
+    "typescript-async-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/typescript/skills/typescript-async-patterns/SKILL.md",
+      "computedHash": "bd74ad509718e02fa1ba1333e615d53fbfab7712623e0b6123102fb36ac322c2"
+    },
+    "typescript-type-system": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/typescript/skills/typescript-typescript-type-system/SKILL.md",
+      "computedHash": "738b63ba2effa4b2c7434976e27c60767b3c0b63de375631d8044f613f4606db"
+    },
+    "typescript-utility-types": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/languages/typescript/skills/typescript-utility-types/SKILL.md",
+      "computedHash": "7eb566f23a7ddbf7abd151df7915b3a3ac449edea17c8e89946ddf976d182974"
+    },
+    "update-sop": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/agent-sop/skills/update-sop/SKILL.md",
+      "computedHash": "88041e0cea6cd3954d82fa00fd03304602508fabef995a8fd8eaf297d9bc4fb3"
+    },
+    "using-git-worktrees": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/using-git-worktrees/SKILL.md",
+      "computedHash": "48c8a1040e378e0cb7208107294e3afa9067b9370c3f33b49a443eb6b7528b0d"
+    },
+    "using-superpowers": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/using-superpowers/SKILL.md",
+      "computedHash": "c7abe8bdc2099bbe4f245454d32c7563ccd2bb41dcc218b02b461c2acc3c6ae6"
+    },
+    "validate": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/clickup/skills/validate/SKILL.md",
+      "computedHash": "2bfe6fdf9e42377d976ec71b679144e977471c0a0f3d9e017c54be2666af894f"
+    },
+    "vercel-cli-with-tokens": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/vercel-cli-with-tokens/SKILL.md",
+      "computedHash": "eb16b20dcbe6ce51e0372083d624e0847af1b09487ec99249227d5a8eddebfc0"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/composition-patterns/SKILL.md",
+      "computedHash": "575757e3e25761c8c562d6e395d29f0b76c98b1273c0bd72d88e6ab1bc9c7d42"
+    },
+    "vercel-optimize": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/vercel-optimize/SKILL.md",
+      "computedHash": "ad0ef9c5c980f824e2ec19cba5c45426aba923a17e71fbaf6d1830574b62cc44"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "ca7b0c0c6e5f2750043f7f0cd72d16ac4e2abc48f9b5500d047a4b77a2506212"
+    },
+    "vercel-react-native-skills": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-native-skills/SKILL.md",
+      "computedHash": "41d24eafa7c3d82e270439808f7cfbc4d51aeb2d14f2809a2267c16275784d06"
+    },
+    "vercel-react-view-transitions": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-view-transitions/SKILL.md",
+      "computedHash": "b1be40dfc6e714612020c7583b574cc4c92a1b5bc185a7dd3eea5c0123653d1c"
+    },
+    "verification-before-completion": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/verification-before-completion/SKILL.md",
+      "computedHash": "b529822bdac4b197b180fe12225cff86b930b65910435103c10622df7f041651"
+    },
+    "view-pipeline": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/gitlab/skills/view-pipeline/SKILL.md",
+      "computedHash": "b25e46ad09b87a044e9767c633eef095a3b1fb6f927445f079f52b87e85f136c"
+    },
+    "view-workflow": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/services/github/skills/view-workflow/SKILL.md",
+      "computedHash": "2dc9069baba8234cff2b226c64dc7d0bed90307a93fbd074fe54f3a2cd05e9c4"
+    },
+    "vitest-configuration": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/vitest/skills/vitest-configuration/SKILL.md",
+      "computedHash": "d7c2d8d874ad301a055994a97c95fd1ea6f74e64133689f348a339eb6045e993"
+    },
+    "vitest-performance": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/vitest/skills/vitest-performance/SKILL.md",
+      "computedHash": "f9a788ccefef532eec576d87f68fec0434d15702e98373a4623b1a0b79dd7e02"
+    },
+    "vitest-testing-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/tools/vitest/skills/vitest-testing-patterns/SKILL.md",
+      "computedHash": "4a2a3cfe03dd0a32e25499add99f8a9545096d44010ce8a2cc29180e4b08065a"
+    },
+    "vue-component-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/vue/skills/vue-component-patterns/SKILL.md",
+      "computedHash": "20ae55e010d0bcef997e005c34ae0de67bd7b42c46c8650683b194804cf9d8c6"
+    },
+    "vue-composition-api": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/vue/skills/vue-composition-api/SKILL.md",
+      "computedHash": "4435300af7332a1fdcb3277b0ac4692eacb03b0787e5c67e4fdc07a11b23ec2b"
+    },
+    "vue-reactivity-system": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/vue/skills/vue-reactivity-system/SKILL.md",
+      "computedHash": "567640d1203442d58ceccdb1678a86c0ef2a6dbc289b92e79c21806b362fcd3a"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
+    },
+    "webgpu-threejs-tsl": {
+      "source": "dgreenheck/webgpu-claude-skill",
+      "sourceType": "github",
+      "skillPath": "skills/webgpu-threejs-tsl/SKILL.md",
+      "computedHash": "1467f5e3e4748c70c0e72e391c4f1bd535c5e09ad3b275dc429186b582c70f0f"
+    },
+    "writing-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/writing-guidelines/SKILL.md",
+      "computedHash": "25aa3a33a97bddbcb1847ce4a6169106ec25e5b19b15b99c66e75ab383866ef2"
+    },
+    "writing-plans": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/writing-plans/SKILL.md",
+      "computedHash": "27c75044e444a4fc68798c3f799dc23eaff3a6bfabff32e6ad75bb20f881c094"
+    },
+    "writing-skills": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/writing-skills/SKILL.md",
+      "computedHash": "5f255b9c0d50d6d7eafa41b245b9308799321c5222bc68b1be2499f50ed82713"
+    },
+    "zustand-advanced-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/zustand/skills/zustand-advanced-patterns/SKILL.md",
+      "computedHash": "9741de60f25f52d26355ae1ab93644d9e41163e758ef624cd9fc55a92d050b11"
+    },
+    "zustand-middleware": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/zustand/skills/zustand-middleware/SKILL.md",
+      "computedHash": "baae426ad728c91a755c09a064c648fcab096ad76c28ddd0e5eb28d06d4d3518"
+    },
+    "zustand-store-patterns": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/zustand/skills/zustand-store-patterns/SKILL.md",
+      "computedHash": "691191e843d9abcf0bb8b4f578cb64a21d8cf254cea77eca5d5153efbec137a2"
+    },
+    "zustand-typescript": {
+      "source": "TheBushidoCollective/han",
+      "sourceType": "github",
+      "skillPath": "plugins/frameworks/zustand/skills/zustand-typescript/SKILL.md",
+      "computedHash": "1a5580d1240449e804ca8f3702d2963bdacf7594521f5a878755db6c3fb96e57"
+    }
+  }
+}
