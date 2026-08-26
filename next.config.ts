@@ -13,6 +13,15 @@ const nextConfig: NextConfig = {
       layers: true
     };
 
+    // Transformers.js: avoid bundling Node-only backends into the client bundle
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        sharp: false,
+        'onnxruntime-node': false
+      };
+    }
+
     // Prevent server-side compilation of browser workers
     if (isServer) {
       config.resolve.fallback = {
