@@ -6,6 +6,7 @@ docs/.last-machine
 
 # Freebuff local state (not part of the project)
 .freebuff/
+.claude/
 
 # Dependencies / package managers
 node_modules/
@@ -28,7 +29,6 @@ venv/
 
 # Tooling / build artifacts
 .audit/
-.agents/
 .vite/
 coverage/
 .playwright-cli/
