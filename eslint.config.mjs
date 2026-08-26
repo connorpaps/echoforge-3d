@@ -10,6 +10,15 @@ const eslintConfig = [
     extends: ['next/core-web-vitals', 'next/typescript'],
   }),
   {
+    rules: {
+      // Idiomatic: parameters/vars prefixed with _ are intentionally unused
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
+    },
+  },
+  {
     ignores: [
       'node_modules/**',
       '.next/**',
