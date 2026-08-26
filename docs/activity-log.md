@@ -1268,3 +1268,11 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
 **chore: restrict sdxl-turbo pre-cache to fp16 weights**
 
   - backend/scripts/download_models.py
+
+## 2026-08-25 21:36 — `37aab9e`
+**docs: close out phase 0 plan and update session memory**
+
+  - docs/activity-log.md
+  - docs/plans/2026-08-25-phase-0-initialization.md
+  - handoff.md
+  - knowledge.md
