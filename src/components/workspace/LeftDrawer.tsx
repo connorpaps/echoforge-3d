@@ -3,11 +3,12 @@
 import { GlassPanel } from '@/components/ui/GlassPanel';
 import { KeycapBadge } from '@/components/ui/KeycapBadge';
 import { SectionLabel } from '@/components/ui/SectionLabel';
+import { PromptBar } from '@/components/workspace/PromptBar';
 
 /**
- * Left creation drawer (DESIGN.md §5). Task 1.3 replaces the voice-pill
- * stub; Task 1.4 replaces the topo-canvas stub; the scene inspector fills
- * in with the entity store as generation lands (Phase 2+).
+ * Left creation drawer (DESIGN.md §5). Task 1.4 replaces the topo-canvas
+ * stub; the scene inspector fills in with the entity store as generation
+ * lands (Phase 2+).
  */
 export function LeftDrawer() {
   return (
@@ -27,16 +28,8 @@ export function LeftDrawer() {
         </p>
       </GlassPanel>
 
-      {/* Voice & text prompt input — stub, wired in Task 1.3 */}
-      <GlassPanel className="p-3">
-        <SectionLabel>Prompt</SectionLabel>
-        <div
-          data-testid="voice-pill"
-          className="mt-2 flex h-10 items-center gap-2 rounded-md border border-border-subtle bg-bg-elevated px-3 text-xs text-text-secondary"
-        >
-          Hold <KeycapBadge>M</KeycapBadge> to Speak
-        </div>
-      </GlassPanel>
+      {/* Voice & text prompt input (Task 1.3) */}
+      <PromptBar />
 
       {/* Scene entity inspector */}
       <GlassPanel className="flex-1 p-3">
