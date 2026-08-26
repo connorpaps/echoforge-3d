@@ -20,8 +20,10 @@ This repo uses git-tracked files as its cross-session AI memory. **Freebuff read
 **Automatic memory (no input needed):** a git `post-commit` hook (`.githooks/post-commit`) appends every commit to `docs/activity-log.md` and auto-captures fix/error commits into `docs/lessons-learned.md`; `node scripts/memory-watcher.mjs` (optional) logs every file save to `docs/activity-watch.log` (gitignored). These are mechanical records — the agent still owns writing the *why* into `handoff.md`/this file.
 
 ## Commands
-- Install (frontend): `pnpm install`
-- Install (backend): `pip install -r backend/requirements.txt`
+- Install (frontend): `pnpm install` (pnpm 11; allowBuilds config lives in `pnpm-workspace.yaml`)
+- Install (backend, venv): `python -m venv .venv && .venv/Scripts/python.exe -m pip install -r backend/requirements.txt` (Windows: `.venv/Scripts/python.exe`; POSIX: `.venv/bin/python`)
+- **CUDA torch:** PyPI defaults to CPU wheels — install CUDA builds from `--index-url https://download.pytorch.org/whl/cu121` (see note in backend/requirements.txt)
+- Model pre-cache: `.venv/Scripts/python.exe backend/scripts/download_models.py` (cache defaults to project-local `.hf-cache/`, override via HF_HOME; AudioGen requires HF_TOKEN)
 - Development (frontend): `pnpm dev` (Next.js on http://localhost:3000)
 - Development (backend): `uvicorn backend.main:app --reload --port 8000`
 - Test (frontend): `pnpm test`
@@ -33,6 +35,8 @@ This repo uses git-tracked files as its cross-session AI memory. **Freebuff read
 
 ## Architecture and behavior
 - **Source of truth:** consult `docs/01_PRD.md` through `docs/08_TASKS.md` before writing new features; visual tokens live in `DESIGN.md`; the task roadmap is `docs/08_TASKS.md`.
+- 14-repo skill matrix installed (471 skills) in `.agents/skills/` — committed to git; reinstall/restore via `skills-lock.json` (`npx skills experimental_install`). AGENTS.md §3 routes tasks to specific skills.
+- `.claude/` (per-agent symlinks) and `.hf-cache/` are gitignored; `.agents/` IS versioned.
 - Frontend uses `pnpm`, not `npm`.
 - Machine learning inference in the browser runs in dedicated Web Workers (never the main thread).
 - Backend heavy models route through `SequentialVRAMManager`; never load multiple heavy PyTorch models concurrently on CUDA.
@@ -44,3 +48,7 @@ This repo uses git-tracked files as its cross-session AI memory. **Freebuff read
 - **Design adherence:** all UI must match `DESIGN.md`; no generic AI purple gradients or pure `#000000` backgrounds.
 - **Diagnose first:** log root cause before patching; 3 consecutive identical build/test failures = stop and report.
 - Never commit secrets (`.env` files). Never hand-edit `node_modules`, `.next/`, or other build output.
+- **C: drive is 100% full (137MB free)** on this machine — keep big downloads (HF cache, node_modules, venv) on G: and flag disk pressure early. Stale 40GB HF cache at `C:/Users/Conno/.cache/huggingface`.
+- **HF cache on Windows without Developer Mode:** symlinks unsupported — huggingface_hub falls back to copies (degraded, uses ~2x space; warning is benign). Enable Developer Mode to avoid it.
+- **audiocraft==1.3.0 pins torch==2.1.0** — conflicts with the spec's torch 2.5.0; install with `--no-deps` + runtime extras when AudioGen integration lands (Phase 2).
+- **sdxl-turbo repo ships fp32 + fp16** — pre-cache fetches only `*.fp16.safetensors` (spec loads `variant="fp16"`).

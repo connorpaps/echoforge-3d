@@ -1,7 +1,7 @@
 # Phase 0 Initialization Plan — EchoForge 3D
 
 **Date:** 2026-08-25
-**Status:** Ready for approval (execution gated on approval)
+**Status:** ✅ COMPLETE — executed 2026-08-25 (all tasks verified exit 0)
 **Governing skills (installed):** `superpowers/writing-plans`, `superpowers/executing-plans`, `superpowers/verification-before-completion`, `superpowers/systematic-debugging`, `vercel-react-best-practices`, `r3f-fundamentals`, `pytorch/pytorch`, `api-design`, `transformers-js`
 **Spec source:** `docs/08_TASKS.md` Phase 0 (Tasks 0.1, 0.3, 0.4), `docs/03_TECH_SPEC.md`, `docs/07_SECURITY_AND_ENV.md`
 
@@ -234,3 +234,20 @@ On any failure: `systematic-debugging` (log root cause -> research -> minimal fi
 - `pnpm typecheck` is a no-op gate until Phase 1 adds `src/` sources (Task 1.1+), per DoD note in `docs/08_TASKS.md`.
 
 **Session-end memory ritual (after final commit):** append "Work completed" to `handoff.md`, update `knowledge.md` with new commands, expand any auto-captured lessons (post-commit hook runs automatically).
+
+## Execution results (2026-08-25)
+
+| # | Task | Result |
+| :-- | :-- | :-- |
+| 1 | 0.1 tree + .gitignore + .gitkeep | ✅ commit c21f834 |
+| 2 | 0.2 skills + lockfile | ✅ commit 7a5877e (471 skills) |
+| 3 | 0.3a pnpm | ✅ pnpm 11.24.0 (npm i -g) |
+| 4 | 0.3b frontend manifests + install | ✅ commit 067c98d; tsc exit 0; Playwright chromium installed |
+| 5 | 0.3c backend venv + requirements | ✅ commit 3559b15; CUDA Available: True (RTX 2070, 8GB) |
+| 6 | 0.4 pre-cache script | ✅ commits b439b1b, 29dc267; TripoSR + SDXL-Turbo(fp16) + SmolVLM cached (19GB); AudioGen deferred (gated) |
+
+**Notes / deviations (documented):**
+- `audiocraft==1.3.0` removed from the main pip resolution (pins torch==2.1.0); deferred to Phase 2 install with `--no-deps`.
+- torch/torchvision reinstalled from `https://download.pytorch.org/whl/cu121` (PyPI defaults to CPU wheels).
+- HF cache redirected to project-local `.hf-cache/` because C: is 100% full (137MB free, pre-existing 40GB cache).
+- sdxl-turbo pre-cache restricted to fp16 weights (39GB -> 14GB).
