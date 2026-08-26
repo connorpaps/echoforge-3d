@@ -31,7 +31,7 @@ MODELS = [
     },
     {
         "repo_id": "stabilityai/sdxl-turbo",
-        "allow_patterns": ["*.json", "*.safetensors", "*.txt"],
+        "allow_patterns": ["*.json", "*.fp16.safetensors", "*.txt"],  # fp16 only (spec loads SDXL with variant="fp16")
     },
     {
         "repo_id": "facebook/audiogen-medium",
