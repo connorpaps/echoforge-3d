@@ -1,3 +1,6 @@
+# EchoForge 3D — backend AI microservice dependencies
+# Install with:  .venv/Scripts/python.exe -m pip install -r backend/requirements.txt
+
 fastapi==0.115.0
 uvicorn[standard]==0.32.0
 torch==2.5.0
@@ -14,7 +17,30 @@ pytest==8.3.3
 # PyPI publishes CPU and CUDA wheels with the same version; pip defaults to CPU.
 # Install CUDA builds with:
 #   pip install torch==2.5.0 torchvision==0.20.0 --index-url https://download.pytorch.org/whl/cu121
+
+# --- Phase 2 additions (TripoSR + SDXL-Turbo runtime) ---------------------------
+# TripoSR pipeline (vendored in backend/vendor/tsr) runtime deps:
+einops==0.8.0
+omegaconf==2.3.0
+imageio==2.36.1
+# Marching-cubes surface extraction: PyMCubes (C++ wheel) preferred; the
+# skimage fallback (scikit-image) is used only if PyMCubes is unavailable.
+PyMCubes==0.1.6
+scikit-image>=0.24.0
+# Quadric mesh decimation backend for trimesh.simplify_quadric_decimation.
+fast-simplification>=1.0.0
+# Test tooling:
+httpx>=0.27.0
+pytest-asyncio>=0.24.0
+
+# --- Optional / deferred --------------------------------------------------------
+# torchmcubes (CUDA marching cubes) is a source-only build (needs MSVC + libtorch
+# ABI); the backend shim (backend/shims/torchmcubes_stub.py) uses PyMCubes or
+# skimage instead, so it is intentionally NOT required.
+# xatlas / moderngl: only needed for UV-atlas texture baking (tsr/bake_texture.py),
+# which v1 does not use (vertex colors are exported directly).
+#
 # NOTE: audiocraft==1.3.0 is intentionally NOT in the main resolution.
 # It pins torch==2.1.0 / torchvision==0.16.0 / torchtext==0.16.0 / xformers<0.0.23,
 # which conflict with this spec's torch 2.5.0 stack. Install it separately in
-# Phase 2 (AudioGen integration) with --no-deps plus its runtime extras.
+# Phase 3 (AudioGen integration) with --no-deps plus its runtime extras.
