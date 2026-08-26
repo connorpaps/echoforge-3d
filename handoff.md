@@ -68,13 +68,20 @@ stages of Phase 0 complete: workspace tree, 471 skills, frontend manifests + loc
 - `pnpm typecheck` — passes (no src/ sources yet; gate bites from Task 1.1)
 - `pnpm test` — n/a (no tests yet)
 
-## Prioritized next steps
+## Prioritized next steps (Phase 3)
 
-1. Phase 2 — backend AI services: FastAPI app skeleton (`backend.main:app`), SequentialVRAMManager, TripoSR/SDXL endpoints (docs/08 Task 2.x). audiocraft (`--no-deps`, pins torch==2.1.0) when AudioGen lands.
-2. Phase 2/3 — wire the real Depth-Anything worker to CUJ-02 (voice → topo → terrain) with real weights; currently only the mock seam is e2e-tested.
-3. Provide HF_TOKEN (with AudioGen license accepted) to finish the pre-cache: `HF_TOKEN=... .venv/Scripts/python.exe backend/scripts/download_models.py`
-4. Free disk space on C: (currently 100% full, ~1.5GB free) — the stale 40GB HF cache at `C:/Users/Conno/.cache/huggingface` is a candidate for cleanup.
-5. Before shipping: verify WebGPU path on a real GPU (e2e runs SwiftShader software WebGL); re-check `world.castRay` on a rapier upgrade before using it for gameplay queries.
+1. Phase 3 — AudioGen endpoint (`facebook/audiogen-medium`, gated): install with `--no-deps` + runtime extras (pins torch==2.1.0); wire `/api/v1/generate-audio` + the loopable `.wav` contract.
+2. Wire the real Depth-Anything worker to CUJ-02 (voice → topo → terrain) with real weights; the mock seam is e2e-tested but the real path isn't.
+3. Provide HF_TOKEN (with AudioGen license accepted) to finish the pre-cache: `HF_TOKEN=... .venv/Scripts/python.exe backend/scripts/download_models.py`.
+4. Before shipping: verify the WebGPU path on a real GPU (e2e runs SwiftShader software WebGL); re-check `world.castRay` on a rapier upgrade before gameplay use.
+5. Backend run command now needs the relocated cache (new shells get `HF_HOME` via setx): `HF_HOME=G:\\hf-cache .venv/Scripts/python.exe -m uvicorn backend.main:app --port 8000`.
+
+## Phase 2 delivered this session
+
+- FastAPI microservice (`backend.main:app`): `/health`, `/api/v1/generate-mesh` (TripoSR), `/api/v1/generate-texture` (SDXL-Turbo), `/ws/progress` — all behind `SequentialVRAMManager` (serial, <6 GB peak).
+- Mesh pipeline: decimation ≤20k faces, Laplacian, hulls, bounds, GLB with vertex colors.
+- Frontend generation UI: image upload + generate buttons, emerald shimmer pill, glass success/error toasts, TopBar VRAM meter (Task 2.5).
+- Caches relocated to G: (HF/pip/npm/playwright); C: freed 5.8 GB → 60.9 GB.
 
 ## Session handoff checklist
 

@@ -62,3 +62,31 @@ The dim3 wasm `heightfield` binding differs from the documented API in three way
 - **HF cache on Windows without Developer Mode:** symlinks unsupported — huggingface_hub falls back to copies (degraded, uses ~2x space; warning is benign). Enable Developer Mode to avoid it.
 - **audiocraft==1.3.0 pins torch==2.1.0** — conflicts with the spec's torch 2.5.0; install with `--no-deps` + runtime extras when AudioGen integration lands (Phase 2).
 - **sdxl-turbo repo ships fp32 + fp16** — pre-cache fetches only `*.fp16.safetensors` (spec loads `variant="fp16"`).
+
+## Phase 2 backend + generation UI (verified 2026-08-26)
+
+- **SDXL-Turbo on 8 GB VRAM:** the fp16 pipeline is ~6.6 GB of weights (UNet
+  4.9 GB), so plain `.to(cuda)` thrashes — a 1-step job takes 40s+. Always use
+  `pipe.enable_model_cpu_offload()` + `enable_vae_slicing()` + `enable_vae_tiling()`
+  (peak ~5.3 GB, ~10s at 512²). `backend/services/sdxl_service.py` encodes this.
+- **diffusers 0.31 callback changes:** legacy `callback` requires `callback_steps`
+  and the signature dropped the `pipe` arg (now `(step, timestep, latents)`).
+  Prefer `callback_on_step_end(pipe, step, timestep, kwargs)`.
+- **TripoSR fp16:** the vendored renderer mixes fp32 `torch.linspace` grid
+  vertices with the decoder — cast image input + grid vertices + MC output to the
+  model dtype (patched in `backend/vendor/tsr/system.py`). fp16 + `chunk_size
+  16384` + resolution 192 + PyMCubes: extract ~3s (was ~200s at fp32/256/skimage).
+- **torchmcubes is source-only (MSVC+libtorch ABI):** use `PyMCubes` (C++ wheel)
+  or skimage via `backend/shims/torchmcubes_stub.py`; register it in `sys.modules`
+  before importing the vendored `tsr` package.
+- **Backend packaging:** `backend` is a real package (`__init__.py`); tests run
+  via `backend/pytest.ini` with `pythonpath = ..` (project root). Vendored code
+  lives in `backend/vendor/` (see README there for the patch list).
+- **Cache relocation:** HF cache → `G:\hf-cache` (persistent `HF_HOME`), pip →
+  `G:\pip-cache`, npm → `G:\npm-cache`, Playwright → `G:\ms-playwright`
+  (`PLAYWRIGHT_BROWSERS_PATH`). Windows HF caches store snapshots as symlinks;
+  robocopy dereferences them — verify snapshot files landed and repair dangling
+  refs (copy blob → snapshot path) after a move.
+- **E2E generation mock seam:** `src/lib/api/generate.ts` gates on
+  `isE2EMode()` (from `workerRegistry`) and drives a scripted progress timeline
+  through an in-process bus so the shimmer/toast UI is e2e-testable with no GPU.
