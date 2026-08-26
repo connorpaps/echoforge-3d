@@ -24,6 +24,17 @@ EchoForge 3D is a browser-based 3D creative suite: draw 2D topographic elevation
 - Enriched one auto-captured lesson from a real `fix(...)` test commit (executable bit on hook/scripts wasn't captured by git on Windows).
 - All plumbing verified: hook setup clean, activity-log appended on every commit, lessons auto-capture fired on a fix commit and was enriched, skip guard prevents feedback loops, machine-sync exits 0, watcher smoke test passed, `.gitignore` catch correct.
 
+### 3. Phase 1 foundation (this session) — COMPLETE
+- **Stack upgrade (approved):** three 0.185 / R3F 9.7 / drei 10 / rapier 2.2 / react-resizable-panels. WebGL default; WebGPU via async `gl` factory behind `NEXT_PUBLIC_ENABLE_WEBGPU`; all materials TSL (`MeshStandardNodeMaterial` from `three/webgpu`).
+- **App shell:** `src/app` layout/page, Tailwind v4 tokens from DESIGN.md, resizable workstation (TopBar/BottomBar/LeftDrawer + resizable viewport), UI primitives (GlassPanel, IconButton, StatusPill, KeycapBadge, TelemetryText, SectionLabel), zustand stores (scene/ui), hotkey map (Tab mode switch, M push-to-talk).
+- **Worker infra:** typed `createWorkerClient`/`createWorker` factory + static URL registry + `useWorker` hook; depth/speech/tts workers (transformers.js / kokoro-js), requestId/READY handshake, zero-copy ArrayBuffers.
+- **Speech (Task 1.3):** MediaRecorder audio layer, `useSpeechRecognition` hook, VoicePill + PromptBar (M = push-to-talk; mock seam via `NEXT_PUBLIC_E2E=true` fixture worker for hermitic e2e).
+- **Terrain (Task 1.4):** 2D topo canvas (canvas 2D, brush/erase/clear, quantized contours), heightmap store, `heightmapTexture` DataTexture, TSL `positionNode` displacement (CUJ-01 e2e).
+- **Physics (Task 1.5):** Rapier `<Physics>` + `HeightfieldCollider` + capsule `PlayerController` (camera-relative WASD, jump, grounded check from heightmap) + `FirstPersonRig` (pointer-lock look) + CrosshairHud + POS readout (CUJ-03 e2e).
+- **Test infra:** `eslint.config.mjs` (FlatCompat), `vitest.config.ts` (jsdom + testing-library, jsx automatic), `playwright.config.ts` (**workers: 1 — serial, avoids machine freezes**; webServer pins `-p 3000` because env `PORT=0` hijacked the port).
+- **Final gates:** typecheck ✓ lint ✓ 62 unit ✓ 9 e2e ✓ (~25s serial).
+- **Rapier gotcha (see knowledge.md / lessons-learned.md):** rapier3d-compat 0.19.2 heightfield = cell counts + (cells+1)² samples + full-extent scale + transposed layout. `heightmapToPhysicsGrid` handles the remap; verified via debug-render probes.
+
 ## Current repository state
 
 - `docs/` — static spec suite (PRD, design brief, tech spec, API contracts, data models, testing/QA, security/env, tasks)
@@ -59,11 +70,11 @@ stages of Phase 0 complete: workspace tree, 471 skills, frontend manifests + loc
 
 ## Prioritized next steps
 
-1. Begin Phase 1 — Task 1.1: Next.js 15 app shell (src/app/layout.tsx, page.tsx), Tailwind v4 tokens from DESIGN.md, react-resizable-panels split workstation. Active skills: vercel-react-best-practices, r3f-fundamentals, shadcn, taste, impeccable.
-2. Task 1.2 Web Worker infra (depth/speech/tts workers) — transformers-js skill.
-3. (Phase 2) Install audiocraft with `--no-deps` + runtime extras when AudioGen lands.
-4. Provide HF_TOKEN (with AudioGen license accepted) to finish the pre-cache: `HF_TOKEN=... .venv/Scripts/python.exe backend/scripts/download_models.py`
-5. Free disk space on C: (currently 100% full, 137MB free) — the stale 40GB HF cache at `C:/Users/Conno/.cache/huggingface` is a candidate for cleanup.
+1. Phase 2 — backend AI services: FastAPI app skeleton (`backend.main:app`), SequentialVRAMManager, TripoSR/SDXL endpoints (docs/08 Task 2.x). audiocraft (`--no-deps`, pins torch==2.1.0) when AudioGen lands.
+2. Phase 2/3 — wire the real Depth-Anything worker to CUJ-02 (voice → topo → terrain) with real weights; currently only the mock seam is e2e-tested.
+3. Provide HF_TOKEN (with AudioGen license accepted) to finish the pre-cache: `HF_TOKEN=... .venv/Scripts/python.exe backend/scripts/download_models.py`
+4. Free disk space on C: (currently 100% full, ~1.5GB free) — the stale 40GB HF cache at `C:/Users/Conno/.cache/huggingface` is a candidate for cleanup.
+5. Before shipping: verify WebGPU path on a real GPU (e2e runs SwiftShader software WebGL); re-check `world.castRay` on a rapier upgrade before using it for gameplay queries.
 
 ## Session handoff checklist
 

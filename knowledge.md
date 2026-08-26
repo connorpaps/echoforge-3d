@@ -28,7 +28,8 @@ This repo uses git-tracked files as its cross-session AI memory. **Freebuff read
 - Development (backend): `uvicorn backend.main:app --reload --port 8000`
 - Test (frontend): `pnpm test`
 - Test (backend): `pytest backend/tests`
-- E2E: `pnpm test:e2e` (Playwright WebGL/WebGPU runner)
+- E2E: `pnpm test:e2e` (Playwright WebGL/WebGPU runner — **strictly serial, workers:1**; parallel SwiftShader instances freeze the machine)
+- E2E dev server: port is pinned (`-p 3000`) in `playwright.config.ts` because the shell env sets `PORT=0` (Next picks a random port and Playwright's probe hangs)
 - Typecheck/lint: `pnpm typecheck` / `pnpm lint`
 - Build: `pnpm build`
 - Download AI model weights: `python backend/scripts/download_models.py`
@@ -48,6 +49,15 @@ This repo uses git-tracked files as its cross-session AI memory. **Freebuff read
 - **Design adherence:** all UI must match `DESIGN.md`; no generic AI purple gradients or pure `#000000` backgrounds.
 - **Diagnose first:** log root cause before patching; 3 consecutive identical build/test failures = stop and report.
 - Never commit secrets (`.env` files). Never hand-edit `node_modules`, `.next/`, or other build output.
+
+## Rapier heightfield (verified against `@dimforge/rapier3d-compat@0.19.2`)
+
+The dim3 wasm `heightfield` binding differs from the documented API in three ways. All three were root-caused and verified empirically (drop tests + `world.debugRender()` probes) during Task 1.5 — `src/lib/physics/rapierHeightfield.ts` encodes the correct usage:
+- **Cell counts, not sample counts:** the binding builds `DMatrix::from_vec(nrows + 1, ncols + 1, heights)`, so pass `width/height = cells` and a `(cells+1)²` heights array. Passing sample counts traps the wasm module (`RuntimeError: unreachable`) and crashes the page.
+- **Full-extent scale:** the local grid is normalized to ±0.5, so `scale.x/z` = the whole footprint (e.g. `TERRAIN_WORLD_SIZE = 64`), NOT per-cell width. Per-cell scale silently collapses the terrain to a 1×1 patch and everything falls through.
+- **Transposed layout:** DMatrix column-major construction makes rapier place `heights[i * ncols + j]` at world (x = i, z = j), while the terrain mesh places `heightmap[z * size + x]` at (x, z = size-1-z). `heightmapToPhysicsGrid` remaps mesh→rapier layout.
+- `world.castRay` returns NaN in this compat build even against a cuboid — do not use it for gameplay queries until rapier is upgraded and re-verified. Use drop tests / solver contacts as ground truth.
+- `@react-three/rapier`'s `scaleColliderArgs` has a bug for heightfields (`s.x *= scale.x/y/z`), harmless while body scale is (1,1,1).
 - **C: drive is 100% full (137MB free)** on this machine — keep big downloads (HF cache, node_modules, venv) on G: and flag disk pressure early. Stale 40GB HF cache at `C:/Users/Conno/.cache/huggingface`.
 - **HF cache on Windows without Developer Mode:** symlinks unsupported — huggingface_hub falls back to copies (degraded, uses ~2x space; warning is benign). Enable Developer Mode to avoid it.
 - **audiocraft==1.3.0 pins torch==2.1.0** — conflicts with the spec's torch 2.5.0; install with `--no-deps` + runtime extras when AudioGen integration lands (Phase 2).

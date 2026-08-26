@@ -1276,3 +1276,121 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - docs/plans/2026-08-25-phase-0-initialization.md
   - handoff.md
   - knowledge.md
+
+## 2026-08-25 21:59 — `da77d4e`
+**chore: upgrade R3F/three to v9 stack and add test tooling**
+
+  - next-env.d.ts
+  - package.json
+  - pnpm-lock.yaml
+
+## 2026-08-25 22:10 — `61b6166`
+**feat: scaffold app shell, design tokens, and resizable 3D viewport workstation**
+
+  - .env.local.example
+  - .gitignore
+  - e2e/viewport-shell.spec.ts
+  - eslint.config.mjs
+  - next.config.ts
+  - playwright.config.ts
+  - src/app/globals.css
+  - src/app/layout.tsx
+  - src/app/page.tsx
+  - src/components/ui/GlassPanel.tsx
+  - src/components/ui/IconButton.tsx
+  - src/components/ui/KeycapBadge.tsx
+  - src/components/ui/SectionLabel.tsx
+  - src/components/ui/StatusPill.tsx
+  - src/components/ui/TelemetryText.tsx
+  - src/components/viewport/Scene.tsx
+  - src/components/viewport/Viewport3D.tsx
+  - src/components/viewport/ViewportCanvas.tsx
+  - src/components/workspace/BottomBar.tsx
+  - src/components/workspace/LeftDrawer.test.tsx
+  - src/components/workspace/LeftDrawer.tsx
+  - src/components/workspace/TopBar.tsx
+  - src/components/workspace/Workstation.tsx
+  - src/lib/hotkeys.ts
+  - src/lib/stores/useSceneStore.test.ts
+  - src/lib/stores/useSceneStore.ts
+  - src/lib/stores/useUiStore.ts
+  - src/lib/utils.test.ts
+  - src/lib/utils.ts
+  - vitest.config.ts
+  - vitest.setup.ts
+
+## 2026-08-25 22:19 — `d1299c6`
+**feat: add typed web-worker ML infrastructure with zero-copy transfers**
+
+  - playwright.config.ts
+  - src/lib/workers/useWorker.test.tsx
+  - src/lib/workers/useWorker.ts
+  - src/workers/depth.worker.ts
+  - src/workers/speech.worker.ts
+  - src/workers/tts.worker.ts
+  - src/workers/workerFactory.test.ts
+  - src/workers/workerFactory.ts
+  - src/workers/workerRegistry.ts
+  - src/workers/workerTypes.ts
+
+## 2026-08-25 22:19 — `11ee798`
+**chore: allow underscore-prefixed unused args in eslint**
+
+  - eslint.config.mjs
+
+## 2026-08-25 22:21 — `70da4d5`
+**feat: wire Distil-Whisper speech recognition with push-to-talk voice pill**
+
+  - e2e/voice-pill.spec.ts
+  - src/components/ui/VoicePill.tsx
+  - src/components/workspace/LeftDrawer.test.tsx
+  - src/components/workspace/LeftDrawer.tsx
+  - src/components/workspace/PromptBar.tsx
+  - src/lib/audio/recorder.test.ts
+  - src/lib/audio/recorder.ts
+  - src/lib/audio/useSpeechRecognition.ts
+  - src/lib/hotkeys.ts
+  - src/lib/stores/useVoiceStore.ts
+
+## 2026-08-25 22:32 — `fd2d63e`
+**feat: add 2D topographic canvas with depth-worker TSL terrain displacement**
+
+  - e2e/terrain-journey.spec.ts
+  - playwright.config.ts
+  - src/components/canvas/TopoCanvas.test.tsx
+  - src/components/canvas/TopoCanvas.tsx
+  - src/components/viewport/Scene.tsx
+  - src/components/viewport/TerrainMesh.tsx
+  - src/components/workspace/BottomBar.tsx
+  - src/components/workspace/LeftDrawer.tsx
+  - src/lib/stores/useSceneStore.ts
+  - src/lib/stores/useUiStore.ts
+  - src/lib/terrain/heightmap.test.ts
+  - src/lib/terrain/heightmap.ts
+  - src/lib/terrain/heightmapTexture.ts
+
+## 2026-08-25 22:59 — `f852986`
+**test: add voice pill and voice store unit tests**
+
+  - src/components/ui/VoicePill.test.tsx
+  - src/lib/stores/useVoiceStore.test.ts
+
+## 2026-08-25 22:59 — `475d4b7`
+**feat: add Rapier physics heightfield and first-person locomotion**
+
+  - e2e/first-person-journey.spec.ts
+  - src/components/player/CrosshairHud.tsx
+  - src/components/player/FirstPersonRig.tsx
+  - src/components/player/PlayerController.tsx
+  - src/components/viewport/Scene.tsx
+  - src/components/viewport/TerrainCollider.tsx
+  - src/components/viewport/TerrainMesh.tsx
+  - src/components/workspace/BottomBar.tsx
+  - src/components/workspace/Workstation.tsx
+  - src/lib/hotkeys.test.ts
+  - src/lib/physics/controls.test.ts
+  - src/lib/physics/controls.ts
+  - src/lib/physics/rapierHeightfield.test.ts
+  - src/lib/physics/rapierHeightfield.ts
+  - src/lib/stores/usePlayerStore.ts
+  - src/lib/terrain/heightmap.ts

@@ -36,3 +36,10 @@
 - **Fix:** ran `git update-index --chmod=+x` on the hook and scripts, then committed (now mode 100755).
 - **Avoid in future:** after creating hook/script files, set the exec bit via `git update-index --chmod=+x` before committing (or verify with `git ls-files --stage`).
 - **Status:** fixed
+
+## 2026-08-25 — rapier heightfield wasm crash + silent fall-through (Task 1.5)
+- **Symptom:** (1) every page load crashed with `RuntimeError: unreachable` inside `@dimforge/rapier3d-compat@0.19.2`; (2) after fixing the crash, the player capsule fell straight through the terrain heightfield even though the shape reported sane nrows/ncols/scale.
+- **Root cause:** the dim3 wasm binding builds `DMatrix::from_vec(nrows + 1, ncols + 1, heights)` — it expects CELL counts with a `(cells+1)²` sample array (passing `size` cells + `size²` heights panics). Then two more quirks: `scale.x/z` is the FULL footprint (±0.5-normalized local grid), not per-cell width; and DMatrix column-major storage transposes the layout relative to the mesh.
+- **Fix:** `src/lib/physics/rapierHeightfield.ts` — pass `width/height = size-1`, `scale.x/z = TERRAIN_WORLD_SIZE (64)`, and remap via `heightmapToPhysicsGrid` (transpose + flip). Verified with `world.debugRender()` bump probes and the CUJ-03 e2e (player walks over the hill).
+- **Avoid in future:** never trust a wasm binding's documented signature — verify against the compiled Rust (docs.rs / GitHub source) AND empirically (debug render, drop tests). Also: `world.castRay` returns NaN in this build, so use solver/drop tests as ground truth.
+- **Status:** fixed
