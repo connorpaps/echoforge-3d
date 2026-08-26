@@ -9,9 +9,11 @@ const ctx = self as unknown as {
 };
 
 async function runInit(): Promise<void> {
+  // 'wasm' over 'webgpu': universal fallback matching the app's WebGL-default
+  // design; kokoro-js accepts only 'cpu' | 'wasm' | 'webgpu' (no 'auto').
   ttsInstance = await KokoroTTS.from_pretrained(
     'onnx-community/Kokoro-82M-v1.0-ONNX',
-    { dtype: 'q8', device: 'webgpu' },
+    { dtype: 'q8', device: 'wasm' },
   );
 }
 

@@ -14,18 +14,35 @@ export function isE2EMode(): boolean {
 }
 
 /**
- * Static worker URLs. Bundlers (webpack/vite) can only statically analyze
- * `new URL(...)` calls, so dynamic template strings are not allowed here.
+ * Real model-backed workers. Bundlers (webpack/vite) only treat
+ * `new Worker(new URL(...))` as a compilable worker when the URL expression
+ * appears directly as the constructor argument. Routing through a map or
+ * variable makes webpack emit the `.ts` file as a raw asset, which the dev
+ * server then serves with MIME `video/mp2t` — the module worker then crashes
+ * with "Failed to load module script". Keep these factories direct.
  */
-const workerUrls: Record<WorkerId, URL> = {
-  depth: new URL('./depth.worker.ts', import.meta.url),
-  speech: new URL('./speech.worker.ts', import.meta.url),
-  tts: new URL('./tts.worker.ts', import.meta.url),
-};
+function createDepthWorker(): WorkerLike {
+  return new Worker(new URL('./depth.worker.ts', import.meta.url));
+}
+
+function createSpeechWorker(): WorkerLike {
+  return new Worker(new URL('./speech.worker.ts', import.meta.url));
+}
+
+function createTtsWorker(): WorkerLike {
+  return new Worker(new URL('./tts.worker.ts', import.meta.url));
+}
 
 /** Create the real model-backed worker for the given worker id. */
 export function createRealWorker(id: WorkerId): WorkerLike {
-  return new Worker(workerUrls[id], { type: 'module' });
+  switch (id) {
+    case 'depth':
+      return createDepthWorker();
+    case 'speech':
+      return createSpeechWorker();
+    case 'tts':
+      return createTtsWorker();
+  }
 }
 
 /** Create the deterministic fixture client used in E2E mode. */

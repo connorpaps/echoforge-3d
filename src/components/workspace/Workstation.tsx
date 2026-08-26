@@ -2,6 +2,7 @@
 
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { GeneratingPill } from '@/components/generation/GeneratingPill';
+import { GeneratedEntityBridge } from '@/components/generation/GeneratedEntityBridge';
 import { ResultToast } from '@/components/generation/ResultToast';
 import { CrosshairHud } from '@/components/player/CrosshairHud';
 import { BottomBar } from '@/components/workspace/BottomBar';
@@ -45,6 +46,8 @@ export function Workstation() {
           <Panel defaultSize={70} minSize={60} className="relative min-w-0">
             <ViewportCanvas />
             {activeMode === 'play' && <CrosshairHud />}
+            {/* Spawns generated meshes into the scene on success */}
+            <GeneratedEntityBridge />
             {/* Non-blocking generation HUD (Task 2.5) */}
             <GeneratingPill />
             <ResultToast />

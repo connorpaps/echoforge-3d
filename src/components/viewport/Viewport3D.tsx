@@ -2,6 +2,7 @@
 
 import { Canvas } from '@react-three/fiber';
 import { Suspense } from 'react';
+import { WebGLNodesHandler } from 'three/addons/tsl/WebGLNodesHandler.js';
 import { Scene } from './Scene';
 
 /**
@@ -40,6 +41,15 @@ export default function Viewport3D() {
   return (
     <Canvas
       gl={{ antialias: true }}
+      onCreated={({ gl }) => {
+        // three r185: the WebGL renderer only compiles TSL node materials
+        // (MeshStandardNodeMaterial) after an explicit opt-in. Without this,
+        // node materials have no vertex/fragment shader and WebGLProgram
+        // crashes with "Cannot read properties of undefined (reading
+        // 'replace')" on the first draw — the whole frame aborts and the
+        // viewport goes black the moment terrain is generated.
+        gl.setNodesHandler(new WebGLNodesHandler());
+      }}
       camera={{ position: [12, 10, 12], fov: 50, near: 0.1, far: 200 }}
     >
       <Suspense fallback={null}>

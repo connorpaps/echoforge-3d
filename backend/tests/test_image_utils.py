@@ -71,9 +71,14 @@ def test_prepare_foreground_keeps_upload_alpha():
     assert arr.min() >= 250  # white canvas
 
 
-def test_prepare_foreground_flood_fill_erases_border():
-    # Object = bright center square on a dark border; flood fill should clear
-    # the border and keep the center.
+def test_prepare_foreground_flood_fill_erases_border(monkeypatch):
+    # Object = bright center square on a dark border; the flood-fill fallback
+    # (rembg unavailable) should clear the border and keep the center.
+    from backend.services import image_utils as image_utils_module
+
+    monkeypatch.setattr(image_utils_module, "_rembg_session", None)
+    monkeypatch.setattr(image_utils_module, "_rembg_error", RuntimeError("offline"))
+
     img = np.full((100, 100, 3), 10, dtype=np.uint8)
     img[30:70, 30:70] = (200, 200, 200)
     out = prepare_foreground(Image.fromarray(img), size=128)
@@ -84,3 +89,27 @@ def test_prepare_foreground_flood_fill_erases_border():
     # Center stays the bright object color (approximately).
     center = arr[64, 64]
     assert center[0] > 150
+
+
+def test_prepare_foreground_uses_rembg_when_available(monkeypatch):
+    # When rembg is available it must be preferred over the heuristic.
+    from backend.services import image_utils as image_utils_module
+
+    calls = []
+
+    def fake_remove(image, **kwargs):
+        calls.append(image)
+        rgba = np.asarray(image.convert("RGBA")).copy()
+        rgba[..., 3] = 0  # everything background except a center square
+        rgba[30:70, 30:70, 3] = 255
+        return Image.fromarray(rgba)
+
+    monkeypatch.setattr(image_utils_module, "_rembg_remove", fake_remove)
+
+    img = np.full((100, 100, 3), 10, dtype=np.uint8)
+    img[30:70, 30:70] = (200, 200, 200)
+    out = prepare_foreground(Image.fromarray(img), size=128)
+    assert calls, "rembg path should run when available"
+    arr = np.asarray(out)
+    assert arr[0, 0].tolist() == [255, 255, 255]
+    assert arr[64, 64][0] > 150

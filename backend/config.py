@@ -23,6 +23,13 @@ HF_HOME = Path(
 ).resolve()
 os.environ.setdefault("HF_HOME", str(HF_HOME))
 
+# rembg (U²-Net) background-removal weights must also stay off the C: drive
+# (knowledge.md: "keep big downloads on G:"). rembg honors U2NET_HOME.
+U2NET_HOME = Path(
+    os.environ.get("U2NET_HOME", str(HF_HOME / "u2net"))
+).resolve()
+os.environ.setdefault("U2NET_HOME", str(U2NET_HOME))
+
 # Vendored third-party packages (see backend/vendor/README.md).
 VENDOR_DIR = BACKEND_DIR / "vendor"
 
@@ -65,11 +72,11 @@ CORS_ORIGINS = os.environ.get(
     "http://localhost:3000,http://127.0.0.1:3000",
 ).split(",")
 
-# Generation defaults. Mesh resolution defaults to 192: TripoSR's official
-# 256³ extraction is expensive on 8 GB cards (density+colour queries over 16.7M
-# voxels); 192³ is ~2.3× cheaper with visually equivalent results after
-# decimation to <= MESH_MAX_FACES.
-MESH_RESOLUTION = int(os.environ.get("MESH_RESOLUTION", "192"))
+# Generation defaults. Mesh resolution defaults to 256 for better detail on
+# organic subjects (faces etc.) — TripoSR's official 256³ extraction is
+# ~2.3× slower than 192³ on 8 GB cards (density+colour queries over 16.7M
+# voxels). Drop back to 192 via MESH_RESOLUTION if generation feels too slow.
+MESH_RESOLUTION = int(os.environ.get("MESH_RESOLUTION", "256"))
 MESH_MAX_FACES = int(os.environ.get("MESH_MAX_FACES", "20000"))
 SDXL_STEPS = int(os.environ.get("SDXL_STEPS", "1"))
 SDXL_GUIDANCE = float(os.environ.get("SDXL_GUIDANCE", "0.0"))

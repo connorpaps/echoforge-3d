@@ -62,9 +62,12 @@ def test_process_mesh_full_pipeline():
 
     bounds = result["bounds"]
     assert len(bounds["min"]) == len(bounds["max"]) == len(bounds["size"]) == 3
-    # A unit icosphere fits in [-1.5, 1.5]^3
-    assert all(-2.0 < v < 2.0 for v in bounds["min"])
-    assert all(-2.0 < v < 2.0 for v in bounds["max"])
+    # World frame contract: feet sit on y=0, x/z centered on origin, and the
+    # asset is a sane size (the unit icosphere is ~2 units tall).
+    assert abs(bounds["min"][1]) < 1e-6
+    assert abs(bounds["min"][0] + bounds["max"][0]) < 1e-3
+    assert abs(bounds["min"][2] + bounds["max"][2]) < 1e-3
+    assert all(v < 2.5 for v in bounds["size"])
 
     assert len(result["collisionHulls"]) >= 1
     hull = result["collisionHulls"][0]
@@ -109,3 +112,83 @@ def test_empty_mesh_rejected():
     empty = trimesh.Trimesh(vertices=[[0, 0, 0]], faces=[])
     with pytest.raises(ValueError, match="no faces"):
         mesh_processing.process_mesh(empty)
+
+
+def test_keep_largest_component_drops_debris():
+    big = trimesh.creation.box(extents=[2, 2, 2])
+    sliver = trimesh.creation.box(extents=[0.05, 0.05, 0.05]).apply_translation([10, 10, 10])
+    mesh = trimesh.util.concatenate([big, sliver])
+
+    cleaned = mesh_processing.keep_largest_component(mesh)
+    # Only the big box remains; the debris box is gone.
+    assert len(cleaned.vertices) == len(big.vertices)
+    assert cleaned.extents.max() > 1.9
+
+
+def test_keep_largest_component_single_component_unchanged():
+    mesh = trimesh.creation.icosphere(subdivisions=2)
+    assert mesh_processing.keep_largest_component(mesh) is mesh
+
+
+def test_orient_upright_stands_on_ground_with_warm_top():
+    # Tall box lying along X, warm colors at the +X tip (photo semantics: warm
+    # wood/skin = the object's natural top). After orient, height must be +Y,
+    # feet on y=0, and the warm end pointing up.
+    mesh = trimesh.creation.box(extents=[3.0, 0.5, 0.5])
+    verts = mesh.vertices
+    colors = np.zeros((len(verts), 4), dtype=np.uint8)
+    colors[verts[:, 0] > 1.0] = [200, 120, 60, 255]  # warm end
+    colors[verts[:, 0] <= 1.0] = [240, 240, 240, 255]
+    colors[:, 3] = 255
+    mesh.visual.vertex_colors = colors
+
+    out = mesh_processing.orient_upright(mesh)
+    extents = out.extents
+    assert extents[1] > 2.5, f"height should align to +Y, got {extents}"
+    assert extents[0] < 1.0, f"width should shrink after upright, got {extents}"
+    assert abs(out.bounds[0][1]) < 1e-6, "feet must sit on y=0"
+
+    y = out.vertices[:, 1]
+    lo, hi = y.min(), y.max()
+    top_colors = out.visual.vertex_colors[y > hi - 0.15 * (hi - lo)][:, :3]
+    assert top_colors[:, 0].mean() > 150, "warm (red) end must point up"
+
+
+def test_orient_upright_flips_cold_top():
+    # Same box but warm at the -X tip: the flip must put the warm end up too.
+    mesh = trimesh.creation.box(extents=[3.0, 0.5, 0.5])
+    verts = mesh.vertices
+    colors = np.zeros((len(verts), 4), dtype=np.uint8)
+    colors[verts[:, 0] < -1.0] = [200, 120, 60, 255]
+    colors[verts[:, 0] >= -1.0] = [240, 240, 240, 255]
+    colors[:, 3] = 255
+    mesh.visual.vertex_colors = colors
+
+    out = mesh_processing.orient_upright(mesh)
+    y = out.vertices[:, 1]
+    lo, hi = y.min(), y.max()
+    top_colors = out.visual.vertex_colors[y > hi - 0.15 * (hi - lo)][:, :3]
+    assert top_colors[:, 0].mean() > 150, "warm end must point up regardless of input sign"
+    assert abs(out.bounds[0][1]) < 1e-6
+
+
+def test_orient_upright_front_faces_z():
+    # Tall box with height along Z and warm colors on the +X end (the model's
+    # photo-facing side). After orient: height on Y AND the warm "front" must
+    # face world +Z (the convention the frontend yaws toward the camera).
+    mesh = trimesh.creation.box(extents=[0.5, 0.5, 3.0])
+    verts = mesh.vertices
+    colors = np.zeros((len(verts), 4), dtype=np.uint8)
+    colors[verts[:, 0] > 0.2] = [200, 120, 60, 255]
+    colors[verts[:, 0] <= 0.2] = [240, 240, 240, 255]
+    colors[:, 3] = 255
+    mesh.visual.vertex_colors = colors
+
+    out = mesh_processing.orient_upright(mesh)
+    assert out.extents[1] > 2.5, f"height should align to +Y, got {out.extents}"
+    assert abs(out.bounds[0][1]) < 1e-6
+
+    z = out.vertices[:, 2]
+    lo, hi = z.min(), z.max()
+    front_colors = out.visual.vertex_colors[z > hi - 0.15 * (hi - lo)][:, :3]
+    assert front_colors[:, 0].mean() > 150, "warm front must face +Z"

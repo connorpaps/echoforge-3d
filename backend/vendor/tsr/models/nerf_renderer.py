@@ -46,6 +46,9 @@ class TriplaneNeRFRenderer(BaseModule):
     ) -> Dict[str, torch.Tensor]:
         input_shape = positions.shape[:-1]
         positions = positions.view(-1, 3)
+        # EchoForge patch: sampled positions can be fp32 (e.g. rays built from
+        # fp32 linspace) — match the triplane dtype or grid_sample crashes.
+        positions = positions.to(triplane.dtype)
 
         # positions in (-radius, radius)
         # normalized to (-1, 1) for grid sample
@@ -106,8 +109,11 @@ class TriplaneNeRFRenderer(BaseModule):
         t_near, t_far, rays_valid = rays_intersect_bbox(rays_o, rays_d, self.cfg.radius)
         t_near, t_far = t_near[rays_valid], t_far[rays_valid]
 
+        # EchoForge patch: linspace defaults to float32, which promotes the
+        # sampled positions to fp32 and crashes grid_sample against the fp16
+        # triplane — cast to the triplane dtype (same patch as extract_mesh).
         t_vals = torch.linspace(
-            0, 1, self.cfg.num_samples_per_ray + 1, device=triplane.device
+            0, 1, self.cfg.num_samples_per_ray + 1, device=triplane.device, dtype=triplane.dtype
         )
         t_mid = (t_vals[:-1] + t_vals[1:]) / 2.0
         z_vals = t_near * (1 - t_mid[None]) + t_far * t_mid[None]  # (N_rays, N_samples)

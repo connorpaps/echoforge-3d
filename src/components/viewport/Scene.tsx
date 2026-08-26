@@ -8,8 +8,10 @@ import { FirstPersonRig } from '@/components/player/FirstPersonRig';
 import { PlayerController } from '@/components/player/PlayerController';
 import { TerrainCollider } from '@/components/viewport/TerrainCollider';
 import { TerrainMesh } from '@/components/viewport/TerrainMesh';
+import { SceneEntities } from '@/components/viewport/SceneEntities';
 import { useSceneStore } from '@/lib/stores/useSceneStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
+import { cameraRef } from '@/lib/viewport/cameraRef';
 
 function Ground() {
   return (
@@ -18,6 +20,17 @@ function Ground() {
       <meshStandardMaterial color="#16181d" roughness={0.95} metalness={0} />
     </mesh>
   );
+}
+
+/** Mirrors the live camera position into cameraRef for spawn-facing logic. */
+function CameraProbe() {
+  useFrame(({ camera }) => {
+    const p = camera.position;
+    cameraRef.x = p.x;
+    cameraRef.y = p.y;
+    cameraRef.z = p.z;
+  });
+  return null;
 }
 
 /** Samples the render loop and pushes FPS / frame-time into the UI store. */
@@ -49,8 +62,9 @@ export function Scene() {
   return (
     <>
       <color attach="background" args={['#08090a']} />
-      <hemisphereLight args={['#5e6ad2', '#08090a', 0.55]} />
-      <directionalLight position={[10, 15, 8]} intensity={1.2} />
+      <hemisphereLight args={['#5e6ad2', '#08090a', 1.0]} />
+      <directionalLight position={[10, 15, 8]} intensity={2.2} />
+      <directionalLight position={[-8, 6, -10]} intensity={0.6} color="#9fb4ff" />
 
       <Physics gravity={[0, -9.81, 0]}>
         {hasTerrain ? <TerrainMesh /> : <Ground />}
@@ -71,6 +85,9 @@ export function Scene() {
         fadeStrength={1}
         infiniteGrid={false}
       />
+
+      {/* Generated mesh entities (spawned by GeneratedEntityBridge) */}
+      <SceneEntities />
       <OrbitControls
         makeDefault
         enableDamping
@@ -78,6 +95,7 @@ export function Scene() {
         enabled={activeMode === 'editor'}
       />
       <FirstPersonRig />
+      <CameraProbe />
       <Stats className="stats-overlay" />
       <TelemetryLoop />
     </>

@@ -25,10 +25,16 @@ const ctx = self as unknown as {
 };
 
 async function runInit(): Promise<void> {
+  // NOTE: spec originally pinned `onnx-community/distil-whisper-small`, but
+  // that repo is gated on HF (HTTP 401 without a logged-in account + accepted
+  // license). `onnx-community/whisper-small.en` is public and is the full
+  // (non-distilled) Whisper-small, so accuracy is on par or better.
   const instance = await pipeline(
     'automatic-speech-recognition',
-    'onnx-community/distil-whisper-small',
-    { device: 'webgpu', dtype: 'fp16' },
+    'onnx-community/whisper-small.en',
+    // 'auto' = WebGPU when available, WASM otherwise — matches the app's
+    // WebGL-default / WebGPU-opt-in design (see depth.worker.ts).
+    { device: 'auto', dtype: 'fp32' },
   );
   asrPipeline = instance as unknown as SpeechRecognizer;
 }

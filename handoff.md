@@ -83,6 +83,53 @@ stages of Phase 0 complete: workspace tree, 471 skills, frontend manifests + loc
 - Frontend generation UI: image upload + generate buttons, emerald shimmer pill, glass success/error toasts, TopBar VRAM meter (Task 2.5).
 - Caches relocated to G: (HF/pip/npm/playwright); C: freed 5.8 GB → 60.9 GB.
 
+## Work completed (2026-08-26, live-app session)
+
+- Booted the real app (`pnpm exec next dev -p 3000` — the shell's `PORT=0` env still hijacks the port, so `-p 3000` is mandatory outside Playwright) and verified it live at 60 FPS: workstation UI, Rapier running, terrain canvas, generation panel.
+- **Fixed the real-worker dev bug (previously hidden by the e2e mock seam):** `new Worker(workerUrls[id], { type: 'module' })` made webpack emit workers as raw `.ts` media assets → served as `video/mp2t` → module workers crashed (`AI: LOADING…` forever). Rewrote `workerRegistry.ts` with direct per-worker `new Worker(new URL(...))` factories; depth worker now uses `device: 'auto'`, kokoro-js uses `device: 'wasm'` (details in lessons-learned.md).
+- **Verified live end-to-end in the browser:** depth-anything-v2-small loads over WASM (`AI: READY`), a brush stroke on the topo canvas produced a 16384-vert displaced terrain mesh at 60 FPS. Typecheck ✓, 84 unit tests ✓.
+- **Still failing in this sandbox (not code bugs):** speech worker hits HF hub `Unauthorized access` for distil-whisper-small (network/gating — needs checking on the real dev machine); backend offline → VRAM: offline + Generate disabled (start `uvicorn backend.main:app --port 8000`); WebGPU path still unverified on a real GPU.
+
+## Work completed (2026-08-26, live-app session — continued)
+
+- **Fixed the black-viewport bug:** drawing on the topo canvas made the viewport go solid black. Root cause: three r185's WebGLRenderer can't compile TSL node materials without the explicit `renderer.setNodesHandler(new WebGLNodesHandler())` opt-in (from `three/addons/tsl/WebGLNodesHandler.js`) — without it, `resolveIncludes(undefined)` throws per frame and aborts the whole render after the clear. Added the opt-in via `onCreated` in `Viewport3D.tsx`. Verified: crash gone, terrain renders (bright test color proved it), grid visible, 13/13 e2e, 84 unit, typecheck green. Lesson logged.
+- **Known e2e blind spot:** CUJ-01 (terrain) and other viewport e2e assert store/DOM state, not rendered pixels — this bug shipped because of that. Worth adding a pixel-level check later.
+
+## Work completed (2026-08-26, live-app session — continued)
+
+- **Completed the missing half of Task 2.5 — generated meshes now drop into the scene** (was: toast only, nothing visible). Verified against the DESIGN BRIEF §Generation success state ("Generated .glb mesh drops into scene") and 05_DATA_MODELS (SceneEntity store was built but unconsumed). NOT Phase 3 scope (Phase 3 has no such task).
+  - `src/lib/generation/spawn.ts` + tests: `buildMeshEntity` — scales the normalized TripoSR GLB to 2m, sits it on the current terrain height, spawns at (2, 0, 0) (inside the default camera FOV).
+  - `GeneratedEntityBridge` (mounted in Workstation): adds an entity on mesh success, deduped by jobId, skipped in E2E mode (mock GLB is a placeholder).
+  - `SceneEntities` (in Scene): imperative GLTFLoader (data-URL safe), corrupt payloads degrade to not-rendered instead of throwing.
+  - Scene Inspector in LeftDrawer now lists entities with a remove (✕) button.
+  - Verified live end-to-end with the user's headshot: upload → Generate Mesh → GLB generated on GPU → mesh visible center-frame (pixel-verified) → listed in inspector. Typecheck ✓, 90 unit ✓, 13/13 e2e ✓.
+- **Also this session:** black-viewport fix (WebGLNodesHandler), real-worker MIME fix, device auto/wasm fallback, backend started on :8000 (TripoSR warm, VRAM 0.8GB).
+
+## Work completed (2026-08-26, live-app session — continued)
+
+- **Cheap wins for mesh quality applied (at user request):** `MESH_RESOLUTION` default 192 → 256 (backend/config.py, env-overridable; gen ~7.8s vs 6.2s); viewport lighting brightened (hemisphere 1.0, directional 2.2 + cool fill light in Scene.tsx — still 60 FPS); SceneEntities now forces `vertexColors = true` on loaded GLBs with a color attribute (TripoSR GLBs carry COLOR_0 with no material — colors were possibly being dropped). Verified live: mesh renders lit + colored. **Verdict: presentation improved, but likeness unchanged — TripoSR is the quality limiter for faces** (blobby geometry, confirmed via bounds/vertex analysis). Real fix = model swap to TRELLIS / Hunyuan3D-2 (Task 2.3 already names "TripoSR / TRELLIS").
+
+## Work completed (2026-08-26, live-app session — continued)
+
+- **Root-caused the "ugly rock/slab" mesh problem — it was the background remover, not the model.** A chair (TripoSR's bread-and-butter) reconstructed as a flat slab (depth 0.398); fp16 and decimation both exonerated by direct fp32 + raw-mesh comparison. The hand-rolled border flood-fill in `image_utils.py` was eating light objects on white backgrounds (only 0.5–1.6% of the image survived as foreground) — explains both the chair slab AND the faceless headshot.
+- **Fix: `backend/services/image_utils.py` now uses rembg (U²-Net)** — the same background-removal model TripoSR's reference pipeline uses (installed `rembg[cpu]`, authorized by user). Lazy session with cached failure → offline fallback to the old flood-fill heuristic (tests patched to force/verify each path). `U2NET_HOME` pinned to `G:\hf-cache\u2net` in `backend/config.py` so the ~170 MB model stays off C: (user's G:-drive rule; also noted in knowledge.md). Verified: chair depth 0.398 → 0.572, recognizable chair generated live through the UI (19,986 faces · 9,957 verts · 3.0s). 36/36 backend tests, 8/8 image_utils tests.
+- **Honest remaining limitation:** the mesh is now a real chair but still low-poly/rough — that's TripoSR at 20k-face budget (raw 96k faces decimated). Real quality jump = TRELLIS / Hunyuan3D-2 model swap (Task 2.3 already names TripoSR / TRELLIS).
+
+## Work completed (2026-08-26, live-app session — continued)
+
+- **Fixed meshes spawning sideways/upside-down with floating debris** (backend `mesh_processing.py`): TripoSR outputs meshes in its tilted camera frame (height axis diagonal in X/Y — the chair's extents were [0.964, 0.921, 0.572]) and emits 15+ disconnected components. Pipeline now: sanitize → **keep_largest_component** (drops slivers + detached slabs) → **orient_upright** (PCA height axis → +Y; up/down via photo-sampled vertex colors — warm R−B tip = wood/skin up; mass heuristic tiebreak) → decimate → smooth → keep_largest again (decimation re-emits 3-vert slivers) → reground (min-y=0) → recolor → export. Bounds now world-frame so frontend spawn drops assets on terrain directly.
+- **Verified:** chair now extents [0.703, 1.025, 0.573] (standing), 1 component, brown backrest up (tip R−B +14.8/+3.7); headshot also upright (skin top). 40/40 backend tests (4 new), regenerated live through the UI — screenshot shows the chair standing on the grid with no debris.
+- **User question answered:** wireframe "lines" (Google Images style) are a display mode; the app renders solid shaded surfaces. A wireframe view toggle is a suggested follow-up.
+
+## Work completed (2026-08-26, live-app session — continued)
+
+- **Fixed the "tilted / facing the wrong direction" complaint — meshes now stand upright AND face the camera.**
+  - Empirical proof of the model convention: rendered the reconstruction with TripoSR's own novel-view renderer from azimuths 0/90/180/270 and compared to the input photo — azimuth 0 (camera at +X in model space) matches best (object-pixel diff 0.202 vs 0.305 worst), so the photo-facing side is +X in raw model space.
+  - Backend `orient_upright` now yaws the mesh so that side faces world **+Z** (documented convention).
+  - Frontend: `facingAzimuthToward()` computes the yaw pointing +Z at the live camera; `buildMeshEntity` applies `rotation=[0, yaw, 0]`; `CameraProbe` (in Scene.tsx) mirrors the orbiting camera into module-level `cameraRef` (avoids per-frame zustand re-renders). Works with OrbitControls in editor mode and the player camera in play mode.
+  - Also patched two latent fp16 dtype bugs in the vendored NeRF renderer (`nerf_renderer.py`: t_vals linspace + positions → triplane dtype) — same class as the extract-path patch; surfaced while using `render()` for the diagnostic.
+  - Verified: regenerated chair spawns at (2,0,0) with yaw ≈ 0.695 rad toward the default camera (12,10,12) — the photo's 3/4 front faces the viewer. 41 backend tests, 93 frontend tests, 13/13 e2e. App running on :3000, backend on :8000.
+
 ## Session handoff checklist
 
 - Read `knowledge.md`, `docs/lessons-learned.md`, and this file

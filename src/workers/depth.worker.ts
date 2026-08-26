@@ -28,10 +28,12 @@ const ctx = self as unknown as {
 };
 
 async function runInit(): Promise<void> {
+  // 'auto' = WebGPU when the browser supports it, WASM otherwise — matches the
+  // app's "WebGL default, WebGPU opt-in" design (NEXT_PUBLIC_ENABLE_WEBGPU).
   const instance = await pipeline(
     'depth-estimation',
     'onnx-community/depth-anything-v2-small',
-    { device: 'webgpu', dtype: 'fp16' },
+    { device: 'auto', dtype: 'fp32' },
   );
   depthPipeline = instance as unknown as DepthEstimator;
 }
