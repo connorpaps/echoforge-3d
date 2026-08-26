@@ -43,3 +43,17 @@
 - **Fix:** `src/lib/physics/rapierHeightfield.ts` — pass `width/height = size-1`, `scale.x/z = TERRAIN_WORLD_SIZE (64)`, and remap via `heightmapToPhysicsGrid` (transpose + flip). Verified with `world.debugRender()` bump probes and the CUJ-03 e2e (player walks over the hill).
 - **Avoid in future:** never trust a wasm binding's documented signature — verify against the compiled Rust (docs.rs / GitHub source) AND empirically (debug render, drop tests). Also: `world.castRay` returns NaN in this build, so use solver/drop tests as ground truth.
 - **Status:** fixed
+
+## 2026-08-26 — SDXL-Turbo "hang" was allocator thrash (Task 2.3)
+- **Symptom:** a 1-step SDXL-Turbo generation took 40s at 256² and appeared to hang at 512², with `torch.cuda.max_memory_reserved` peaking at 7.5 GB on an 8 GB RTX 2070.
+- **Root cause:** the fp16 pipeline is ~6.6 GB of weights (UNet alone 4.9 GB), leaving <1 GB for activations + CUDA context; the caching allocator thrashed under pressure. Compounded by diffusers 0.31's legacy `callback` requiring `callback_steps` (else `i % callback_steps` → NoneType) and a changed 3-arg signature.
+- **Fix:** `enable_model_cpu_offload()` + `enable_vae_slicing()` + `enable_vae_tiling()` (peak 5.3 GB, ~10s at 512²); switched to `callback_on_step_end(pipe, step, timestep, kwargs)`.
+- **Avoid in future:** on ≤8 GB cards always CPU-offload SDXL-Turbo; verify the installed diffusers version's callback API before wiring progress.
+- **Status:** fixed
+
+## 2026-08-26 — TripoSR fp16 + torchmcubes unavailability (Task 2.3)
+- **Symptom:** `expected scalar type Half but found Float` during TripoSR extraction; and `torchmcubes` (a hard import in the vendored pipeline) has no prebuilt wheel — its source build needs MSVC + libtorch ABI, unavailable on Windows.
+- **Root cause:** the triplane renderer builds fp32 `torch.linspace` grid vertices while the decoder is fp16; the image preprocessor also emits fp32. The marching-cubes call is the only torchmcubes usage.
+- **Fix:** three dtype casts patched into `backend/vendor/tsr/system.py`; `backend/shims/torchmcubes_stub.py` prefers PyMCubes (C++ wheel) with a skimage fallback and is registered in `sys.modules`. fp16 + `chunk_size=16384` + resolution 192 took extraction from ~200s to ~3s.
+- **Avoid in future:** when vendoring an inference pipeline, keep a patch list in the vendor README; prefer pure-wheel backends (PyMCubes) over source-only CUDA extensions on Windows.
+- **Status:** fixed
