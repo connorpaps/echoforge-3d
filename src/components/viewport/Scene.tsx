@@ -3,6 +3,8 @@
 import { Grid, OrbitControls, Stats } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
+import { TerrainMesh } from '@/components/viewport/TerrainMesh';
+import { useSceneStore } from '@/lib/stores/useSceneStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
 
 function Ground() {
@@ -37,12 +39,14 @@ function TelemetryLoop() {
 }
 
 export function Scene() {
+  const hasTerrain = useSceneStore((s) => s.terrainHeightmap !== null);
+
   return (
     <>
       <color attach="background" args={['#08090a']} />
       <hemisphereLight args={['#5e6ad2', '#08090a', 0.55]} />
       <directionalLight position={[10, 15, 8]} intensity={1.2} />
-      <Ground />
+      {hasTerrain ? <TerrainMesh /> : <Ground />}
       <Grid
         position={[0, 0.01, 0]}
         args={[64, 64]}

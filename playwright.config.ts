@@ -3,7 +3,10 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   timeout: 45000,
-  fullyParallel: true,
+  // CPU-safety: SwiftShader renders WebGL on the CPU, so parallel workers
+  // saturate the machine and can freeze the host. Always run serially.
+  fullyParallel: false,
+  workers: 1,
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
@@ -29,7 +32,10 @@ export default defineConfig({
     // which Next.js would otherwise honor and break the URL probe.
     command: 'pnpm dev -p 3000',
     url: 'http://localhost:3000',
-    reuseExistingServer: true,
+    // Always start our own server: reusing an unrelated dev server would run
+    // tests against non-hermetic (real-worker) builds. Fails loudly if 3000
+    // is occupied.
+    reuseExistingServer: false,
     timeout: 120000,
     // Hermetic E2E mode: workers are replaced with deterministic fixtures
     // so CI never downloads models or touches the network.

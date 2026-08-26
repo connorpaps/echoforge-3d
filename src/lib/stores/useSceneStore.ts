@@ -41,7 +41,7 @@ export interface SceneState {
   removeEntity: (id: string) => void;
   setMode: (mode: 'editor' | 'play') => void;
   setIsRecordingVoice: (recording: boolean) => void;
-  setTerrainHeightmap: (heightmap: Float32Array) => void;
+  setTerrainHeightmap: (heightmap: Float32Array | null) => void;
   undo: () => void;
   redo: () => void;
 }
