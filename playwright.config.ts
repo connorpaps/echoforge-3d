@@ -31,5 +31,8 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: true,
     timeout: 120000,
+    // Hermetic E2E mode: workers are replaced with deterministic fixtures
+    // so CI never downloads models or touches the network.
+    env: { ...process.env, NEXT_PUBLIC_E2E: 'true' },
   },
 });
