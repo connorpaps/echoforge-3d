@@ -1,0 +1,20 @@
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+torch==2.5.0
+torchvision==0.20.0
+diffusers==0.31.0
+transformers==4.46.0
+accelerate==1.0.1
+trimesh==4.5.1
+pyvista==0.44.1
+slowapi==0.1.9
+pydantic==2.9.2
+huggingface_hub==0.26.1
+pytest==8.3.3
+# PyPI publishes CPU and CUDA wheels with the same version; pip defaults to CPU.
+# Install CUDA builds with:
+#   pip install torch==2.5.0 torchvision==0.20.0 --index-url https://download.pytorch.org/whl/cu121
+# NOTE: audiocraft==1.3.0 is intentionally NOT in the main resolution.
+# It pins torch==2.1.0 / torchvision==0.16.0 / torchtext==0.16.0 / xformers<0.0.23,
+# which conflict with this spec's torch 2.5.0 stack. Install it separately in
+# Phase 2 (AudioGen integration) with --no-deps plus its runtime extras.
