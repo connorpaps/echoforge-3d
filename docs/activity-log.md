@@ -1586,3 +1586,11 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - src/lib/stores/useUiStore.ts
   - src/lib/viewport/capture.ts
   - src/lib/viewport/postprocessing.ts
+
+## 2026-08-26 21:08 — `8e2426f`
+**fix: resolve SDXL-Turbo "hang" — allocator thrash, not a kernel bug; harden live battery**
+
+  - docs/lessons-learned.md
+  - handoff.md
+  - knowledge.md
+  - scripts/gpu/live_api_battery.py
