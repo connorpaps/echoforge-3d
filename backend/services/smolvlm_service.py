@@ -1,14 +1,16 @@
 """SmolVLM vision-NPC dialogue service (Task 3.3).
 
-Loads ``HuggingFaceTB/SmolVLM-Instruct`` (weights pre-cached in Phase 0) via
-the transformers ``image-text-to-text`` pipeline and answers questions about
-a viewport screenshot with a persona prompt. All GPU work happens inside the
+Loads ``HuggingFaceTB/SmolVLM-Instruct`` (weights pre-cached in Phase 0) as an
+``AutoModelForImageTextToText`` + its processor and answers questions about a
+viewport screenshot with a persona prompt. All GPU work happens inside the
 SequentialVRAMManager lock via the ``smolvlm`` model slot.
 
-Real inference additionally needs ``qwen-vl-utils`` (SmolVLM's processor
-dependency) — NOT installed by default under the zero-vetted-deps guardrail.
-When it is missing (or the model fails to load), the service degrades to a
-deterministic canned dialogue line so the contract, UI, and tests always work.
+NOTE: transformers 4.46 has no ``image-text-to-text`` pipeline task (added
+later), so we drive the processor + model directly with the SmolVLM chat
+template — the canonical HF usage. Real inference additionally needs
+``qwen-vl-utils`` (SmolVLM's processor dependency). When it is missing (or the
+model fails to load), the service degrades to a deterministic canned dialogue
+line so the contract, UI, and tests always work.
 """
 
 from __future__ import annotations
@@ -18,7 +20,10 @@ import io
 import logging
 from typing import Callable
 
-from ..config import DEVICE, TORCH_DTYPE
+import torch
+from transformers import AutoModelForImageTextToText, AutoProcessor
+
+from ..config import DEVICE, SMOLVLM_REPO_ID, TORCH_DTYPE
 
 logger = logging.getLogger(__name__)
 
@@ -43,23 +48,28 @@ DEFAULT_PERSONA = (
 
 
 def _load_smolvlm():
-    """VRAM manager slot loader: real SmolVLM, or None → canned dialogue."""
+    """VRAM manager slot loader: real SmolVLM, or None → canned dialogue.
+
+    Returns ``(model, processor)`` or ``None`` (fallback). The model rides on
+    the GPU through the VRAM manager slot.
+    """
     if not QWEN_VL_UTILS_AVAILABLE:
         logger.info(
             "[SmolVLM] qwen-vl-utils not installed — using fallback dialogue"
         )
         return None
     try:
-        from transformers import pipeline
-
-        logger.info("[SmolVLM] loading HuggingFaceTB/SmolVLM-Instruct ...")
-        pipe = pipeline(
-            "image-text-to-text",
-            model="HuggingFaceTB/SmolVLM-Instruct",
-            device=DEVICE,
-            torch_dtype=TORCH_DTYPE if DEVICE == "cuda" else None,
+        logger.info("[SmolVLM] loading %s ...", SMOLVLM_REPO_ID)
+        processor = AutoProcessor.from_pretrained(SMOLVLM_REPO_ID)
+        model = AutoModelForImageTextToText.from_pretrained(
+            SMOLVLM_REPO_ID, torch_dtype=TORCH_DTYPE
         )
-        return pipe
+        model.to(DEVICE)
+        model.eval()
+        logger.info(
+            "[SmolVLM] loaded %s (device=%s, dtype=%s)", SMOLVLM_REPO_ID, DEVICE, TORCH_DTYPE
+        )
+        return model, processor
     except Exception as exc:  # noqa: BLE001 - uncached/unsupported weights degrade gracefully
         logger.warning("[SmolVLM] load failed (%s) — using fallback dialogue", exc)
         return None
@@ -103,26 +113,32 @@ class SmolVLMService:
             return FALLBACK_DIALOGUE, True
 
         try:
+            vl_model, processor = model
             report("NPC", 20, "encoding frame")
             image = _decode_frame(frame_base64)
             messages = [
                 {
                     "role": "user",
                     "content": [
-                        {"type": "image", "image": image},
+                        {"type": "image"},
                         {"type": "text", "text": persona},
                     ],
                 }
             ]
+            report("NPC", 40, "preprocessing frame")
+            prompt = processor.apply_chat_template(messages, add_generation_prompt=True)
+            inputs = processor(text=prompt, images=[image], return_tensors="pt").to(DEVICE)
             report("NPC", 55, "vision model reasoning")
-            outputs = model(
-                messages,
-                max_new_tokens=64,
-                do_sample=True,
-                temperature=0.7,
-                return_full_text=False,
-            )
-            text = outputs[0]["generated_text"].strip()
+            with torch.inference_mode():
+                outputs = vl_model.generate(
+                    **inputs,
+                    max_new_tokens=64,
+                    do_sample=True,
+                    temperature=0.7,
+                )
+            text = processor.batch_decode(
+                outputs[:, inputs["input_ids"].shape[1] :], skip_special_tokens=True
+            )[0].strip()
             if not text:
                 raise ValueError("SmolVLM returned empty text")
             report("NPC", 95, "response ready")

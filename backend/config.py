@@ -51,6 +51,7 @@ TRIPOSR_CONFIG_NAME = "config.yaml"
 TRIPOSR_WEIGHTS_NAME = "model.ckpt"
 
 SDXL_REPO_ID = os.environ.get("SDXL_REPO_ID", "stabilityai/sdxl-turbo")
+SMOLVLM_REPO_ID = os.environ.get("SMOLVLM_REPO_ID", "HuggingFaceTB/SmolVLM-Instruct")
 SDXL_VARIANT = "fp16"
 
 

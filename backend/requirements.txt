@@ -7,6 +7,10 @@ torch==2.5.0
 torchvision==0.20.0
 diffusers==0.31.0
 transformers==4.46.0
+# SmolVLM vision-NPC (Task 3.3 real path): the SmolVLM image processor depends
+# on qwen-vl-utils. Authorized install 2026-08-26; without it the service
+# degrades to the canned fallback dialogue.
+qwen-vl-utils>=0.0.8
 accelerate==1.0.1
 trimesh==4.5.1
 pyvista==0.44.1

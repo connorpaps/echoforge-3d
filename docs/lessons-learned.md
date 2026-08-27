@@ -155,3 +155,12 @@
 **fix: resolve SDXL-Turbo "hang" — allocator thrash, not a kernel bug; harden live battery**
 
 Enriched in-place: see the full Symptom / Root cause / Fix / Avoid-in-future entry directly above ("2026-08-26 — SDXL-Turbo 'hang' was allocator thrash + zombie contamination"). This commit also carried the battery-script hardening (cp1252 `≈` crash, WS jobId race, 2-tuple tally).
+
+
+## 2026-08-26 — drei Grid invisible on WebGPU (ShaderMaterial incompatibility) + WebGPU adapter gotchas
+- **Symptom:** with NEXT_PUBLIC_ENABLE_WEBGPU=true on the real GPU, the scene rendered but the grid floor was gone and the console logged `THREE.NodeBuilder: Material "ShaderMaterial" is not compatible.`
+- **Root cause:** drei's `<Grid>` is built on `shaderMaterial` (classic THREE.ShaderMaterial); three r185's WebGPURenderer compiles everything through NodeBuilder, has no conversion for ShaderMaterial, logs the error and substitutes an empty NodeMaterial — the mesh renders nothing.
+- **Fix:** replaced with `src/components/viewport/GridFloor.tsx`, a pure-TSL grid (MeshBasicNodeMaterial with colorNode/opacityNode; world-aligned lines via `positionWorld.x/z`, `min` of the x/z fract patterns, radial fade). Renders identically on WebGL + WebGPU; pixel-verified on both.
+- **WebGPU adapter gotchas (all three bit during verification):** (1) Playwright's bundled Chromium has no WebGPU adapter — use the real Chrome via `channel: 'chrome'`; (2) headless exposes no adapter and three's WebGPURenderer silently falls back to WebGL2, so the app "works" but isn't WebGPU — always check `canvas.getContext('webgpu')` is truthy; (3) `--enable-features=Vulkan,DefaultANGLEVulkan` makes `requestAdapter()` return null on Windows (Dawn tries Vulkan and fails) — pass no GPU flags, Chrome enables WebGPU by default on localhost.
+- **Avoid in future:** any scene material must be a TSL node material (Mesh*NodeMaterial) or a classic material with a library conversion (LineBasicMaterial etc.) — never raw ShaderMaterial — or it silently vanishes on the WebGPU path.
+- **Status:** fixed; WebGPU check 7/7, WebGL + WebGPU both pixel-verified, 120 unit + 68 pytest + 21/21 e2e green.

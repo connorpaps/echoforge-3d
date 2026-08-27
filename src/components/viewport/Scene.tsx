@@ -1,12 +1,13 @@
 'use client';
 
-import { Grid, OrbitControls, Stats } from '@react-three/drei';
+import { OrbitControls, Stats } from '@react-three/drei';
 import { Physics } from '@react-three/rapier';
 import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 import { FirstPersonRig } from '@/components/player/FirstPersonRig';
 import { PlayerController } from '@/components/player/PlayerController';
 import { TerrainCollider } from '@/components/viewport/TerrainCollider';
+import { GridFloor } from '@/components/viewport/GridFloor';
 import { TerrainMesh } from '@/components/viewport/TerrainMesh';
 import { SceneEntities } from '@/components/viewport/SceneEntities';
 import { AudioEmitters } from '@/components/viewport/AudioEmitters';
@@ -90,19 +91,7 @@ export function Scene() {
         <PlayerController />
       </Physics>
 
-      <Grid
-        position={[0, 0.01, 0]}
-        args={[64, 64]}
-        cellSize={1}
-        cellThickness={0.6}
-        cellColor="#16181d"
-        sectionSize={4}
-        sectionThickness={1}
-        sectionColor="#10b981"
-        fadeDistance={45}
-        fadeStrength={1}
-        infiniteGrid={false}
-      />
+      <GridFloor />
 
       {/* Generated mesh entities (spawned by GeneratedEntityBridge) */}
       <SceneEntities />
