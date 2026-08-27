@@ -4,7 +4,7 @@ Clients connect to ``/ws/progress`` and receive JSON events for every running
 generation job:
 
     {"jobId": "...", "stage": "DIFFUSION" | "RECONSTRUCTION" | "DECIMATION"
-                      | "DONE" | "ERROR",
+                      | "AUDIO" | "DONE" | "ERROR",
      "percent": 0-100, "message": "..."}
 
 The client filters by ``jobId`` to follow its own request. The channel is

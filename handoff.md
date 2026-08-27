@@ -1,6 +1,6 @@
 # EchoForge 3D — Session Handoff
 
-**Last updated:** 2026-08-25
+**Last updated:** 2026-08-26
 **Project:** Multimodal spatial worldcrafting engine & in-browser 3D creative suite (Next.js 15 + Three.js/WebGPU frontend, FastAPI + PyTorch backend).
 
 ## Read this first
@@ -68,13 +68,14 @@ stages of Phase 0 complete: workspace tree, 471 skills, frontend manifests + loc
 - `pnpm typecheck` — passes (no src/ sources yet; gate bites from Task 1.1)
 - `pnpm test` — n/a (no tests yet)
 
-## Prioritized next steps (Phase 3)
+## Next steps (post-Phase-3)
 
-1. Phase 3 — AudioGen endpoint (`facebook/audiogen-medium`, gated): install with `--no-deps` + runtime extras (pins torch==2.1.0); wire `/api/v1/generate-audio` + the loopable `.wav` contract.
-2. Wire the real Depth-Anything worker to CUJ-02 (voice → topo → terrain) with real weights; the mock seam is e2e-tested but the real path isn't.
-3. Provide HF_TOKEN (with AudioGen license accepted) to finish the pre-cache: `HF_TOKEN=... .venv/Scripts/python.exe backend/scripts/download_models.py`.
-4. Before shipping: verify the WebGPU path on a real GPU (e2e runs SwiftShader software WebGL); re-check `world.castRay` on a rapier upgrade before gameplay use.
-5. Backend run command now needs the relocated cache (new shells get `HF_HOME` via setx): `HF_HOME=G:\\hf-cache .venv/Scripts/python.exe -m uvicorn backend.main:app --port 8000`.
+1. **Mesh-quality tuning milestone** (user-deferred decision — re-ask when ready): TRELLIS/Hunyuan3D-2 model swap, SDXL PBR texture baking, or pipeline polish + pixel-level viewport e2e.
+2. Provide HF_TOKEN (accept AudioGen license) to finish the pre-cache and verify the REAL AudioGen path: `HF_TOKEN=... .venv/Scripts/python.exe backend/scripts/download_models.py`.
+3. `pip install qwen-vl-utils` (authorization needed) to enable real SmolVLM vision replies (currently canned fallback).
+4. Wire the real Depth-Anything worker to CUJ-02 (voice → topo → terrain) — mock seam is tested but the real path isn't.
+5. Before shipping: verify the WebGPU renderer + post path on a real GPU (CI runs SwiftShader WebGL); re-check `world.castRay` on a rapier upgrade before gameplay use.
+6. Backend run command (relocated cache): `HF_HOME=G:\\hf-cache .venv/Scripts/python.exe -m uvicorn backend.main:app --port 8000`.
 
 ## Phase 2 delivered this session
 
@@ -129,6 +130,40 @@ stages of Phase 0 complete: workspace tree, 471 skills, frontend manifests + loc
   - Frontend: `facingAzimuthToward()` computes the yaw pointing +Z at the live camera; `buildMeshEntity` applies `rotation=[0, yaw, 0]`; `CameraProbe` (in Scene.tsx) mirrors the orbiting camera into module-level `cameraRef` (avoids per-frame zustand re-renders). Works with OrbitControls in editor mode and the player camera in play mode.
   - Also patched two latent fp16 dtype bugs in the vendored NeRF renderer (`nerf_renderer.py`: t_vals linspace + positions → triplane dtype) — same class as the extract-path patch; surfaced while using `render()` for the diagnostic.
   - Verified: regenerated chair spawns at (2,0,0) with yaw ≈ 0.695 rad toward the default camera (12,10,12) — the photo's 3/4 front faces the viewer. 41 backend tests, 93 frontend tests, 13/13 e2e. App running on :3000, backend on :8000.
+
+## Work completed (2026-08-26, Phase 3 — full plan implementation)
+
+- **All 7 Phase 3 tasks shipped.** Gates: typecheck ✓ · lint ✓ · 119 frontend unit ✓ · 60 backend pytest ✓ · **21/21 serial e2e** ✓ · `pnpm build` ✓ (First Load JS **372 kB** vs PRD <15 MB). Close-out: `docs/plans/2026-08-26-phase-3.md`.
+- **3.1 AudioGen** — `/api/v1/generate-audio` → loopable WAV (crossfaded seam). Real `audiocraft` path is import-guarded; ships on the deterministic procedural fallback (`procedural_audio.py`) until HF_TOKEN. `requirements-audiocraft.txt` documented.
+- **3.2 HRTF bus** — `SpatialAudioEmitter` (HRTF/inverse), camera→listener sync, entity-driven `AudioEmitters`, Generate Ambient button → `audio_emitter` entity + live bus count + volume/falloff inspector controls.
+- **3.3 SmolVLM NPC** — `/api/v1/npc-dialogue`; Spawn NPC + E-to-interact + offscreen render-target capture (`capture.ts`); dialogue bubble + hint. Real vision needs `qwen-vl-utils` (gated install — noted).
+- **3.4 Kokoro TTS** — `speechPlayback.ts` plays NPC dialogue as one-shot spatial emitters at the NPC position (voice from entity `npcVoice`).
+- **3.5 Post-FX (dual path)** — WebGL UnrealBloomPass+FXAA+OutputPass verified in CI (FX toggle, FPS-floor test disables FX on SwiftShader); WebGPU TSL path feature-detects bloom — **three r185 TSL ships no bloom/fxaa nodes**, so it renders the plain pass until a three upgrade (knowledge.md).
+- **3.6 Export** — offline standalone HTML (three.core embedded as base64 blob import, minimal GLB parser in `public/exporter/runtime.js`) + merged glTF-2.0 scene tree for Godot/Unity. ExportMenu on the TopBar; CUJ-04 e2e re-opens the downloaded HTML in an isolated page and renders with zero errors.
+- **3.7 Profiling** — rolling P95 frame-time telemetry; bundle audit above.
+- New/changed files: backend (`audio_service`, `smolvlm_service`, `procedural_audio`, `routers/npc.py`, config/router/test additions), frontend (`spatialAudio`, `speechPlayback`, `postprocessing`, `export/exportScene`, `capture`, NPC/audio/export/postfx components, stores), `public/vendor/three.core.min.js` + `public/exporter/runtime.js` (eslint `public/**` ignored), new e2e specs (audio, npc, export) + viewport-shell FX tests.
+- Repo hygiene: everything (user doc edits + Phase 3 + audit work) is committed and pushed at session end.
+
+## Work completed (2026-08-26, Phase 3 live audit session)
+
+Ran the full Phase 3 verification battery: static gates ✓ (typecheck, lint, 119 frontend unit, **61 backend pytest**), **21/21 serial e2e** ✓, and a **live GPU API battery** against the real stack (CUDA RTX 2070, real TripoSR, real SDXL, live WebSocket progress):
+
+- **audio ✓** (procedural fallback, loopable WAV, seam check, synthetic header), **NPC ✓** (fallback synthetic dialogue, 400/422 guards), **mesh ✓** (REAL TripoSR on CUDA, 200 OK, GLB color check).
+- **texture ✗ OPEN — real SDXL-Turbo fp16 hangs** (1 step never completes; GPU pegs 100% / 7.7 GB for 15+ min). Fixed one real bug so far: diffusers 0.31 `callback_on_step_end` must return the kwargs dict (`backend/services/sdxl_service.py`) — was crashing with `'NoneType' object has no attribute 'pop'`. The REMAINING hang (fp16 UNet forward stall) was never cleanly re-tested: earlier "hangs" were contaminated by zombie python processes holding CUDA contexts (7.7 GB). The clean-GPU isolation run was interrupted by session end.
+- **Two new safety mechanisms added this session:**
+  1. **Backend GpuWatchdog** (`backend/services/vram_manager.py`): arms a daemon thread before every GPU job; if the job exceeds its slot deadline it `os._exit(2)` (a hung CUDA kernel can't be cancelled from Python — process exit is the only reliable release). Config: `GPU_JOB_TIMEOUT_S` (default 300; 0 disables) + per-slot `GPU_TIMEOUT_TRIPOSR/SDXL/AUDIOGEN/SMOLVLM`. 9/9 vram_manager tests.
+  2. **Test-run watchdog** `scripts/gpu/run_guarded.sh <limit> <log> <marker> <cmd...>`: hard deadline with 15s GPU check-ins, force-kills the tree at the limit (exit 124), sweeps stragglers by command-line marker. Also `scripts/gpu/live_api_battery.py` (the live battery) and `scripts/gpu/pyprocs.ps1` (python process lister).
+- **pytest full-suite hang fixed:** the new audio WebSocket test bound the singleton `progress_bus._loop` to its TestClient's event loop; the later mesh WS test's events hit a stale loop and `receive_json()` blocked forever. Fixed by resetting the bus between tests (`backend/tests/conftest.py`).
+
+### ▶ RESUME POINT (next session — SDXL hang)
+
+1. Verify GPU baseline is clean: `nvidia-smi --query-gpu=memory.used --format=csv,noheader` should read ~1–2 GB. If higher, list/kill stray pythons: `powershell -ExecutionPolicy Bypass -File scripts/gpu/pyprocs.ps1`, then `taskkill //PID <pid> //T //F` each.
+2. Restart backend: `HF_HOME='G:\hf-cache' .venv/Scripts/python.exe -m uvicorn backend.main:app --port 8000` (dev server may still be on :3000).
+3. Isolate the fp16 UNet forward under the watchdog: `HF_HOME='G:\hf-cache' bash scripts/gpu/run_guarded.sh 90 .audit/repro_unet.log "repro_unet.py" .venv/Scripts/python.exe -u .audit/repro_unet.py` (script already written at `.audit/repro_unet.py`; if `.audit` is gone, re-create from the description in knowledge.md).
+4. If the bare UNet forward hangs → try fp32 UNet-only, `torch.backends.cuda.matmul` flags, or a torch 2.6/CUDA driver note; if it completes → the hang is in the pipeline loop (scheduler/VLM), not the UNet.
+5. Then re-run the full live battery: `HF_HOME='G:\hf-cache' .venv/Scripts/python.exe scripts/gpu/live_api_battery.py`.
+
+**Session state at wrap-up:** backend down (was killed during diagnosis); dev server still running on :3000 (node pid 22116, leave or kill); GPU clean at ~1.3 GB; all work committed + pushed.
 
 ## Session handoff checklist
 

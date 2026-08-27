@@ -102,3 +102,43 @@
 - **Avoid in future:** when vendoring an inference pipeline, keep a patch list in the vendor README; prefer pure-wheel backends (PyMCubes) over source-only CUDA extensions on Windows.
 - **Status:** fixed
 
+
+## 2026-08-26 — three r185 TSL build has no chainable bloom/ssao/fxaa nodes (Task 3.5)
+- **Symptom:** the spec's `pass(scene, camera).pipe(bloom).pipe(fxaa)` WebGPU post chain couldn't be built; `import { bloom } from 'three/tsl'` didn't exist.
+- **Root cause:** three 0.185's `three.tsl.js` exports `pass`/`passTexture` but NO post-processing effect nodes (`grep bloom` = 0; the chainable `.bloom()`/`.ssao()` methods landed in later releases).
+- **Fix:** dual path — WebGL (default, CI-verified): `three/addons` EffectComposer + UnrealBloomPass + FXAA + OutputPass (zero new deps). WebGPU: `PostProcessing` + `pass(scene, camera)` with runtime feature-detection of `passNode.bloom()` so a future three upgrade unlocks the chain with no code change.
+- **Avoid in future:** check the installed three version's TSL exports before promising chainable post nodes; feature-detect runtime APIs when the version is pinned.
+- **Status:** fixed
+
+## 2026-08-26 — R3F v9 only renders the scene when no subscriber takes render priority (Task 3.5)
+- **Symptom:** risk of double-rendering the scene (composer + default gl.render) when wiring an EffectComposer.
+- **Root cause:** uncertainty about fiber v9's loop semantics.
+- **Fix:** verified in `node_modules/@react-three/fiber/dist/events-*.esm.js` — the loop calls `if (!state.internal.priority && state.gl.render) state.gl.render(...)`, and any `useFrame(cb, renderPriority > 0)` subscriber increments `internal.priority`. So `useFrame(() => composer.render(), 1)` takes over rendering cleanly.
+- **Avoid in future:** when taking over the render loop in R3F, pass a positive renderPriority — do NOT also call gl.render manually.
+- **Status:** fixed
+
+## 2026-08-26 — GLB JSON chunks must pad with spaces, not NULs (Task 3.6)
+- **Symptom:** a hand-built test GLB failed to parse in the export merge (entity silently skipped).
+- **Root cause:** the JSON chunk was padded with zero bytes; `JSON.parse` rejects NUL characters. The glTF spec mandates padding with 0x20 (space).
+- **Fix:** test builder pads with `0x20`; the runtime parser tolerates both.
+- **Avoid in future:** any GLB authoring tooling must pad JSON chunks with spaces.
+- **Status:** fixed
+
+## 2026-08-26 — Phase 3 live audit (GPU watchdog + SDXL hang)
+- **Symptom:** `taskkill //PID $! //T //F` from Git Bash silently killed nothing; zombie python processes survived with CUDA contexts and pegged the GPU at 7.7/8 GB, making every subsequent GPU test *appear* to hang (SDXL texture, UNet repro).
+- **Root cause:** three compounding Windows gotchas — (1) Git Bash `$!` is an MSYS pid, not a Windows pid, so `taskkill` misses; (2) `.venv/Scripts/python.exe` is a stub that spawns the real `C:\Users\...\Python311\python.exe`, so killing the stub can orphan the real process; (3) `wmic get ProcessId,CommandLine` returns columns alphabetically (CommandLine first) and truncates long lines, so a naive `awk '{print $1}'` grabbed the path, not the pid.
+- **Fix:** `scripts/gpu/run_guarded.sh` resolves real pids via single-column `wmic process where "name='python.exe' and CommandLine like '%MARKER%'" get ProcessId` and sweeps repeatedly (the stub spawns the real python asynchronously). Added `scripts/gpu/pyprocs.ps1` for inspecting stragglers. Backend `GpuWatchdog` in `vram_manager.py` force-exits the process when a GPU job exceeds its slot deadline (hung CUDA kernels can't be cancelled from Python).
+- **Avoid in future:** never trust `$!` for Windows process kills; always resolve via wmic/PowerShell by command-line marker; verify `nvidia-smi` memory is at baseline (~1–2 GB) before judging whether a GPU job is hung.
+- **Status:** fixed (watchdog) + SDXL hang itself still open (see handoff RESUME POINT).
+
+- **Symptom:** real SDXL-Turbo fp16 `/api/v1/generate-texture` on CUDA crashed with `'NoneType' object has no attribute 'pop'`.
+- **Root cause:** diffusers 0.31's `callback_on_step_end` hook contract — the callback must RETURN the kwargs dict; 0.31 pops `"latents"` off the return value. Our callback returned `None`.
+- **Fix:** `sdxl_service.py` `on_step_end` now returns `callback_kwargs` (the standard hook contract).
+- **Avoid in future:** when using `callback_on_step_end` (or `callback_on_step_end_tensor_inputs`), always return the kwargs dict.
+- **Status:** fixed.
+
+- **Symptom:** full backend pytest suite hung forever after adding an audio WebSocket test; the mesh WS test's `receive_json()` blocked.
+- **Root cause:** the new test's TestClient bound the singleton `progress_bus._loop` to its own event loop; later tests' `publish_sync` events were posted onto that stale (closed) loop and never reached the current client's queue.
+- **Fix:** reset the bus between tests in `backend/tests/conftest.py` (re-create the `ProgressBus` singleton per test).
+- **Avoid in future:** any test that touches `progress_bus` must not leak a loop binding into the module-level singleton; reset it in conftest.
+- **Status:** fixed.

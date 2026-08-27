@@ -3,14 +3,20 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('@/lib/api/generate', () => ({
   generateMesh: vi.fn(),
   generateTexture: vi.fn(),
+  generateAudio: vi.fn(),
   subscribeProgress: vi.fn(() => () => {}),
 }));
 
-import { generateMesh, generateTexture } from '@/lib/api/generate';
+import {
+  generateAudio,
+  generateMesh,
+  generateTexture,
+} from '@/lib/api/generate';
 import { useGenerationStore } from '@/lib/stores/useGenerationStore';
 
 const mockGenerateMesh = vi.mocked(generateMesh);
 const mockGenerateTexture = vi.mocked(generateTexture);
+const mockGenerateAudio = vi.mocked(generateAudio);
 
 function resetStore() {
   useGenerationStore.getState().dismiss();
@@ -21,6 +27,7 @@ describe('useGenerationStore', () => {
     resetStore();
     mockGenerateMesh.mockReset();
     mockGenerateTexture.mockReset();
+    mockGenerateAudio.mockReset();
   });
 
   it('transitions idle → generating → success on mesh generation', async () => {
@@ -67,6 +74,27 @@ describe('useGenerationStore', () => {
     await useGenerationStore.getState().retry();
     expect(useGenerationStore.getState().status).toBe('success');
     expect(mockGenerateTexture).toHaveBeenCalledTimes(2);
+  });
+
+  it('transitions idle → generating → success on audio generation', async () => {
+    mockGenerateAudio.mockResolvedValue({
+      jobId: 'j5',
+      wavBase64: 'UklGRg==',
+      synthetic: true,
+      elapsedMs: 30,
+    });
+
+    const promise = useGenerationStore.getState().generateAudio('rain', 8);
+    expect(useGenerationStore.getState().status).toBe('generating');
+    expect(useGenerationStore.getState().kind).toBe('audio');
+    expect(mockGenerateAudio).toHaveBeenCalledWith(
+      expect.objectContaining({ prompt: 'rain', durationSec: 8, seed: 42 }),
+    );
+
+    await promise;
+    const state = useGenerationStore.getState();
+    expect(state.status).toBe('success');
+    expect(state.result).toMatchObject({ wavBase64: 'UklGRg==' });
   });
 
   it('dismiss returns to idle and clears the result', async () => {

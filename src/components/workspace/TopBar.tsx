@@ -3,10 +3,14 @@
 import { KeycapBadge } from '@/components/ui/KeycapBadge';
 import { StatusPill } from '@/components/ui/StatusPill';
 import { VramMeter } from '@/components/generation/VramMeter';
+import { ExportMenu } from '@/components/workspace/ExportMenu';
 import { useSceneStore } from '@/lib/stores/useSceneStore';
+import { useUiStore } from '@/lib/stores/useUiStore';
 
 export function TopBar() {
   const isRecording = useSceneStore((s) => s.isRecordingVoice);
+  const postFxEnabled = useUiStore((s) => s.postFxEnabled);
+  const togglePostFx = useUiStore((s) => s.togglePostFx);
 
   return (
     <header className="flex h-12 shrink-0 items-center justify-between border-b border-border-subtle bg-bg-canvas/80 px-4">
@@ -30,10 +34,15 @@ export function TopBar() {
 
         <button
           type="button"
-          className="rounded-sm border border-accent-secondary/50 px-3 py-1 text-xs font-medium text-accent-secondary transition-all duration-150 hover:border-accent-secondary active:scale-[0.98]"
+          data-testid="fx-toggle"
+          aria-pressed={postFxEnabled}
+          onClick={togglePostFx}
+          className="rounded-sm border border-border-subtle px-3 py-1 text-xs font-medium text-text-secondary transition-all duration-150 hover:border-border-interactive hover:text-text-primary active:scale-[0.98]"
         >
-          Export .GLB / Scene
+          FX: {postFxEnabled ? 'On' : 'Off'}
         </button>
+
+        <ExportMenu />
       </div>
     </header>
   );

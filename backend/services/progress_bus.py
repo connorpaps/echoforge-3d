@@ -6,7 +6,7 @@ publish through :meth:`publish_sync` (thread-safe hop onto the loop), and each
 connected WebSocket client consumes from its own queue.
 
 Event shape (JSON-serialisable):
-    {"jobId": str, "stage": "DIFFUSION"|"RECONSTRUCTION"|"DECIMATION"|"DONE"|"ERROR",
+    {"jobId": str, "stage": "DIFFUSION"|"RECONSTRUCTION"|"DECIMATION"|"AUDIO"|"NPC"|"DONE"|"ERROR",
      "percent": int, "message": str}
 """
 

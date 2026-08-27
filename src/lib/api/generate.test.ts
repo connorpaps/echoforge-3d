@@ -68,6 +68,42 @@ describe('generate API client (real HTTP path)', () => {
       api.generateMesh({ prompt: 'x', imageBase64: 'data:y' }),
     ).rejects.toThrow('mesh generation failed: OOM');
   });
+
+  it('generateAudio posts to the contract path and reads wav bytes + headers', async () => {
+    const wavBytes = new Uint8Array([0x52, 0x49, 0x46, 0x46, 0x01, 0x02, 0x03]);
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(wavBytes, {
+        status: 200,
+        headers: {
+          'X-EchoForge-Synthetic': 'false',
+          'X-EchoForge-Job': 'j9',
+          'Content-Type': 'audio/wav',
+        },
+      }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const result = await api.generateAudio({ prompt: 'rain on a tent' });
+    expect(fetchMock).toHaveBeenCalledWith(
+      expect.stringContaining('/api/v1/generate-audio'),
+      expect.objectContaining({ method: 'POST' }),
+    );
+    expect(result.synthetic).toBe(false);
+    expect(result.jobId).toBe('j9');
+    expect(result.wavBase64).toBe('UklGRgECAw=='); // base64 of the RIFF prefix
+  });
+
+  it('generateAudio surfaces backend error details', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue(
+        jsonResponse({ detail: 'audio generation failed: OOM' }, false, 500),
+      ),
+    );
+    await expect(api.generateAudio({ prompt: 'x' })).rejects.toThrow(
+      'audio generation failed: OOM',
+    );
+  });
 });
 
 describe('generate API client (E2E mock seam)', () => {
@@ -107,5 +143,21 @@ describe('generate API client (E2E mock seam)', () => {
     await expect(
       api.generateTexture({ prompt: 'make this fail now' }),
     ).rejects.toThrow('GPU queue saturated');
+  });
+
+  it('generateAudio returns the deterministic wav fixture with AUDIO timeline', async () => {
+    const events: Array<{ stage: string; percent: number }> = [];
+    const unsubscribe = api.subscribeProgress((event) =>
+      events.push({ stage: event.stage, percent: event.percent }),
+    );
+
+    const result = await api.generateAudio({ prompt: 'night forest' });
+    expect(result.synthetic).toBe(true);
+    expect(result.jobId).toMatch(/^e2e-audio/);
+    expect(result.wavBase64.startsWith('UklGR')).toBe(true); // 'RIFF' in base64
+
+    expect(events[0].stage).toBe('AUDIO');
+    expect(events.at(-1)?.stage).toBe('DONE');
+    unsubscribe();
   });
 });

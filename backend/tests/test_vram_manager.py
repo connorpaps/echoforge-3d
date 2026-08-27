@@ -137,6 +137,60 @@ def test_register_duplicate_name_rejected():
         manager.register("a", lambda: object())
 
 
+# --- GpuWatchdog -------------------------------------------------------------
+
+def _wait_for_threads() -> None:
+    for t in threading.enumerate():
+        if t.name == "gpu-watchdog" and t is not threading.current_thread():
+            t.join(timeout=5)
+
+
+def test_watchdog_disarm_prevents_exit():
+    """A job that finishes (disarm) before the deadline never fires."""
+    from backend.services.vram_manager import gpu_watchdog
+
+    gpu_watchdog.disarm()
+    gpu_watchdog.arm("triposr", 0.5)
+    assert gpu_watchdog.is_armed()
+    time.sleep(0.1)  # well before the deadline
+    gpu_watchdog.disarm()  # normal path: the job finished inside the deadline
+    _wait_for_threads()
+    assert not gpu_watchdog.is_armed()
+
+
+def test_watchdog_fires_and_force_exits(monkeypatch):
+    """A job that outlives its deadline triggers os._exit(2)."""
+    from backend.services.vram_manager import gpu_watchdog
+
+    gpu_watchdog.disarm()
+    exits: list[int] = []
+
+    def fake_exit(code: int) -> None:
+        exits.append(code)
+        raise SystemExit(code)
+
+    # Patch BEFORE arming so the firing thread can never kill the pytest
+    # process itself.
+    monkeypatch.setattr("backend.services.vram_manager.os._exit", fake_exit)
+    gpu_watchdog.arm("sdxl-turbo", 0.05)
+    time.sleep(0.3)  # outlive the 50 ms deadline — the watchdog must fire
+    _wait_for_threads()
+    assert exits == [2], f"os._exit not called with 2: {exits}"
+
+
+@pytest.mark.asyncio
+async def test_run_disarms_watchdog_after_success():
+    """vram_manager.run() arms around the job and disarms in its finally."""
+    from backend.services.vram_manager import gpu_watchdog
+
+    gpu_watchdog.disarm()
+    manager = SequentialVRAMManager()
+    manager.register("a", _dummy_loader("a"))
+    assert not gpu_watchdog.is_armed()
+    await _run_once(manager, "a")
+    assert not gpu_watchdog.is_armed()
+
+
 def test_publish_sync_from_worker_thread_is_safe():
     """publish_sync must never crash when no loop is running (e.g., unit tests)."""
     from backend.services.progress_bus import ProgressBus

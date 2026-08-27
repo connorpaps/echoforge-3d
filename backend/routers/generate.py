@@ -2,8 +2,9 @@
 
 POST /api/v1/generate-mesh      — image (base64) → optimized GLB asset
 POST /api/v1/generate-texture   — prompt → SDXL-Turbo PNG
+POST /api/v1/generate-audio     — prompt → loopable WAV (AudioGen / fallback)
 
-Both route GPU work through the SequentialVRAMManager (serial, one model
+All route GPU work through the SequentialVRAMManager (serial, one model
 resident at a time) and publish live progress events to the WebSocket channel.
 """
 
@@ -11,16 +12,20 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import io
 import logging
 import time
 import uuid
 from typing import Callable
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from ..config import (
     API_V1_PREFIX,
+    AUDIO_DURATION_DEFAULT,
+    MAX_AUDIO_SECONDS,
     MESH_MAX_FACES,
     MESH_RESOLUTION,
     MAX_PROMPT_CHARS,
@@ -28,7 +33,7 @@ from ..config import (
     SDXL_SIZE,
     SDXL_STEPS,
 )
-from ..services import mesh_processing, sdxl_service, tsr_service
+from ..services import audio_service, mesh_processing, sdxl_service, tsr_service
 from ..services.image_utils import ImageDecodeError, decode_image
 from ..services.progress_bus import progress_bus
 from ..services.vram_manager import vram_manager
@@ -64,6 +69,14 @@ class GenerateTextureRequest(BaseModel):
     seed: int | None = Field(default=None, ge=0, le=2**32 - 1)
     steps: int = Field(default=SDXL_STEPS, ge=1, le=4)
     size: int = Field(default=SDXL_SIZE, ge=256, le=1024)
+
+
+class GenerateAudioRequest(BaseModel):
+    prompt: str = Field(min_length=1, max_length=MAX_PROMPT_CHARS)
+    durationSec: float = Field(
+        default=AUDIO_DURATION_DEFAULT, ge=1.0, le=MAX_AUDIO_SECONDS
+    )
+    seed: int | None = Field(default=None, ge=0, le=2**32 - 1)
 
 
 class GenerateTextureResponse(BaseModel):
@@ -175,6 +188,44 @@ async def generate_texture(request: GenerateTextureRequest) -> GenerateTextureRe
         imageBase64=base64.b64encode(png_bytes).decode("ascii"),
         seed=request.seed,
         elapsedMs=elapsed_ms,
+    )
+
+
+@router.post("/generate-audio")
+async def generate_audio(request: GenerateAudioRequest) -> StreamingResponse:
+    job_id = _new_job()
+    report = _make_progress(job_id)
+    started = time.monotonic()
+
+    try:
+        report("AUDIO", 0, "queued for GPU")
+        wav_bytes, synthetic = await vram_manager.run(
+            "audiogen",
+            audio_service.audio_service.generate,
+            request.prompt,
+            request.durationSec,
+            request.seed,
+            report,
+        )
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("generate-audio failed (job %s)", job_id)
+        _publish_terminal(job_id, {"stage": "ERROR", "percent": 0, "message": str(exc)})
+        raise HTTPException(status_code=500, detail=f"audio generation failed: {exc}") from exc
+
+    elapsed_ms = int((time.monotonic() - started) * 1000)
+    _publish_terminal(
+        job_id,
+        {"stage": "DONE", "percent": 100, "message": f"audio ready in {elapsed_ms} ms"},
+    )
+    # The wav is returned as a binary stream (docs/04_API_CONTRACTS.md). The
+    # synthetic flag lets the frontend label fallback audio honestly.
+    return StreamingResponse(
+        io.BytesIO(wav_bytes),
+        media_type="audio/wav",
+        headers={
+            "X-EchoForge-Synthetic": "true" if synthetic else "false",
+            "X-EchoForge-Job": job_id,
+        },
     )
 
 

@@ -43,6 +43,16 @@ describe('useSceneStore', () => {
     expect(entity.scale).toEqual([2, 2, 2]);
   });
 
+  it('patches arbitrary entity fields via updateEntity', () => {
+    useSceneStore
+      .getState()
+      .addEntity(makeEntity({ type: 'audio_emitter', audioUrl: 'data:x' }));
+    useSceneStore.getState().updateEntity('1', { volume: 0.35, falloffDistance: 40 });
+    const entity = useSceneStore.getState().entities['1'];
+    expect(entity.volume).toBe(0.35);
+    expect(entity.falloffDistance).toBe(40);
+  });
+
   it('removes an entity and clears its selection', () => {
     useSceneStore.getState().addEntity(makeEntity());
     useSceneStore.setState({ selectedEntityId: '1' });

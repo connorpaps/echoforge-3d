@@ -1,146 +1,155 @@
-# 05. Data Architecture, Scene Graph & Storage Schemas
+# 05. Data Models, State Trees & IndexedDB Storage
 
 **Product:** EchoForge 3D  
-**Storage Layers:** Zustand In-Memory Scene Graph, Client IndexedDB Binary Cache, Supabase PostgreSQL
+**Specification Version:** 1.2.0 (Audited & Production-Hardened)  
+**Governing Skills:** `TheBushidoCollective/han` (`zustand-advanced-patterns`, `zustand-typescript`), `NeverSight/learn-skills.dev` (`idb-state-persistence`)
 
 ---
 
-## 1. Zustand 3D Scene Graph State Tree (In-Memory)
+## 1. Zustand 3D Scene Graph Store
 
-The in-memory scene state is managed via Zustand. High-frequency 60 FPS physics and camera matrices are stored as flat dictionary maps to avoid triggering React component re-renders:
+The scene graph decouples transient Three.js matrix updates from the React render tree using a flat entity map:
 
 ```typescript
-// src/types/scene-graph.ts
-export interface Vector3D {
-  x: number;
-  y: number;
-  z: number;
-}
-
-export interface AudioEmitterConfig {
-  audioId: string;
-  audioUrl: string;
-  volume: number;
-  refDistance: number;
-  maxDistance: number;
-  loop: boolean;
-}
-
-export interface PhysicsColliderConfig {
-  type: 'convex_hull' | 'cuboid' | 'heightfield' | 'none';
-  mass: number;
-  isStatic: boolean;
-}
+// src/lib/stores/useSceneStore.ts
+import { create } from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
 
 export interface SceneEntity {
-  id: string; // UUID v4
-  name: string;
-  category: 'terrain' | 'prop' | 'foliage' | 'structure' | 'npc';
-  glbUrl?: string;
-  position: Vector3D;
-  rotation: Vector3D;
-  scale: Vector3D;
-  physics: PhysicsColliderConfig;
-  audioEmitter?: AudioEmitterConfig;
-  npcData?: {
-    systemPrompt: string;
-    voiceName: string;
-    dialogueHistory: Array<{ role: 'user' | 'assistant'; content: string }>;
+  id: string;                    // UUID v4
+  name: string;                  // Display label (e.g., "Ancient Stone Pillar")
+  type: 'mesh' | 'terrain' | 'audio_emitter' | 'npc';
+  position: [number, number, number];
+  rotation: [number, number, number];
+  scale: [number, number, number];
+  glbUrl?: string;               // Blob URL or cached IndexedDB key
+  audioUrl?: string;             // Blob URL or cached audio buffer key
+  volume?: number;               // 0.0 to 1.0 for audio emitters
+  falloffDistance?: number;      // Inverse-square max distance
+  physics: {
+    colliderType: 'convexHull' | 'trimesh' | 'cuboid' | 'none';
+    mass: number;                // 0.0 for static terrain / fixed props
   };
-  visible: boolean;
-  selected: boolean;
+  npcPersona?: string;           // Persona system prompt for SmolVLM
 }
 
-export interface SceneGraphState {
-  sceneId: string;
-  projectName: string;
-  terrainHeightmapData: Float32Array | null;
-  entities: Record<string, SceneEntity>; // Flat key-value map by ID
+export interface SceneState {
+  entities: Record<string, SceneEntity>;
   selectedEntityId: string | null;
-  activeTool: 'select' | 'terrain_brush' | 'spawn_prop' | 'first_person';
-  historyPast: Array<Record<string, SceneEntity>>;
-  historyFuture: Array<Record<string, SceneEntity>>;
-  
+  activeMode: 'editor' | 'play';
+  isRecordingVoice: boolean;
+  terrainHeightmap: Float32Array | null;
+  history: {
+    past: Array<Record<string, SceneEntity>>;
+    future: Array<Record<string, SceneEntity>>;
+  };
+
   // Actions
-  setTerrainHeightmap: (data: Float32Array) => void;
   addEntity: (entity: SceneEntity) => void;
-  updateEntityTransform: (id: string, position?: Vector3D, rotation?: Vector3D, scale?: Vector3D) => void;
+  updateEntityTransform: (id: string, pos: [number, number, number], rot: [number, number, number], scale: [number, number, number]) => void;
   removeEntity: (id: string) => void;
-  selectEntity: (id: string | null) => void;
+  setMode: (mode: 'editor' | 'play') => void;
+  setTerrainHeightmap: (heightmap: Float32Array) => void;
   undo: () => void;
   redo: () => void;
 }
+
+export const useSceneStore = create<SceneState>()(
+  subscribeWithSelector((set, get) => ({
+    entities: {},
+    selectedEntityId: null,
+    activeMode: 'editor',
+    isRecordingVoice: false,
+    terrainHeightmap: null,
+    history: { past: [], future: [] },
+
+    addEntity: (entity) => set((state) => ({
+      entities: { ...state.entities, [entity.id]: entity },
+      history: {
+        past: [...state.history.past.slice(-50), state.entities],
+        future: []
+      }
+    })),
+
+    updateEntityTransform: (id, position, rotation, scale) => set((state) => {
+      const target = state.entities[id];
+      if (!target) return state;
+      return {
+        entities: {
+          ...state.entities,
+          [id]: { ...target, position, rotation, scale }
+        }
+      };
+    }),
+
+    removeEntity: (id) => set((state) => {
+      const nextEntities = { ...state.entities };
+      delete nextEntities[id];
+      return {
+        entities: nextEntities,
+        selectedEntityId: state.selectedEntityId === id ? null : state.selectedEntityId,
+        history: {
+          past: [...state.history.past.slice(-50), state.entities],
+          future: []
+        }
+      };
+    }),
+
+    setMode: (activeMode) => set({ activeMode }),
+    setTerrainHeightmap: (terrainHeightmap) => set({ terrainHeightmap }),
+
+    undo: () => set((state) => {
+      if (state.history.past.length === 0) return state;
+      const previous = state.history.past[state.history.past.length - 1];
+      const newPast = state.history.past.slice(0, -1);
+      return {
+        entities: previous,
+        history: {
+          past: newPast,
+          future: [state.entities, ...state.history.future.slice(0, 50)]
+        }
+      };
+    }),
+
+    redo: () => set((state) => {
+      if (state.history.future.length === 0) return state;
+      const next = state.history.future[0];
+      const newFuture = state.history.future.slice(1);
+      return {
+        entities: next,
+        history: {
+          past: [...state.history.past, state.entities],
+          future: newFuture
+        }
+      };
+    })
+  }))
+);
 ```
 
 ---
 
-## 2. Client-Side IndexedDB Storage Schema (`idb-keyval`)
+## 2. Client-Side IndexedDB Storage Protocol (LRU 500MB Limit)
 
-Large binary files (`.glb` 3D meshes, `.wav` audio buffers, and heightmap tensors) are stored locally in the browser's IndexedDB with an automated Least-Recently-Used (LRU) eviction limit of 500 MB to prevent browser quota rejections:
+```typescript
+// src/lib/stores/assetCache.ts
+import { get, set, del } from 'idb-keyval';
 
-```
-Database Name: EchoForgeLocalStore (Version 1)
+const MAX_CACHE_BYTES = 500 * 1024 * 1024; // 500 MB LRU Limit
 
-Object Stores:
-├── Store 1: "scene_meta"
-│    └── Key: `project:${projectId}` ──► Value: JSON metadata & scene graph state tree
-├── Store 2: "mesh_blobs"
-│    └── Key: `glb:${assetHash}`     ──► Value: Blob (application/octet-stream .glb binary)
-├── Store 3: "audio_blobs"
-│    └── Key: `audio:${audioHash}`   ──► Value: Blob (audio/wav binary buffer)
-└── Store 4: "heightmaps"
-     └── Key: `terrain:${sceneId}`   ──► Value: ArrayBuffer (Float32Array depth matrix)
-```
+export async function cacheAsset(key: string, buffer: ArrayBuffer): Promise<void> {
+  const metadata = { timestamp: Date.now(), size: buffer.byteLength };
+  await set(`meta:${key}`, metadata);
+  await set(`blob:${key}`, buffer);
+}
 
----
-
-## 3. Remote Relational Database Schema (Supabase / PostgreSQL)
-
-```sql
--- Schema version: 1.0.0
-
-CREATE TABLE IF NOT EXISTS public.users (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    email TEXT UNIQUE NOT NULL,
-    username TEXT UNIQUE NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS public.projects (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
-    name TEXT NOT NULL,
-    description TEXT,
-    thumbnail_url TEXT,
-    is_public BOOLEAN DEFAULT false,
-    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS public.scenes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    project_id UUID REFERENCES public.projects(id) ON DELETE CASCADE,
-    scene_graph_json JSONB NOT NULL,
-    heightmap_storage_path TEXT,
-    vertex_count INT DEFAULT 0,
-    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS public.assets (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    project_id UUID REFERENCES public.projects(id) ON DELETE SET NULL,
-    prompt TEXT NOT NULL,
-    category TEXT NOT NULL CHECK (category IN ('prop', 'foliage', 'structure', 'audio', 'npc')),
-    glb_storage_path TEXT,
-    audio_storage_path TEXT,
-    polygon_count INT,
-    bounding_box JSONB,
-    created_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
--- Indices for rapid spatial and project lookup
-CREATE INDEX idx_projects_user ON public.projects(user_id);
-CREATE INDEX idx_scenes_project ON public.scenes(project_id);
-CREATE INDEX idx_assets_project ON public.assets(project_id);
+export async function getCachedAsset(key: string): Promise<ArrayBuffer | null> {
+  const data = await get(`blob:${key}`);
+  if (data) {
+    // Update access timestamp for LRU eviction
+    await set(`meta:${key}`, { timestamp: Date.now(), size: data.byteLength });
+    return data as ArrayBuffer;
+  }
+  return null;
+}
 ```

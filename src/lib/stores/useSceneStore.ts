@@ -17,6 +17,7 @@ export interface SceneEntity {
     mass: number; // 0.0 for static terrain / fixed props
   };
   npcPersona?: string; // Persona system prompt for SmolVLM
+  npcVoice?: string; // Kokoro-82M voice id (default 'af_heart')
 }
 
 export interface SceneState {
@@ -38,6 +39,8 @@ export interface SceneState {
     rot: [number, number, number],
     scale: [number, number, number],
   ) => void;
+  /** Patch any non-id fields (volume/falloff for audio emitters, etc.). */
+  updateEntity: (id: string, patch: Partial<Omit<SceneEntity, 'id'>>) => void;
   removeEntity: (id: string) => void;
   setMode: (mode: 'editor' | 'play') => void;
   setIsRecordingVoice: (recording: boolean) => void;
@@ -72,6 +75,18 @@ export const useSceneStore = create<SceneState>()(
           entities: {
             ...state.entities,
             [id]: { ...target, position, rotation, scale },
+          },
+        };
+      }),
+
+    updateEntity: (id, patch) =>
+      set((state) => {
+        const target = state.entities[id];
+        if (!target) return state;
+        return {
+          entities: {
+            ...state.entities,
+            [id]: { ...target, ...patch },
           },
         };
       }),

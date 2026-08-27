@@ -1,7 +1,7 @@
 'use client';
 
 import { useGenerationStore } from '@/lib/stores/useGenerationStore';
-import type { MeshResult, TextureResult } from '@/lib/api/generate';
+import type { AudioResult, MeshResult, TextureResult } from '@/lib/api/generate';
 
 /**
  * Floating glass toasts (docs/02_DESIGN_BRIEF.md §4):
@@ -56,6 +56,12 @@ export function ResultToast() {
   }
 
   if (status === 'success' && result) {
+    const title =
+      kind === 'texture'
+        ? 'Texture ready'
+        : kind === 'audio'
+          ? 'Ambient ready'
+          : 'Mesh ready';
     return (
       <div className="pointer-events-none absolute bottom-4 right-4 z-30 flex flex-col items-end gap-2">
         <div
@@ -65,14 +71,16 @@ export function ResultToast() {
         >
           <div className="flex items-center gap-2">
             <span className="size-1.5 shrink-0 rounded-full bg-accent-primary" />
-            <p className="text-xs font-semibold text-text-primary">
-              {kind === 'texture' ? 'Texture ready' : 'Mesh ready'}
-            </p>
+            <p className="text-xs font-semibold text-text-primary">{title}</p>
             {kind === 'texture' ? (
               <TextureThumb result={result as TextureResult} />
             ) : null}
           </div>
-          <MeshSummary result={result as MeshResult} kind={kind} />
+          {kind === 'audio' ? (
+            <AudioSummary result={result as AudioResult} />
+          ) : (
+            <MeshSummary result={result as MeshResult} kind={kind} />
+          )}
           <div className="mt-2 flex justify-end">
             <button
               type="button"
@@ -103,12 +111,20 @@ function TextureThumb({ result }: { result: TextureResult }) {
   );
 }
 
+function AudioSummary({ result }: { result: AudioResult }) {
+  return (
+    <p className="mt-1.5 font-mono text-[11px] tabular-nums text-text-telemetry">
+      {result.synthetic ? 'Procedural fallback' : 'AudioGen'} · loopable WAV
+    </p>
+  );
+}
+
 function MeshSummary({
   result,
   kind,
 }: {
   result: MeshResult;
-  kind: 'mesh' | 'texture' | null;
+  kind: 'mesh' | 'texture' | 'audio' | null;
 }) {
   if (kind !== 'mesh' || result.faceCount === undefined) return null;
   const seconds = (result.elapsedMs / 1000).toFixed(1);

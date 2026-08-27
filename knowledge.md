@@ -63,6 +63,19 @@ The dim3 wasm `heightfield` binding differs from the documented API in three way
 - **audiocraft==1.3.0 pins torch==2.1.0** — conflicts with the spec's torch 2.5.0; install with `--no-deps` + runtime extras when AudioGen integration lands (Phase 2).
 - **sdxl-turbo repo ships fp32 + fp16** — pre-cache fetches only `*.fp16.safetensors` (spec loads `variant="fp16"`).
 
+## Phase 3 — spatial audio, vision NPCs, post-FX, export (verified 2026-08-26)
+
+- **AudioGen is gated + pins torch 2.1.0** — `backend/services/audio_service.py` imports audiocraft behind a guard and falls back to a deterministic procedural synthesizer (`procedural_audio.py`) when unavailable. Loopable WAV contract: `make_loopable` crossfades tail→head with the seam on an original adjacent pair (mathematically seamless). Real-model verification needs HF_TOKEN; install via `requirements-audiocraft.txt` with `--no-deps`.
+- **SmolVLM real inference needs `qwen-vl-utils`** (processor dep) — guarded import; the service returns a canned line (`synthetic=true`) without it. `pip install qwen-vl-utils` (authorization required) unlocks real vision.
+- **three r185's TSL build has NO chainable bloom/ssao/fxaa nodes** (verified in `three.tsl.js` exports) — the spec's `pass().pipe(bloom).pipe(fxaa)` is unavailable until a three upgrade. Task 3.5 ships dual path: WebGL `three/addons` EffectComposer (UnrealBloomPass + FXAA + OutputPass, zero new deps) + WebGPU `PostProcessing` with runtime feature-detection of `passNode.bloom()`.
+- **R3F v9 render takeover:** `useFrame(cb, renderPriority > 0)` disables R3F's automatic render (`if (!state.internal.priority && state.gl.render)` in fiber source) — the PostFx composer renders via `useFrame(..., 1)`.
+- **UnrealBloomPass is too heavy for SwiftShader** — the e2e FPS-floor test disables FX first; keep any FPS assertions on the base loop.
+- **three 0.185 ships no UMD build** — `three.core.min.js` is a self-contained ESM bundle (0 imports) — embedded as base64 + blob import in the standalone HTML export (`public/vendor/three.core.min.js`, vendored; eslint ignores `public/**`).
+- **Export pipeline:** `src/lib/export/exportScene.ts` — snapshot from the scene store → offline HTML (minimal GLB parser in `public/exporter/runtime.js` — no GLTFLoader needed) or merged glTF-2.0 scene tree. GLB JSON chunks must pad with **spaces (0x20)**, not NULs (JSON.parse rejects NULs).
+- **NPC frame capture:** `capture.ts` renders to an offscreen WebGLRenderTarget + readRenderTargetPixels + 2D-canvas PNG encode — no `preserveDrawingBuffer` cost.
+- **Phase 3 endpoints:** `POST /api/v1/generate-audio` (→ audio/wav stream, `X-EchoForge-Synthetic` header) and `POST /api/v1/npc-dialogue`; progress stages now include `AUDIO` and `NPC`.
+- **Commands:** backend tests now 60 (`pytest backend/tests`); frontend 119 unit + 21 serial e2e.
+
 ## Phase 2 backend + generation UI (verified 2026-08-26)
 
 - **SDXL-Turbo on 8 GB VRAM:** the fp16 pipeline is ~6.6 GB of weights (UNet
@@ -90,3 +103,9 @@ The dim3 wasm `heightfield` binding differs from the documented API in three way
 - **E2E generation mock seam:** `src/lib/api/generate.ts` gates on
   `isE2EMode()` (from `workerRegistry`) and drives a scripted progress timeline
   through an in-process bus so the shimmer/toast UI is e2e-testable with no GPU.
+- **GPU job watchdog (backend):** `SequentialVRAMManager.run` arms a daemon thread before every GPU job; a job exceeding its slot deadline gets the process force-exited (`os._exit(2)`) because a hung CUDA kernel cannot be cancelled from Python — process exit is the only reliable GPU release. Config: `GPU_JOB_TIMEOUT_S` (default 300; 0 disables) + per-slot `GPU_TIMEOUT_TRIPOSR/SDXL/AUDIOGEN/SMOLVLM` (defaults 300/120/180/120).
+- **GPU test runs:** wrap in `bash scripts/gpu/run_guarded.sh <limit_sec> <logfile> <marker> <cmd...>` — hard deadline, 15s GPU check-ins, force-kills the tree at the limit (exit 124), sweeps stragglers by command-line marker. Live battery: `scripts/gpu/live_api_battery.py`; python lister: `scripts/gpu/pyprocs.ps1`.
+- **Windows process-kill gotchas (all three bit us):** (1) `.venv/Scripts/python.exe` is a stub that spawns `C:\Users\...\Python311\python.exe` — killing the stub can orphan the real process; (2) Git Bash `$!` is an MSYS pid, NOT a Windows pid — `taskkill` on it silently misses; (3) `wmic ... get ProcessId,CommandLine` returns columns alphabetically (CommandLine first) and truncates long lines. Resolve real pids with single-column `wmic process where "name='python.exe' and CommandLine like '%MARKER%'" get ProcessId`, then `taskkill //PID <pid> //T //F` (sweep repeatedly — the stub spawns the real python asynchronously).
+- **Zombie python = false GPU hang:** a leftover python keeps its CUDA context (SDXL resident = 7.7 GB on the 8 GB card), so every new GPU test thrashes and *appears* to hang. Always verify `nvidia-smi --query-gpu=memory.used --format=csv,noheader` is ~1–2 GB before judging a hang.
+- **diffusers 0.31 callback contract:** `callback_on_step_end` MUST return the kwargs dict — 0.31 pops `"latents"` off the return value, so returning `None` crashes with `'NoneType' object has no attribute 'pop'` (fixed in `sdxl_service.py`).
+- **SDXL-Turbo fp16 on RTX 2070 (OPEN):** 1-step generation never completes; GPU pegs 100% / 7.7 GB. Happens with `enable_model_cpu_offload()` AND full-resident. The callback crash is fixed; the remaining UNet-forward stall is unverified in a clean GPU state — see handoff RESUME POINT. Repro: `.audit/repro_unet.py` (bare fp16 UNet forward).

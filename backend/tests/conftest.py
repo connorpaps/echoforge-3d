@@ -28,6 +28,22 @@ if str(BACKEND_DIR) not in sys.path:
 os.environ.setdefault("HF_HOME", str(BACKEND_DIR.parent / ".hf-cache"))
 
 
+@pytest.fixture(autouse=True)
+def _fresh_progress_bus():
+    """Reset the singleton ProgressBus between tests.
+
+    The bus binds its event loop on first subscribe; each TestClient runs the
+    app on its own loop, so a bus left bound to an earlier test's loop would
+    publish to the dead loop and the next WebSocket test would hang waiting
+    for events that never arrive.
+    """
+    from backend.services.progress_bus import progress_bus
+
+    progress_bus._loop = None
+    progress_bus._subscribers.clear()
+    yield
+
+
 def _fake_mesh() -> trimesh.Trimesh:
     """A small vertex-colored test mesh that survives the pipeline."""
     mesh = trimesh.creation.icosphere(subdivisions=3)

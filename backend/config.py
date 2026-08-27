@@ -63,6 +63,21 @@ MAX_CONCURRENT_GPU_TASKS = int(os.environ.get("MAX_CONCURRENT_GPU_TASKS", "1"))
 VRAM_LIMIT_GB = float(os.environ.get("VRAM_LIMIT_GB", "6.0"))
 assert MAX_CONCURRENT_GPU_TASKS == 1, "EchoForge 3D only supports a single serial GPU worker (VRAM safety invariant)."
 
+# Per-slot hard deadline (seconds) for GPU inference. A hung CUDA kernel
+# (driver deadlock) can't be cancelled from Python — asyncio.wait_for leaves
+# the worker thread burning the GPU and torch won't interrupt a wedged
+# kernel. The only reliable release is process exit, so the GpuWatchdog in
+# vram_manager.py force-exits the backend when a job exceeds its slot's
+# deadline. This bounds the blast radius: a stuck model can never peg the
+# host GPU forever. Set GPU_JOB_TIMEOUT_S=0 to disable entirely.
+GPU_JOB_TIMEOUT_S = int(os.environ.get("GPU_JOB_TIMEOUT_S", "300"))
+GPU_SLOT_TIMEOUT_S: dict[str, int] = {
+    "triposr": int(os.environ.get("GPU_TIMEOUT_TRIPOSR", "300")),
+    "sdxl-turbo": int(os.environ.get("GPU_TIMEOUT_SDXL", "120")),
+    "audiogen": int(os.environ.get("GPU_TIMEOUT_AUDIOGEN", "180")),
+    "smolvlm": int(os.environ.get("GPU_TIMEOUT_SMOLVLM", "120")),
+}
+
 
 # --- API -------------------------------------------------------------------
 
@@ -81,6 +96,13 @@ MESH_MAX_FACES = int(os.environ.get("MESH_MAX_FACES", "20000"))
 SDXL_STEPS = int(os.environ.get("SDXL_STEPS", "1"))
 SDXL_GUIDANCE = float(os.environ.get("SDXL_GUIDANCE", "0.0"))
 SDXL_SIZE = int(os.environ.get("SDXL_SIZE", "512"))
+
+# --- Audio (AudioGen / procedural fallback) ---------------------------------
+
+AUDIOGEN_REPO_ID = os.environ.get("AUDIOGEN_REPO_ID", "facebook/audiogen-medium")
+AUDIO_SAMPLE_RATE = int(os.environ.get("AUDIO_SAMPLE_RATE", "16000"))
+AUDIO_DURATION_DEFAULT = float(os.environ.get("AUDIO_DURATION_DEFAULT", "10"))
+MAX_AUDIO_SECONDS = float(os.environ.get("MAX_AUDIO_SECONDS", "30"))
 
 # Input guardrails
 MAX_IMAGE_BYTES = int(os.environ.get("MAX_IMAGE_BYTES", str(10 * 1024 * 1024)))  # 10 MiB

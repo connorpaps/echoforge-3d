@@ -7,7 +7,9 @@ The app exposes:
     GET  /health                 CUDA device + VRAM snapshot
     POST /api/v1/generate-mesh   image → optimized GLB asset
     POST /api/v1/generate-texture prompt → SDXL-Turbo PNG
-    WS   /ws/progress            live DIFFUSION/RECONSTRUCTION/DECIMATION ticks
+    POST /api/v1/generate-audio  prompt → loopable WAV (AudioGen / fallback)
+    POST /api/v1/npc-dialogue    viewport frame + persona → dialogue text
+    WS   /ws/progress            live DIFFUSION/RECONSTRUCTION/DECIMATION/AUDIO/NPC ticks
 
 All GPU work is serialized through the SequentialVRAMManager (backend/
 services/vram_manager.py) so no two heavy models are ever resident together.
@@ -21,12 +23,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import CORS_ORIGINS
-from .routers import generate, health, progress
+from .routers import generate, health, npc, progress
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-APP_VERSION = "0.2.0"
+APP_VERSION = "0.3.0"
 
 
 def create_app() -> FastAPI:
@@ -46,6 +48,7 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(generate.router)
+    app.include_router(npc.router)
     app.include_router(progress.router)
 
     logger.info("EchoForge backend v%s ready — routers: health, generate, progress", APP_VERSION)

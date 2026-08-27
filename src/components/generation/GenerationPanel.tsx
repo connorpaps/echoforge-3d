@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react';
 import { GlassPanel } from '@/components/ui/GlassPanel';
 import { SectionLabel } from '@/components/ui/SectionLabel';
+import { resumeAudioContext } from '@/lib/audio/spatialAudio';
 import { useGenerationStore } from '@/lib/stores/useGenerationStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
 
@@ -17,6 +18,7 @@ export function GenerationPanel() {
   const generating = useGenerationStore((s) => s.status === 'generating');
   const generateMesh = useGenerationStore((s) => s.generateMesh);
   const generateTexture = useGenerationStore((s) => s.generateTexture);
+  const generateAudio = useGenerationStore((s) => s.generateAudio);
 
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageName, setImageName] = useState<string | null>(null);
@@ -106,6 +108,20 @@ export function GenerationPanel() {
           Generate Texture
         </button>
       </div>
+
+      <button
+        type="button"
+        data-testid="generate-audio"
+        disabled={prompt.trim().length === 0 || generating}
+        onClick={() => {
+          // The click is the user gesture that unlocks the AudioContext.
+          resumeAudioContext();
+          void generateAudio(prompt);
+        }}
+        className="mt-2 w-full rounded-md border border-accent-cyan/40 bg-accent-cyan/10 px-3 py-1.5 text-xs font-medium text-accent-cyan transition-all duration-150 hover:border-accent-cyan disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.98]"
+      >
+        Generate Ambient Audio
+      </button>
     </GlassPanel>
   );
 }

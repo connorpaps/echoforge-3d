@@ -54,10 +54,20 @@ export interface TextureResult {
   elapsedMs: number;
 }
 
+export interface AudioResult {
+  jobId: string;
+  wavBase64: string;
+  /** True when the backend served the procedural fallback, not AudioGen. */
+  synthetic: boolean;
+  elapsedMs: number;
+}
+
 export type ProgressStage =
   | 'DIFFUSION'
   | 'RECONSTRUCTION'
   | 'DECIMATION'
+  | 'AUDIO'
+  | 'NPC'
   | 'DONE'
   | 'ERROR';
 
@@ -119,6 +129,55 @@ export async function generateTexture(request: {
     return mockTextureResult;
   }
   return postJson<TextureResult>('/api/v1/generate-texture', request);
+}
+
+export async function generateAudio(request: {
+  prompt: string;
+  durationSec?: number;
+  seed?: number | null;
+}): Promise<AudioResult> {
+  if (isE2EMode()) {
+    await maybeFailMock(request.prompt);
+    await runMockTimeline('AUDIO');
+    return {
+      jobId: 'e2e-audio-000003',
+      wavBase64: mockWavBase64,
+      synthetic: true,
+      elapsedMs: 900,
+    };
+  }
+  const response = await fetch(`${API_BASE}/api/v1/generate-audio`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request),
+  });
+  if (!response.ok) {
+    let detail = `HTTP ${response.status}`;
+    try {
+      const data = (await response.json()) as { detail?: string };
+      if (data.detail) detail = data.detail;
+    } catch {
+      // non-JSON error body — keep the status text
+    }
+    throw new Error(detail);
+  }
+  const buffer = await response.arrayBuffer();
+  return {
+    jobId: response.headers.get('X-EchoForge-Job') ?? 'unknown',
+    wavBase64: arrayBufferToBase64(buffer),
+    synthetic: response.headers.get('X-EchoForge-Synthetic') === 'true',
+    elapsedMs: 0,
+  };
+}
+
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  const CHUNK = 0x8000;
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+  }
+  return btoa(binary);
 }
 
 // --- WebSocket progress -------------------------------------------------------
@@ -184,6 +243,39 @@ const mockTextureResult: TextureResult = {
   elapsedMs: 1120,
 };
 
+/** A tiny audible 440 Hz WAV so the mock audio emitter is real to the ear. */
+const mockWavBase64 = buildMockWav();
+
+function buildMockWav(): string {
+  const sampleRate = 16000;
+  const numSamples = sampleRate; // 1s
+  const bytesPerSample = 2;
+  const dataSize = numSamples * bytesPerSample;
+  const buffer = new ArrayBuffer(44 + dataSize);
+  const view = new DataView(buffer);
+  const writeStr = (offset: number, s: string) => {
+    for (let i = 0; i < s.length; i++) view.setUint8(offset + i, s.charCodeAt(i));
+  };
+  writeStr(0, 'RIFF');
+  view.setUint32(4, 36 + dataSize, true);
+  writeStr(8, 'WAVE');
+  writeStr(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true); // PCM
+  view.setUint16(22, 1, true); // mono
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * bytesPerSample, true);
+  view.setUint16(32, bytesPerSample, true);
+  view.setUint16(34, 16, true); // bits per sample
+  writeStr(36, 'data');
+  view.setUint32(40, dataSize, true);
+  for (let i = 0; i < numSamples; i++) {
+    const v = Math.sin((2 * Math.PI * 440 * i) / sampleRate) * 0.2;
+    view.setInt16(44 + i * 2, Math.round(v * 32767), true);
+  }
+  return arrayBufferToBase64(buffer);
+}
+
 type MockBusHandler = (event: ProgressEvent) => void;
 const mockBus = new Set<MockBusHandler>();
 
@@ -208,7 +300,9 @@ async function maybeFailMock(prompt: string) {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Scripted progress timeline so the generating pill animates in E2E runs. */
-async function runMockTimeline(stage: 'RECONSTRUCTION' | 'DIFFUSION') {
+async function runMockTimeline(
+  stage: 'RECONSTRUCTION' | 'DIFFUSION' | 'AUDIO',
+) {
   const ticks: Array<[number, string]> =
     stage === 'RECONSTRUCTION'
       ? [
@@ -218,11 +312,18 @@ async function runMockTimeline(stage: 'RECONSTRUCTION' | 'DIFFUSION') {
           [90, 'extracting surface'],
           [100, 'reconstruction complete'],
         ]
-      : [
-          [15, 'model loaded — sampling'],
-          [55, 'step 1/1'],
-          [100, 'complete'],
-        ];
+      : stage === 'AUDIO'
+        ? [
+            [10, 'queued for synthesis'],
+            [45, 'sampling audio tokens'],
+            [85, 'stitching loop'],
+            [100, 'complete'],
+          ]
+        : [
+            [15, 'model loaded — sampling'],
+            [55, 'step 1/1'],
+            [100, 'complete'],
+          ];
   for (const [percent, message] of ticks) {
     emitMock({ stage, percent, message });
     await sleep(120);

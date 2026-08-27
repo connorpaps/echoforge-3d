@@ -20,9 +20,22 @@ test.describe('EchoForge 3D viewport shell', () => {
     await expect(page.locator('footer')).toContainText('FPS');
   });
 
+  test('FX toggle switches post-processing on and off', async ({ page }) => {
+    const toggle = page.locator('[data-testid="fx-toggle"]');
+    await expect(toggle).toContainText('On');
+    await toggle.click();
+    await expect(toggle).toContainText('Off');
+    await toggle.click();
+    await expect(toggle).toContainText('On');
+  });
+
   test('render loop advances at the software-render floor (>= 30 FPS)', async ({
     page,
   }) => {
+    // UnrealBloomPass is too heavy for SwiftShader — disable FX first so this
+    // measures the base render loop, not the post pipeline.
+    await page.click('[data-testid="fx-toggle"]');
+
     const frames = await page.evaluate(
       () =>
         new Promise<number>((resolve) => {

@@ -97,10 +97,14 @@ class SDXLService:
         if seed is not None:
             generator = torch.Generator(device=DEVICE).manual_seed(seed)
 
-        def on_step_end(_pipe, step: int, _timestep, _kwargs) -> None:
+        def on_step_end(_pipe, step: int, _timestep, callback_kwargs) -> dict:
             # Modern diffusers hook (callback_on_step_end): (pipe, step, timestep, kwargs).
+            # The callback MUST return the kwargs dict — diffusers 0.31 pops
+            # "latents" off the return value and crashes on None (verified
+            # live on CUDA: `'NoneType' object has no attribute 'pop'`).
             percent = 20 + int(80 * (step + 1) / max(1, steps))
             report("DIFFUSION", min(percent, 100), f"step {step + 1}/{steps}")
+            return callback_kwargs
 
         result = pipe(
             prompt=prompt,

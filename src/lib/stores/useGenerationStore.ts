@@ -1,18 +1,20 @@
 import { create } from 'zustand';
 import {
+  generateAudio as apiGenerateAudio,
   generateMesh as apiGenerateMesh,
   generateTexture as apiGenerateTexture,
   subscribeProgress,
+  type AudioResult,
   type MeshResult,
   type ProgressEvent,
   type ProgressStage,
   type TextureResult,
 } from '@/lib/api/generate';
 
-export type GenerationKind = 'mesh' | 'texture';
+export type GenerationKind = 'mesh' | 'texture' | 'audio';
 export type GenerationStatus = 'idle' | 'generating' | 'success' | 'error';
 
-export type GenerationResult = MeshResult | TextureResult;
+export type GenerationResult = MeshResult | TextureResult | AudioResult;
 
 interface PendingRequest {
   kind: GenerationKind;
@@ -31,6 +33,7 @@ interface GenerationState {
 
   generateMesh: (prompt: string, imageBase64: string) => Promise<void>;
   generateTexture: (prompt: string) => Promise<void>;
+  generateAudio: (prompt: string, durationSec?: number) => Promise<void>;
   retry: () => Promise<void>;
   dismiss: () => void;
   /** Internal — applied from progress events; exported for tests. */
@@ -109,12 +112,25 @@ export const useGenerationStore = create<GenerationState>()((set, get) => {
       }
     },
 
+    generateAudio: async (prompt, durationSec) => {
+      begin({ kind: 'audio', prompt, imageBase64: '' });
+      try {
+        finish(await apiGenerateAudio({ prompt, durationSec, seed: 42 }));
+      } catch (error) {
+        fail(error);
+      }
+    },
+
     retry: async () => {
       if (!pending) return;
       const request = pending;
-      await (request.kind === 'mesh'
-        ? get().generateMesh(request.prompt, request.imageBase64)
-        : get().generateTexture(request.prompt));
+      if (request.kind === 'mesh') {
+        await get().generateMesh(request.prompt, request.imageBase64);
+      } else if (request.kind === 'texture') {
+        await get().generateTexture(request.prompt);
+      } else {
+        await get().generateAudio(request.prompt);
+      }
     },
 
     dismiss: () => {

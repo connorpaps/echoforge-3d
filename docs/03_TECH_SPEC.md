@@ -1,129 +1,79 @@
-# 03. Technical Architecture & System Engineering Specification
+# 03. Technical Architecture & Engineering Specification
 
 **Product:** EchoForge 3D  
 **Specification Version:** 1.2.0 (Audited & Production-Hardened)  
-**Target Environment:** Local Consumer Hardware (6GB–8GB CUDA GPU or Apple Silicon WebGPU) & Serverless Cloud
+**Execution Target:** Next.js 15 App Router, Three.js WebGPU (TSL), React Three Fiber, Rapier3D Wasm, Web Audio HRTF, FastAPI, PyTorch 2.x CUDA FP16, Transformers.js
 
 ---
 
-## 1. Universal Hardware Profiles & Deployment Tiers
-
-The system architecture is engineered to run seamlessly across three standardized hardware tiers:
+## 1. System Topology & Data Flow
 
 ```
-+----------------------------------------------------------------------------------------------------+
-| Hardware Profile Tiers & Execution Topology                                                        |
-+----------------------------------------------------------------------------------------------------+
-| Tier 1: Client-Only WebGPU (Any modern laptop / Apple M-series / Intel Core Ultra / AMD Ryzen)     |
-|   └── Whisper ASR + Depth Anything V2 + Kokoro TTS run 100% in-browser via Web Workers (ONNX)      |
-|   └── Heavy 3D mesh & diffusion steps query free Hugging Face Serverless Inference Endpoints       |
-|                                                                                                    |
-| Tier 2: Consumer Local Workstation (Single NVIDIA GPU 6GB–8GB+ VRAM, 16GB+ System RAM)            |
-|   └── In-Browser WebGPU Workers handle ASR, Depth, and TTS                                         |
-|   └── FastAPI backend runs Sequential VRAM Manager (TripoSR default, SDXL-Turbo, AudioGen)        |
-|                                                                                                    |
-| Tier 3: Production Cloud & Serverless (RunPod Serverless / Modal / AWS EC2 G4dn / HF Endpoints)    |
-|   └── Ephemeral worker containers spin up on demand per generation request and scale to zero        |
-+----------------------------------------------------------------------------------------------------+
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                               EchoForge 3D System Architecture                         │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│ 1. Client Browser (Next.js 15 + Three.js WebGPU + Web Audio HRTF)                      │
+│    ├── Main Thread: React Three Fiber Viewport, Rapier3D Physics, Zustand Scene Store │
+│    ├── depth.worker.ts: Depth Anything V2 (onnx-community/depth-anything-v2-small)    │
+│    ├── speech.worker.ts: Distil-Whisper ASR (onnx-community/distil-whisper-small)      │
+│    └── tts.worker.ts: Kokoro-82M TTS (onnx-community/Kokoro-82M-v1.0-ONNX)             │
+│                                                                                        │
+│ 2. Backend Microservice (FastAPI + PyTorch CUDA FP16)                                  │
+│    ├── SequentialVRAMManager: Dynamic CUDA model offloading & memory safety (<6.0 GB)  │
+│    ├── TripoSR / TRELLIS: Single-image to watertight .glb mesh generation              │
+│    ├── SDXL-Turbo: Single-step reference texture & skybox diffusion                    │
+│    ├── AudioCraft AudioGen: 10s loopable spatial audio .wav synthesis                  │
+│    ├── SmolVLM-500M: Viewport canvas frame inspection & NPC visual dialogue            │
+│    └── Trimesh Pipeline: Decimation (≤25k faces), manifold cleanup, convex hulls       │
+└────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 2. Integrated Hugging Face Tasks & Open-Weights Pipeline
+## 2. Next.js 15 WebAssembly & WebGPU Configuration
 
-```
-                    ┌─────────────────────────────────────────────────────────┐
-                    │               EchoForge 3D Studio Web UI                │
-                    │      (Next.js 15 + React 19 + Tailwind CSS + Webpack)   │
-                    └────────────────────────────┬────────────────────────────┘
-                                                 │
-            ┌────────────────────────────────────┼────────────────────────────────────┐
-            │ [Dedicated Web Workers / WebGPU]   │ [Dedicated Web Workers / WebGPU]   │ [Backend CUDA Microservice]
-            ▼                                    ▼                                    ▼
-   ┌───────────────────┐                ┌───────────────────┐                ┌───────────────────┐
-   │   Distil-Whisper  │                │Depth Anything V2  │                │ TripoSR / TRELLIS │
-   │  (distil-small)   │                │(Small ONNX FP16)  │                │ (Low-VRAM FP16)   │
-   │  Speech-to-Text   │                │ 2D Canvas Sketch  │                │  Image-to-3D GLB  │
-   │ Voice Dictation   │                │ to Height Terrain │                │ Mesh Generation   │
-   └─────────┬─────────┘                └─────────┬─────────┘                └─────────┬─────────┘
-             │                                    │                                    │
-             ▼                                    ▼                                    ▼
-   ┌───────────────────┐                ┌───────────────────┐                ┌───────────────────┐
-   │ Qwen2.5-Coder-1.5B│                │    SDXL-Turbo /   │                │ AudioCraft AudioGen│
-   │Scene Graph Parsing│                │   SD 1.5 LCM      │                │  (medium 1.5B)    │
-   │& Transformation   │                │ Tileable Texture  │                │  Spatial Ambient  │
-   │  JSON Tool Calls  │                │  & PBR Synthesis  │                │  Sound Generator  │
-   └─────────┬─────────┘                └─────────┬─────────┘                └─────────┬─────────┘
-             │                                    │                                    │
-             ▼                                    │                                    ▼
-   ┌───────────────────┐                          │                          ┌───────────────────┐
-   │    Kokoro-82M     │                          │                          │    SmolVLM-500M   │
-   │ (TTS ONNX WebGPU) │                          │                          │Visual QA & Viewport│
-   │  NPC Neural Voice │                          │                          │ Scene Inspection  │
-   └─────────┬─────────┘                          │                          └─────────┬─────────┘
-             │                                    │                                    │
-             └────────────────────────────────────┼────────────────────────────────────┘
-                                                  ▼
-                    ┌─────────────────────────────────────────────────────────┐
-                    │            Interactive 3D Viewport Engine               │
-                    │   - Three.js / React Three Fiber / WebGPU Renderer      │
-                    │   - BVH Accelerated Raycasting (@react-three/drei Bvh)  │
-                    │   - Rapier3D (Wasm-based Rigid Body & Character Physics)│
-                    │   - Web Audio API (HRTF Panner Nodes & Gesture Resume)  │
-                    │   - JSON Scene Graph State & Undo/Redo Engine           │
-                    └─────────────────────────────────────────────────────────┘
-```
+To enable Rapier3D Wasm physics and client-side ONNX WebGPU inference in Next.js 15:
 
-### Comprehensive Task & Model Matrix
+```typescript
+// next.config.ts
+import type { NextConfig } from 'next';
 
-| # | Hugging Face Task Category | Model Identifier | Execution Target | Model Size / Precision | System Function |
-|---|---|---|---|---|---|
-| 1 | **Automatic Speech Recognition (ASR)** | `onnx-community/distil-whisper-small` | Client Web Worker (WebGPU / WASM) | ~80 MB (q8 / fp16) | Transcribes microphone voice input in real time (<150ms) off the main thread to trigger scene edits. |
-| 2 | **Depth Estimation** | `onnx-community/depth-anything-v2-small` | Client Web Worker (WebGPU) | ~90 MB (fp16 ONNX) | Processes 2D terrain brush strokes into a continuous relative depth tensor for real-time vertex displacement. |
-| 3 | **Text-to-Speech (TTS)** | `onnx-community/Kokoro-82M-v1.0-ONNX` | Client Web Worker (WebGPU) | ~82 M params (q8 / fp32) | Synthesizes expressive neural NPC voice audio in-browser at 24 kHz sample rate with zero server dependencies. |
-| 4 | **Image-to-3D / Text-to-3D** | `stabilityai/TripoSR` *(Default 6GB+)* or `microsoft/TRELLIS-image-large` *(Low-VRAM)* | Backend (CUDA / PyTorch) | 4.2 GB – 6.5 GB VRAM (FP16) | Generates structured 3D latents and extracts watertight `.glb` meshes with baked PBR materials. |
-| 5 | **Text-to-Image / Image-to-Image** | `stabilityai/sdxl-turbo` | Backend (CUDA / PyTorch) | 3.5 GB VRAM (FP16) | Synthesizes reference concept textures, skyboxes, and seamless diffuse/roughness maps in 1–4 inference steps. |
-| 6 | **Text-to-Audio** | `facebook/audiogen-medium` | Backend (CUDA / PyTorch) | ~1.5 B params (FP16) | Synthesizes 10-second loopable environmental sound effects (crackling fire, subterranean wind, river water). |
-| 7 | **Visual Question Answering (VQA)** | `HuggingFaceTB/SmolVLM-Instruct` | Backend (CUDA) or Free HF Endpoint | ~500 M params (FP16) | Inspects the player's 3D viewport canvas buffer to enable NPCs to visually recognize props and player gear. |
-| 8 | **Text Generation & Structured Tool Calling** | `Qwen/Qwen2.5-Coder-1.5B-Instruct` | Backend (Ollama/vLLM) or Free HF Endpoint | ~1.5 B params (Q4_K_M) | Translates natural language voice transcripts into deterministic JSON scene transformation operations. |
-
----
-
-## 3. Next.js 15 WebAssembly & WebGPU Build Configuration
-
-To support Rapier3D Wasm physics and ONNX WebGPU shaders inside Next.js 15 without runtime bundling failures, `next.config.js` MUST enable asynchronous WebAssembly:
-
-```javascript
-// next.config.js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  experimental: {
+    serverActions: { allowedOrigins: ['localhost:3000'] }
+  },
   webpack: (config, { isServer }) => {
+    // Enable WebAssembly support for Rapier3D
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,
-      layers: true,
+      layers: true
     };
-    if (!isServer) {
+
+    // Prevent server-side compilation of browser workers
+    if (isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         path: false,
+        crypto: false
       };
     }
+
     return config;
-  },
+  }
 };
 
-module.exports = nextConfig;
+export default nextConfig;
 ```
 
 ---
 
-## 4. Production Code Implementations
+## 3. Dedicated Web Worker Architecture (Zero-Copy Transfers)
 
-### 4.1 Non-Blocking WebGPU Web Workers
+### `src/workers/depth.worker.ts`
 ```typescript
-// src/workers/depth.worker.ts
 import { pipeline, env } from '@huggingface/transformers';
 
 env.allowLocalModels = false;
@@ -135,11 +85,10 @@ self.onmessage = async (event: MessageEvent) => {
   const { type, imageBitmap } = event.data;
 
   if (type === 'INIT') {
-    depthPipeline = await pipeline(
-      'depth-estimation',
-      'onnx-community/depth-anything-v2-small',
-      { device: 'webgpu', dtype: 'fp16' }
-    );
+    depthPipeline = await pipeline('depth-estimation', 'onnx-community/depth-anything-v2-small', {
+      device: 'webgpu',
+      dtype: 'fp16'
+    });
     self.postMessage({ type: 'READY' });
     return;
   }
@@ -147,12 +96,13 @@ self.onmessage = async (event: MessageEvent) => {
   if (type === 'ESTIMATE_DEPTH') {
     if (!depthPipeline) throw new Error('Pipeline not initialized');
 
+    // Process ImageBitmap via OffscreenCanvas
     const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height);
     const ctx = canvas.getContext('2d');
     ctx?.drawImage(imageBitmap, 0, 0);
 
     const result = await depthPipeline(canvas);
-    const depthData: Float32Array = result.depth.data;
+    const depthData = new Float32Array(result.depth.data);
 
     // Zero-copy transfer of Float32Array back to main thread
     self.postMessage(
@@ -163,9 +113,9 @@ self.onmessage = async (event: MessageEvent) => {
 };
 ```
 
+### `src/workers/tts.worker.ts`
 ```typescript
-// src/workers/tts.worker.ts
-import { KokoroTTS } from "kokoro-js";
+import { KokoroTTS } from 'kokoro-js';
 
 let ttsInstance: any = null;
 
@@ -173,19 +123,18 @@ self.onmessage = async (event: MessageEvent) => {
   const { type, text, voice } = event.data;
 
   if (type === 'INIT') {
-    ttsInstance = await KokoroTTS.from_pretrained(
-      "onnx-community/Kokoro-82M-v1.0-ONNX",
-      { dtype: "q8", device: "webgpu" }
-    );
+    ttsInstance = await KokoroTTS.from_pretrained('onnx-community/Kokoro-82M-v1.0-ONNX', {
+      dtype: 'q8',
+      device: 'webgpu'
+    });
     self.postMessage({ type: 'READY' });
     return;
   }
 
   if (type === 'SPEAK') {
     if (!ttsInstance) throw new Error('TTS instance not initialized');
-    
-    const rawAudio = await ttsInstance.generate(text, { voice: voice || "af_heart" });
-    const audioData: Float32Array = rawAudio.audio;
+    const rawAudio = await ttsInstance.generate(text, { voice: voice || 'af_heart' });
+    const audioData = new Float32Array(rawAudio.audio);
 
     self.postMessage(
       { type: 'TTS_RESULT', audioArray: audioData.buffer, sampleRate: rawAudio.sampling_rate },
@@ -197,7 +146,8 @@ self.onmessage = async (event: MessageEvent) => {
 
 ---
 
-### 4.2 Backend Sequential VRAM Queue Manager
+## 4. Backend Sequential VRAM Queue Manager
+
 ```python
 # backend/services/vram_manager.py
 import gc
@@ -205,17 +155,18 @@ import torch
 from typing import Optional, Any
 from diffusers import AutoPipelineForText2Image
 from tsr.system import TSR
+from audiocraft.models import AudioGen
 
 class SequentialVRAMManager:
-    """
-    Guarantees that heavy PyTorch models are strictly loaded one at a time,
-    preventing total memory allocation from exceeding 6.0 GB VRAM.
-    """
+    """Guarantees that heavy PyTorch models are strictly loaded one at a time,
+    preventing total memory allocation from exceeding 6.0 GB VRAM."""
+
     def __init__(self):
         self.active_model_name: Optional[str] = None
         self.current_pipeline: Optional[Any] = None
 
     def release_gpu(self):
+        """Deterministically offloads active model and cleans CUDA memory."""
         if self.current_pipeline is not None:
             del self.current_pipeline
             self.current_pipeline = None
@@ -255,8 +206,7 @@ class SequentialVRAMManager:
         if self.active_model_name == "audiogen":
             return self.current_pipeline
         self.release_gpu()
-        from audiocraft.models import AudioGen
-        model = AudioGen.get_pretrained('facebook/audiogen-medium')
+        model = AudioGen.get_pretrained("facebook/audiogen-medium")
         self.current_pipeline = model
         self.active_model_name = "audiogen"
         return model
@@ -264,60 +214,39 @@ class SequentialVRAMManager:
 
 ---
 
-### 4.3 In-Browser HRTF 3D Spatial Audio Bus (With Autoplay Gesture Unlock)
+## 5. Web Audio HRTF Positional Spatial Emitter
+
 ```typescript
 // src/lib/audio/spatial-audio.ts
-export class SpatialAudioEngine {
-  private static ctx: AudioContext | null = null;
-
-  static getContext(): AudioContext {
-    if (!this.ctx) {
-      const AudioCtxClass = window.AudioContext || (window as any).webkitAudioContext;
-      this.ctx = new AudioCtxClass();
-    }
-    // Automatically resume suspended context on user gesture
-    if (this.ctx.state === 'suspended') {
-      const resumeHandler = () => {
-        this.ctx?.resume();
-        window.removeEventListener('click', resumeHandler);
-        window.removeEventListener('keydown', resumeHandler);
-      };
-      window.addEventListener('click', resumeHandler);
-      window.addEventListener('keydown', resumeHandler);
-    }
-    return this.ctx;
-  }
-}
-
 export class SpatialAudioEmitter {
   private ctx: AudioContext;
   private panner: PannerNode;
   private source: AudioBufferSourceNode | null = null;
 
-  constructor(position: [number, number, number]) {
-    this.ctx = SpatialAudioEngine.getContext();
+  constructor(audioContext: AudioContext, position: [number, number, number]) {
+    this.ctx = audioContext;
     this.panner = this.ctx.createPanner();
-    
-    // Configure HRTF 3D audio model
+
+    // Configure HRTF 3D spatial acoustics
     this.panner.panningModel = 'HRTF';
     this.panner.distanceModel = 'inverse';
-    this.panner.refDistance = 1.5;
-    this.panner.maxDistance = 60.0;
-    this.panner.rolloffFactor = 1.0;
+    this.panner.refDistance = 2.0;
+    this.panner.maxDistance = 50.0;
+    this.panner.rolloffFactor = 1.2;
     this.panner.coneInnerAngle = 360;
 
-    this.updatePosition(position);
+    this.updatePosition(position[0], position[1], position[2]);
     this.panner.connect(this.ctx.destination);
   }
 
-  updatePosition([x, y, z]: [number, number, number]) {
+  public updatePosition(x: number, y: number, z: number): void {
     const time = this.ctx.currentTime;
     this.panner.positionX.setValueAtTime(x, time);
     this.panner.positionY.setValueAtTime(y, time);
     this.panner.positionZ.setValueAtTime(z, time);
   }
 
-  playBuffer(buffer: AudioBuffer, loop: boolean = true) {
+  public playBuffer(buffer: AudioBuffer, loop: boolean = true): void {
     if (this.ctx.state === 'suspended') {
       this.ctx.resume();
     }

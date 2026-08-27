@@ -2,9 +2,11 @@
 
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import { GeneratingPill } from '@/components/generation/GeneratingPill';
+import { GeneratedAudioBridge } from '@/components/generation/GeneratedAudioBridge';
 import { GeneratedEntityBridge } from '@/components/generation/GeneratedEntityBridge';
 import { ResultToast } from '@/components/generation/ResultToast';
 import { CrosshairHud } from '@/components/player/CrosshairHud';
+import { DialogueBubble } from '@/components/workspace/DialogueBubble';
 import { BottomBar } from '@/components/workspace/BottomBar';
 import { LeftDrawer } from '@/components/workspace/LeftDrawer';
 import { TopBar } from '@/components/workspace/TopBar';
@@ -48,9 +50,13 @@ export function Workstation() {
             {activeMode === 'play' && <CrosshairHud />}
             {/* Spawns generated meshes into the scene on success */}
             <GeneratedEntityBridge />
+            {/* Spawns generated ambient loops as HRTF emitters on success */}
+            <GeneratedAudioBridge />
             {/* Non-blocking generation HUD (Task 2.5) */}
             <GeneratingPill />
             <ResultToast />
+            {/* Vision-NPC dialogue overlay (Task 3.3) */}
+            <DialogueBubble />
           </Panel>
         </PanelGroup>
       </div>

@@ -23,11 +23,20 @@ from __future__ import annotations
 import asyncio
 import gc
 import logging
+import os
+import threading
+import time
 from typing import Any, Callable, Generic, TypeVar
 
 import torch
 
-from ..config import CUDA_AVAILABLE, CUDA_DEVICE_ID, VRAM_LIMIT_GB
+from ..config import (
+    CUDA_AVAILABLE,
+    CUDA_DEVICE_ID,
+    GPU_JOB_TIMEOUT_S,
+    GPU_SLOT_TIMEOUT_S,
+    VRAM_LIMIT_GB,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +77,59 @@ class ModelSlot(Generic[T]):
 
     def __repr__(self) -> str:  # pragma: no cover - debug aid
         return f"<ModelSlot name={self.name!r} loaded={self.is_loaded}>"
+
+
+class GpuWatchdog:
+    """Force-exit the process if a GPU job exceeds its deadline.
+
+    A hung CUDA kernel (driver deadlock) cannot be cancelled from Python:
+    ``asyncio.wait_for`` abandons the worker thread while it keeps burning
+    the GPU, and torch will not interrupt a wedged kernel. The only reliable
+    release is process exit — so this watchdog arms a daemon thread before
+    each GPU job and, if the job outlives its slot's deadline, force-exits
+    the backend (``os._exit``) so a supervisor / dev loop can restart it and
+    the host GPU is freed within seconds. ``disarm()`` after a completed job
+    is the normal path; the exit path only ever triggers on a genuine hang.
+    """
+
+    def __init__(self) -> None:
+        self._token: object | None = None
+
+    def arm(self, slot_name: str, timeout_s: float | None) -> None:
+        """Start the countdown. Pass ``None``/0 to leave it disarmed."""
+        self.disarm()
+        if not timeout_s or timeout_s <= 0:
+            return
+        token = object()
+        self._token = token
+        threading.Thread(
+            target=self._watch,
+            args=(slot_name, timeout_s, token),
+            daemon=True,
+            name="gpu-watchdog",
+        ).start()
+
+    def disarm(self) -> None:
+        """Cancel a pending countdown (called when the job finishes)."""
+        self._token = None
+
+    def is_armed(self) -> bool:
+        return self._token is not None
+
+    def _watch(self, slot_name: str, timeout_s: float, token: object) -> None:
+        time.sleep(timeout_s)
+        if self._token is not token:
+            return  # disarmed while we slept — the job finished normally
+        logger.critical(
+            "[GPU-WATCHDOG] job on slot '%s' exceeded %ss — force-exiting to release CUDA. "
+            "Restart the backend to resume serving.",
+            slot_name,
+            timeout_s,
+        )
+        os._exit(2)
+
+
+gpu_watchdog = GpuWatchdog()
 
 
 def release_cuda_memory() -> None:
@@ -137,10 +199,13 @@ class SequentialVRAMManager:
         async with self._lock:
             self._evict_all()
             slot = self._slots[slot_name]
+            timeout_s = GPU_SLOT_TIMEOUT_S.get(slot_name, GPU_JOB_TIMEOUT_S)
+            gpu_watchdog.arm(slot_name, timeout_s)
             try:
                 model = await asyncio.to_thread(slot.ensure_loaded)
                 return await asyncio.to_thread(func, model, *args, **kwargs)
             finally:
+                gpu_watchdog.disarm()
                 self._evict_all()
 
     def _evict_all(self) -> None:

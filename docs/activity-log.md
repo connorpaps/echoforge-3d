@@ -1504,3 +1504,9 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - src/workers/speech.worker.ts
   - src/workers/tts.worker.ts
   - src/workers/workerRegistry.ts
+
+## 2026-08-26 16:57 — `e52d2ba`
+**docs: log session activity and drop redundant auto-captured lesson placeholder**
+
+  - docs/activity-log.md
+  - docs/lessons-learned.md

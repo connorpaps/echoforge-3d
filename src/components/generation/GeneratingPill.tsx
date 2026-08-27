@@ -7,14 +7,17 @@ const stageLabel: Record<ProgressStage, string> = {
   DIFFUSION: 'Painting texture via SDXL-Turbo',
   RECONSTRUCTION: 'Generating mesh via TripoSR',
   DECIMATION: 'Optimizing mesh',
+  AUDIO: 'Synthesizing ambient audio',
+  NPC: 'Vision NPC',
   DONE: 'Complete',
   ERROR: 'Error',
 };
 
-const fallbackLabel = (kind: 'mesh' | 'texture' | null) =>
-  kind === 'texture'
-    ? 'Painting texture via SDXL-Turbo'
-    : 'Generating mesh via TripoSR';
+const fallbackLabel = (kind: 'mesh' | 'texture' | 'audio' | null) => {
+  if (kind === 'texture') return 'Painting texture via SDXL-Turbo';
+  if (kind === 'audio') return 'Synthesizing ambient audio via AudioGen';
+  return 'Generating mesh via TripoSR';
+};
 
 /**
  * Non-blocking generating-state HUD pill (docs/02_DESIGN_BRIEF.md §4):

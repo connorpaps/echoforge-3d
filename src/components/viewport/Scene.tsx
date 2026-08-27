@@ -9,6 +9,11 @@ import { PlayerController } from '@/components/player/PlayerController';
 import { TerrainCollider } from '@/components/viewport/TerrainCollider';
 import { TerrainMesh } from '@/components/viewport/TerrainMesh';
 import { SceneEntities } from '@/components/viewport/SceneEntities';
+import { AudioEmitters } from '@/components/viewport/AudioEmitters';
+import { AudioListenerSync } from '@/components/viewport/AudioListenerSync';
+import { NpcMarkers } from '@/components/viewport/NpcMarkers';
+import { NpcInteract } from '@/components/player/NpcInteract';
+import { PostFx } from '@/components/viewport/PostFx';
 import { useSceneStore } from '@/lib/stores/useSceneStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
 import { cameraRef } from '@/lib/viewport/cameraRef';
@@ -33,13 +38,20 @@ function CameraProbe() {
   return null;
 }
 
-/** Samples the render loop and pushes FPS / frame-time into the UI store. */
+/**
+ * Samples the render loop and pushes FPS / frame-time into the UI store,
+ * plus a rolling P95 frame time (Task 3.7) for the 60 FPS budget check.
+ */
 function TelemetryLoop() {
   const setTelemetry = useUiStore((s) => s.setTelemetry);
+  const setFrameTimeP95 = useUiStore((s) => s.setFrameTimeP95);
   const frames = useRef(0);
   const last = useRef(performance.now());
+  const samples = useRef<number[]>([]);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
+    samples.current.push(delta * 1000);
+    if (samples.current.length > 120) samples.current.shift();
     frames.current += 1;
     const now = performance.now();
     const elapsed = now - last.current;
@@ -47,8 +59,14 @@ function TelemetryLoop() {
       const fps = Math.round((frames.current * 1000) / elapsed);
       const frameTimeMs = elapsed / frames.current;
       setTelemetry(fps, frameTimeMs);
+      const sorted = [...samples.current].sort((a, b) => a - b);
+      const p95 =
+        sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * 0.95))] ??
+        0;
+      setFrameTimeP95(p95);
       frames.current = 0;
       last.current = now;
+      samples.current = [];
     }
   });
 
@@ -88,6 +106,17 @@ export function Scene() {
 
       {/* Generated mesh entities (spawned by GeneratedEntityBridge) */}
       <SceneEntities />
+
+      {/* HRTF spatial audio bus (Task 3.2) */}
+      <AudioListenerSync />
+      <AudioEmitters />
+
+      {/* Vision-aware NPCs (Task 3.3): markers + E-to-interact */}
+      <NpcMarkers />
+      <NpcInteract />
+
+      {/* Bloom + FXAA post-processing (Task 3.5) */}
+      <PostFx />
       <OrbitControls
         makeDefault
         enableDamping
