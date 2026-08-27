@@ -164,3 +164,22 @@ Enriched in-place: see the full Symptom / Root cause / Fix / Avoid-in-future ent
 - **WebGPU adapter gotchas (all three bit during verification):** (1) Playwright's bundled Chromium has no WebGPU adapter — use the real Chrome via `channel: 'chrome'`; (2) headless exposes no adapter and three's WebGPURenderer silently falls back to WebGL2, so the app "works" but isn't WebGPU — always check `canvas.getContext('webgpu')` is truthy; (3) `--enable-features=Vulkan,DefaultANGLEVulkan` makes `requestAdapter()` return null on Windows (Dawn tries Vulkan and fails) — pass no GPU flags, Chrome enables WebGPU by default on localhost.
 - **Avoid in future:** any scene material must be a TSL node material (Mesh*NodeMaterial) or a classic material with a library conversion (LineBasicMaterial etc.) — never raw ShaderMaterial — or it silently vanishes on the WebGPU path.
 - **Status:** fixed; WebGPU check 7/7, WebGL + WebGPU both pixel-verified, 120 unit + 68 pytest + 21/21 e2e green.
+
+## 2026-08-26 21:44 — `290ce26` (auto-captured)
+**feat: real SmolVLM vision path + real-GPU WebGPU verification with TSL grid fix**
+
+  - Files:
+    - backend/config.py
+    - backend/requirements.txt
+    - backend/services/smolvlm_service.py
+    - backend/tests/test_npc.py
+    - docs/lessons-learned.md
+    - handoff.md
+    - knowledge.md
+    - scripts/gpu/webgpu-check.mjs
+    - src/components/viewport/GridFloor.tsx
+    - src/components/viewport/Scene.tsx
+  - TODO (agent): expand with Symptom / Root cause / Fix / Avoid in future, then remove the '(auto-captured)' marker.
+
+
+Enriched in-place: see the full Symptom / Root cause / Fix / Avoid-in-future entry directly above ("2026-08-26 — drei Grid invisible on WebGPU"). This commit also carried the real SmolVLM path (qwen-vl-utils, processor + AutoModelForImageTextToText) and the WebGPU adapter launch gotchas.
