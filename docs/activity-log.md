@@ -1608,3 +1608,16 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - scripts/gpu/webgpu-check.mjs
   - src/components/viewport/GridFloor.tsx
   - src/components/viewport/Scene.tsx
+
+## 2026-08-26 23:27 — `fa71168`
+**feat: real AudioGen end-to-end + fix 10s duration clamp; log browser-driven slowdown for next session**
+
+  - backend/config.py
+  - backend/requirements-audiocraft.txt
+  - backend/scripts/download_models.py
+  - backend/services/audio_service.py
+  - backend/services/procedural_audio.py
+  - handoff.md
+  - scripts/gpu/live_api_battery.py
+  - scripts/gpu/time_audio_curl.py
+  - scripts/gpu/ui_audio_timing.mjs

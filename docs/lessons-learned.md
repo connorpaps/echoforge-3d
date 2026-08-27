@@ -183,3 +183,35 @@ Enriched in-place: see the full Symptom / Root cause / Fix / Avoid-in-future ent
 
 
 Enriched in-place: see the full Symptom / Root cause / Fix / Avoid-in-future entry directly above ("2026-08-26 — drei Grid invisible on WebGPU"). This commit also carried the real SmolVLM path (qwen-vl-utils, processor + AutoModelForImageTextToText) and the WebGPU adapter launch gotchas.
+## 2026-08-26 — Real AudioGen under torch 2.5 (audiocraft 1.3.0)
+
+**Symptom:** The spec's real text-to-audio model (facebook/audiogen-medium) was believed gated (needs HF_TOKEN + accepted license). Attempts to install audiocraft 1.3.0 the normal way conflict with the repo's pinned torch 2.5.0+cu121 (audiocraft pins torch==2.1.0, xformers<0.0.23, av==11.0.0).
+
+**Root cause / facts established:**
+- The model is NOT gated — verified via the HF API (`gated: false`); weights (~3.9 GB) download anonymously. The earlier handoff note was wrong.
+- No xformers Windows wheel exists for torch 2.5 on the pytorch index (newest, 0.0.27, pins torch 2.4). audiocraft's DEFAULT attention backend is `'torch'` (native SDPA) — xformers is never actually called — but transformer.py imports it unconditionally, so `--no-deps` + a guarded try/except patch on the import is the clean fix (re-apply after any audiocraft reinstall).
+- `AudioGen` is a wrapper ABC, not an nn.Module: `get_pretrained(repo, device=...)` (no `.eval()/.to()`). Generate via `set_generation_params(duration=...)` then `model.generate([prompt])`.
+
+**Fix:** `backend/requirements-audiocraft.txt` documents the --no-deps install + runtime deps; `audio_service.py` drives the wrapper API directly and still degrades to the procedural synthesizer when audiocraft is missing.
+
+**Second bug found live (10 s request):** make_loopable crossfades away the last 0.5 s, so we generate `duration + 0.5` — but AudioGen caps at max_duration=10 s and requesting more silently switches to the extended streaming continuation path, which is pathologically slow (~7 min for 10.5 s → watchdog kill). Fix: clamp the fade budget to `max_duration - duration` (10 s clips emit the raw one-shot, no crossfade). Verified: 10.00 s WAV in ~47 s.
+
+**Open issue (see handoff RESUME POINT):** browser-driven AudioGen is ~10x slower than curl (>414 s vs 40 s for identical 500-step jobs). Pausing the viewport render loop did NOT fix it. Leading hypothesis: Chrome's GPU footprint pushes VRAM toward the 8 GB cap so AudioGen's cuDNN workspace thrashes (same mechanism as the old SDXL hang).
+
+**Avoid in future:** (1) verify HF gating via the API before planning around a token; (2) never add an unconditional import of an optional dep — guard it; (3) respect a model's max_duration when adding a crossfade/overshoot budget; (4) for timing comparisons, keep the browser closed or instrument VRAM — a headed browser changes the GPU's available memory pool.
+
+## 2026-08-26 23:27 — `fa71168` (auto-captured)
+_Enriched in-place: see the full entry directly above ("2026-08-26 — Real AudioGen under torch 2.5"). This commit also carried the 10 s duration-clamp fix and the timing harnesses (`scripts/gpu/ui_audio_timing.mjs`, `scripts/gpu/time_audio_curl.py`). The browser-driven slowdown is logged in handoff.md as the next-session RESUME POINT._
+**feat: real AudioGen end-to-end + fix 10s duration clamp; log browser-driven slowdown for next session**
+
+  - Files:
+    - backend/config.py
+    - backend/requirements-audiocraft.txt
+    - backend/scripts/download_models.py
+    - backend/services/audio_service.py
+    - backend/services/procedural_audio.py
+    - handoff.md
+    - scripts/gpu/live_api_battery.py
+    - scripts/gpu/time_audio_curl.py
+    - scripts/gpu/ui_audio_timing.mjs
+  - TODO (agent): expand with Symptom / Root cause / Fix / Avoid in future, then remove the '(auto-captured, needs enrichment)' marker.
