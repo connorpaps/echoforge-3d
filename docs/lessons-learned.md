@@ -142,3 +142,11 @@
 - **Fix:** reset the bus between tests in `backend/tests/conftest.py` (re-create the `ProgressBus` singleton per test).
 - **Avoid in future:** any test that touches `progress_bus` must not leak a loop binding into the module-level singleton; reset it in conftest.
 - **Status:** fixed.
+
+
+## 2026-08-26 — SDXL-Turbo "hang" was allocator thrash + zombie contamination, not a kernel bug
+- **Symptom:** real SDXL-Turbo fp16 1-step texture generation never completed; GPU pegged 100% / 7.7 GB for 15+ min on an 8 GB RTX 2070.
+- **Root cause (clean-GPU isolation):** the bare fp16 UNet forward completes in 0.3 s at 5.0 GB peak (`.audit/repro_unet_modes.py`). The full-resident pipeline (6.7 GB) thrashes at 7.5/8 GB when the forward's cuDNN workspace can't fit — 100% GPU, never returns. The production path (`enable_model_cpu_offload()`) runs 0 MB before gen and peaks 5.1 GB (`.audit/repro_prod.py`: 7.9 s, 512×512 PNG). The live-battery failures were orphaned/zombie backend processes holding 7.7 GB while a fresh backend thrashed against them.
+- **Fix:** none needed in production — offload already engages (verified: hooks on all 4 components). Real fixes were in the battery script: cp1252 `≈` crash; WS jobId race (server publishes DURING the POST, so events arrive before `captured["job"]` — buffer until the jobId is known); 2-tuple tally unpacked as 3.
+- **Avoid in future:** before judging any GPU hang, verify `nvidia-smi` memory ≈ 1–2 GB (zombies keep CUDA contexts); never run full-resident pipelines on the 8 GB card; keep the watchdog (`scripts/gpu/run_guarded.sh`) as the backstop.
+- **Status:** resolved — live GPU battery 30/30, all static gates + 120 unit + 64 pytest + 21/21 e2e green.

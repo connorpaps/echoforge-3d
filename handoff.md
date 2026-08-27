@@ -155,15 +155,13 @@ Ran the full Phase 3 verification battery: static gates ✓ (typecheck, lint, 11
   2. **Test-run watchdog** `scripts/gpu/run_guarded.sh <limit> <log> <marker> <cmd...>`: hard deadline with 15s GPU check-ins, force-kills the tree at the limit (exit 124), sweeps stragglers by command-line marker. Also `scripts/gpu/live_api_battery.py` (the live battery) and `scripts/gpu/pyprocs.ps1` (python process lister).
 - **pytest full-suite hang fixed:** the new audio WebSocket test bound the singleton `progress_bus._loop` to its TestClient's event loop; the later mesh WS test's events hit a stale loop and `receive_json()` blocked forever. Fixed by resetting the bus between tests (`backend/tests/conftest.py`).
 
-### ▶ RESUME POINT (next session — SDXL hang)
+### ✔ SDXL hang — RESOLVED (resumed session completed the diagnosis)
 
-1. Verify GPU baseline is clean: `nvidia-smi --query-gpu=memory.used --format=csv,noheader` should read ~1–2 GB. If higher, list/kill stray pythons: `powershell -ExecutionPolicy Bypass -File scripts/gpu/pyprocs.ps1`, then `taskkill //PID <pid> //T //F` each.
-2. Restart backend: `HF_HOME='G:\hf-cache' .venv/Scripts/python.exe -m uvicorn backend.main:app --port 8000` (dev server may still be on :3000).
-3. Isolate the fp16 UNet forward under the watchdog: `HF_HOME='G:\hf-cache' bash scripts/gpu/run_guarded.sh 90 .audit/repro_unet.log "repro_unet.py" .venv/Scripts/python.exe -u .audit/repro_unet.py` (script already written at `.audit/repro_unet.py`; if `.audit` is gone, re-create from the description in knowledge.md).
-4. If the bare UNet forward hangs → try fp32 UNet-only, `torch.backends.cuda.matmul` flags, or a torch 2.6/CUDA driver note; if it completes → the hang is in the pipeline loop (scheduler/VLM), not the UNet.
-5. Then re-run the full live battery: `HF_HOME='G:\hf-cache' .venv/Scripts/python.exe scripts/gpu/live_api_battery.py`.
+**Root cause (clean-GPU isolation proved it):** the bare fp16 UNet forward completes in **0.3 s** (5.0 GB peak) when loaded alone — it is NOT a kernel bug. The full-resident pipeline (`pipe.to("cuda")`, no offload) sits at ~6.7 GB and the forward's cuDNN workspace thrashes at 7.5/8 GB → 100% GPU, never returns. **Production already uses `enable_model_cpu_offload()` and works perfectly**: hooks verified installed on all 4 components, 0 MB resident before gen, **7.9 s gen, 5.1 GB peak**, 512×512 PNG, GPU released after. The live-battery "hang" was the orphaned/zombie backend processes holding 7.7 GB while the battery's fresh backend thrashed against them — exactly the false-hang trap already documented in knowledge.md.
 
-**Session state at wrap-up:** backend down (was killed during diagnosis); dev server still running on :3000 (node pid 22116, leave or kill); GPU clean at ~1.3 GB; all work committed + pushed.
+**Full Phase 3 verification now green end-to-end (2026-08-26, resumed session):** typecheck ✓ · lint ✓ · **120 frontend unit** ✓ · **64 backend pytest** ✓ · **21/21 serial e2e** ✓ · **live GPU battery 30/30** ✓ (REAL TripoSR mesh 19,990 faces / single component / COLOR_0 / regrounded; REAL SDXL-Turbo texture 200 OK in ~6 s; audio seamless-loop WAV; NPC fallback + 400/422 guards; live /ws/progress AUDIO→DONE; VRAM 0.82 GB after jobs).
+
+**Battery script fixed (3 bugs, all in `scripts/gpu/live_api_battery.py`):** (1) `≈` char crashes cp1252 stdout on Windows; (2) WS test missed every event — the server publishes DURING the POST so events arrive before `captured["job"]` is set, and the jobId filter dropped them (now buffers until the jobId is known); (3) tally unpacked 3-tuples but `check()` appended 2-tuples. Isolated repros live in `.audit/` (gitignored): `repro_unet.py` (full-pipeline), `repro_unet_modes.py` (UNet-only + backend-flag combos), `repro_prod.py` (production offload path).
 
 ## Session handoff checklist
 

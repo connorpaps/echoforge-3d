@@ -30,7 +30,7 @@ results: list[tuple[str, bool, str]] = []
 
 
 def check(name: str, cond: bool, detail: str = "") -> None:
-    results.append((name, bool(cond)))
+    results.append((name, bool(cond), detail))
     print(("  PASS " if cond else "  FAIL ") + name + (f"  [{detail}]" if detail else ""))
 
 
@@ -129,7 +129,7 @@ def main() -> None:
         check("mesh decimated <= 20k faces", mesh.faces.shape[0] <= 20000, f"{mesh.faces.shape[0]} faces")
         check("mesh has real geometry", mesh.vertices.shape[0] > 500, f"{mesh.vertices.shape[0]} verts")
         bounds = mb["bounds"]
-        check("mesh regrounded (min-y ≈ 0)", abs(bounds["min"][1]) < 0.005, f"min-y={bounds['min'][1]:.4f}")
+        check("mesh regrounded (min-y ~ 0)", abs(bounds["min"][1]) < 0.005, f"min-y={bounds['min'][1]:.4f}")
         parts = mesh.split()
         check("mesh single component", len(parts) == 1, f"{len(parts)} components")
         # TripoSR GLBs carry COLOR_0 vertex colors with no material — verify in
@@ -167,6 +167,7 @@ async def ws_audio() -> bool:
     """Subscribe to /ws/progress while a generate-audio job runs live."""
     captured: dict = {}
     stage_events: list[str] = []
+    all_events: list[dict] = []
 
     def fire() -> None:
         resp = httpx.post(
@@ -183,16 +184,31 @@ async def ws_audio() -> bool:
             thread.start()
             deadline = time.monotonic() + 60
             while time.monotonic() < deadline:
-                event = json.loads(await asyncio.wait_for(ws.recv(), timeout=20))
-                if event.get("jobId") != captured.get("job"):
+                try:
+                    event = json.loads(await asyncio.wait_for(ws.recv(), timeout=15))
+                except asyncio.TimeoutError:
+                    # The server publishes events DURING the POST, so they can
+                    # arrive before the response sets captured["job"]. If the
+                    # job is already known, nothing more is coming.
+                    if captured.get("job"):
+                        break
                     continue
-                stage_events.append(event["stage"])
-                if event["stage"] == "DONE":
-                    break
+                # Buffer every event until we know our jobId, then filter.
+                if not captured.get("job"):
+                    all_events.append(event)
+                    continue
+                if event.get("jobId") == captured.get("job"):
+                    stage_events.append(event["stage"])
+                    if event["stage"] == "DONE":
+                        break
     except Exception as exc:  # noqa: BLE001
         print(f"      ws error: {exc}")
         return False
     thread.join(timeout=30)
+    job = captured.get("job", "")
+    # Events buffered before the response may already be ours.
+    mine = [e for e in all_events if e.get("jobId") == job or not job]
+    stage_events = stage_events or [e["stage"] for e in mine]
     ok_status = captured.get("status") == 200
     has_audio = "AUDIO" in stage_events
     ends_done = bool(stage_events) and stage_events[-1] == "DONE"
