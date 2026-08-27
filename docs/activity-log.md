@@ -1621,3 +1621,9 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - scripts/gpu/live_api_battery.py
   - scripts/gpu/time_audio_curl.py
   - scripts/gpu/ui_audio_timing.mjs
+
+## 2026-08-26 23:27 — `733b507`
+**docs: enrich lessons entry for real AudioGen work**
+
+  - docs/activity-log.md
+  - docs/lessons-learned.md
