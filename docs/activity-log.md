@@ -1510,3 +1510,79 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
 
   - docs/activity-log.md
   - docs/lessons-learned.md
+
+## 2026-08-26 20:05 — `e71168d`
+**feat: Phase 3 — spatial audio, NPC dialogue, post-FX, offline export + GPU watchdog hardening**
+
+  - AGENTS.md
+  - backend/config.py
+  - backend/main.py
+  - backend/routers/generate.py
+  - backend/routers/npc.py
+  - backend/routers/progress.py
+  - backend/services/audio_service.py
+  - backend/services/procedural_audio.py
+  - backend/services/progress_bus.py
+  - backend/services/sdxl_service.py
+  - backend/services/smolvlm_service.py
+  - backend/services/vram_manager.py
+  - backend/tests/conftest.py
+  - backend/tests/test_audio.py
+  - backend/tests/test_npc.py
+  - backend/tests/test_vram_manager.py
+  - docs/03_TECH_SPEC.md
+  - docs/04_API_CONTRACTS.md
+  - docs/05_DATA_MODELS.md
+  - docs/07_SECURITY_AND_ENV.md
+  - docs/08_TASKS.md
+  - docs/activity-log.md
+  - docs/lessons-learned.md
+  - docs/plans/2026-08-26-phase-3.md
+  - e2e/audio-journey.spec.ts
+  - e2e/export-journey.spec.ts
+  - e2e/npc-journey.spec.ts
+  - e2e/viewport-shell.spec.ts
+  - echoforge_3d_master_skills_library.md
+  - eslint.config.mjs
+  - handoff.md
+  - knowledge.md
+  - public/exporter/runtime.js
+  - public/vendor/three.core.min.js
+  - scripts/gpu/live_api_battery.py
+  - scripts/gpu/pyprocs.ps1
+  - scripts/gpu/run_guarded.sh
+  - src/components/generation/GeneratedAudioBridge.tsx
+  - src/components/generation/GeneratingPill.tsx
+  - src/components/generation/GenerationPanel.tsx
+  - src/components/generation/ResultToast.tsx
+  - src/components/player/NpcInteract.tsx
+  - src/components/viewport/AudioEmitters.tsx
+  - src/components/viewport/AudioListenerSync.tsx
+  - src/components/viewport/NpcMarkers.tsx
+  - src/components/viewport/PostFx.tsx
+  - src/components/viewport/Scene.tsx
+  - src/components/workspace/BottomBar.tsx
+  - src/components/workspace/DialogueBubble.tsx
+  - src/components/workspace/ExportMenu.tsx
+  - src/components/workspace/LeftDrawer.tsx
+  - src/components/workspace/TopBar.tsx
+  - src/components/workspace/Workstation.tsx
+  - src/lib/api/generate.test.ts
+  - src/lib/api/generate.ts
+  - src/lib/api/npc.test.ts
+  - src/lib/api/npc.ts
+  - src/lib/audio/spatialAudio.test.ts
+  - src/lib/audio/spatialAudio.ts
+  - src/lib/audio/speechPlayback.ts
+  - src/lib/export/exportScene.test.ts
+  - src/lib/export/exportScene.ts
+  - src/lib/stores/useDialogueStore.test.ts
+  - src/lib/stores/useDialogueStore.ts
+  - src/lib/stores/useGenerationStore.test.ts
+  - src/lib/stores/useGenerationStore.ts
+  - src/lib/stores/useSceneStore.test.ts
+  - src/lib/stores/useSceneStore.ts
+  - src/lib/stores/useUiStore.test.ts
+  - src/lib/stores/useUiStore.ts
+  - src/lib/viewport/capture.ts
+  - src/lib/viewport/postprocessing.ts
