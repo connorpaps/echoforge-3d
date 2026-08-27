@@ -1594,3 +1594,17 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - handoff.md
   - knowledge.md
   - scripts/gpu/live_api_battery.py
+
+## 2026-08-26 21:44 — `290ce26`
+**feat: real SmolVLM vision path + real-GPU WebGPU verification with TSL grid fix**
+
+  - backend/config.py
+  - backend/requirements.txt
+  - backend/services/smolvlm_service.py
+  - backend/tests/test_npc.py
+  - docs/lessons-learned.md
+  - handoff.md
+  - knowledge.md
+  - scripts/gpu/webgpu-check.mjs
+  - src/components/viewport/GridFloor.tsx
+  - src/components/viewport/Scene.tsx
