@@ -151,12 +151,7 @@
 - **Avoid in future:** before judging any GPU hang, verify `nvidia-smi` memory ≈ 1–2 GB (zombies keep CUDA contexts); never run full-resident pipelines on the 8 GB card; keep the watchdog (`scripts/gpu/run_guarded.sh`) as the backstop.
 - **Status:** resolved — live GPU battery 30/30, all static gates + 120 unit + 64 pytest + 21/21 e2e green.
 
-## 2026-08-26 21:08 — `8e2426f` (auto-captured, needs enrichment)
+## 2026-08-26 21:08 — `8e2426f` (auto-captured)
 **fix: resolve SDXL-Turbo "hang" — allocator thrash, not a kernel bug; harden live battery**
 
-  - Files:
-    - docs/lessons-learned.md
-    - handoff.md
-    - knowledge.md
-    - scripts/gpu/live_api_battery.py
-  - TODO (agent): expand with Symptom / Root cause / Fix / Avoid in future, then remove the '(auto-captured, needs enrichment)' marker.
+Enriched in-place: see the full Symptom / Root cause / Fix / Avoid-in-future entry directly above ("2026-08-26 — SDXL-Turbo 'hang' was allocator thrash + zombie contamination"). This commit also carried the battery-script hardening (cp1252 `≈` crash, WS jobId race, 2-tuple tally).
