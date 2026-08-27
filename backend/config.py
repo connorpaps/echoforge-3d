@@ -75,7 +75,9 @@ GPU_JOB_TIMEOUT_S = int(os.environ.get("GPU_JOB_TIMEOUT_S", "300"))
 GPU_SLOT_TIMEOUT_S: dict[str, int] = {
     "triposr": int(os.environ.get("GPU_TIMEOUT_TRIPOSR", "300")),
     "sdxl-turbo": int(os.environ.get("GPU_TIMEOUT_SDXL", "120")),
-    "audiogen": int(os.environ.get("GPU_TIMEOUT_AUDIOGEN", "180")),
+    # AudioGen 1.5B is autoregressive (~50 lm steps/sec of audio); a 10 s
+    # clip can take minutes on an 8 GB card, so allow a wide window.
+    "audiogen": int(os.environ.get("GPU_TIMEOUT_AUDIOGEN", "420")),
     "smolvlm": int(os.environ.get("GPU_TIMEOUT_SMOLVLM", "120")),
 }
 

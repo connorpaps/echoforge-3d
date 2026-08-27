@@ -19,6 +19,11 @@ import numpy as np
 
 # --- WAV helpers ---------------------------------------------------------------
 
+# Seconds of audio the loop crossfade consumes (see make_loopable). The real
+# AudioGen path generates duration + LOOP_FADE_SEC and trims back to the
+# exact requested duration.
+LOOP_FADE_SEC = 0.5
+
 
 def encode_wav(samples: np.ndarray, sample_rate: int) -> bytes:
     """Encode float samples in [-1, 1] as a 16-bit PCM mono WAV."""
@@ -41,7 +46,7 @@ def decode_wav(data: bytes) -> tuple[np.ndarray, int]:
     return samples, rate
 
 
-def make_loopable(audio: np.ndarray, sample_rate: int, fade_sec: float = 0.5) -> np.ndarray:
+def make_loopable(audio: np.ndarray, sample_rate: int, fade_sec: float = LOOP_FADE_SEC) -> np.ndarray:
     """Crossfade a one-shot into a seamless loop.
 
     The result's first ``fade`` samples are the original *tail* morphing into

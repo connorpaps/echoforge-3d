@@ -170,6 +170,20 @@ Ran the full Phase 3 verification battery: static gates ✓ (typecheck, lint, 11
 - **Real WebGPU bug found & fixed — the grid was invisible:** drei's `<Grid>` builds a classic `ShaderMaterial`, which r185's WebGPURenderer can't compile (`NodeBuilder: Material "ShaderMaterial" is not compatible.` → substituted with an empty NodeMaterial). Replaced with **`GridFloor.tsx` — a TSL grid** (cell lines + emerald `#10b981` sections every 4 units + radial fade à 45) that renders identically on WebGL and WebGPU (pixel-verified both: ~28/19 emerald line-rows). No more console error; 120 unit + 21/21 e2e still green.
 - **Environment:** backend on :8000 (real SmolVLM, `GPU_TIMEOUT_SMOLVLM=300`), dev server on :3000 (WebGL default). The :3100 WebGPU verification server was killed. CORS default still allows only :3000 — running the app on another port shows graceful "backend offline" (not a bug).
 
+### ▶ RESUME POINT (next session — browser-driven AudioGen slowdown)
+
+**What's done & verified (committed):** REAL AudioGen is live end-to-end — model public (gated=false verified via HF API), ~3.9 GB pre-cached under `G:\hf-cache\hub\`, audiocraft 1.3.0 installed `--no-deps` under torch 2.5 (see `backend/requirements-audiocraft.txt`), 3 xformers import sites patched in site-packages (no torch-2.5 Windows wheel exists; the torch SDPA fallback is used, xformers is never actually called). Backend `audio_service.py` drives `AudioGen.get_pretrained(..., device=...)` + `set_generation_params` (no `.eval()/.to()` — it's a wrapper ABC). Verified live: `synthetic: false`, 2.00 s and 10.00 s 16 kHz mono WAVs, seamless loop. Live battery **30/30** (real AudioGen + real SmolVLM + real SDXL + real TripoSR).
+
+**The ONE thing to fix next session — browser-driven AudioGen is ~10x slower than curl, and it's NOT viewport-render contention:**
+- Same backend, same 500-step 10 s job: curl = **40 s generation** (23:16:33→23:17:13 in .audit/backend.log); browser-driven = **>414 s → GPU-WATCHDOG killed** (23:17:52→23:24:47).
+- The viewport-render-pause experiment (`scripts/gpu/ui_audio_timing.mjs --pause-render` = halted rAF) did NOT fix it — still slow. So it's not (only) the R3F render loop competing for GPU.
+- **Leading hypothesis:** Chrome's own GPU footprint (WebGPU context + compositor) pushes VRAM to ~7.9/8.2 GB while AudioGen's ~6.9 GB resident + cuDNN workspace thrashes — the SAME thrash mechanism as the old SDXL hang (see knowledge.md). Test: sample `nvidia-smi` during a browser-driven job and compare VRAM vs the curl run; then try (a) `enable_model_cpu_offload()`-style treatment for AudioGen, (b) `torch.backends.cuda.matmul.allow_fp16_reduced_precision_reduction`, or (c) run AudioGen at lower duration, or (d) quantize.
+- Timing harnesses (tracked): `scripts/gpu/ui_audio_timing.mjs` (browser-driven, `--pause-render` variant) and `scripts/gpu/time_audio_curl.py` (curl control). Reproduce: backend on :8000, dev server on :3000, run both, compare.
+
+**Restart commands:** backend `HF_HOME='G:\hf-cache' .venv/Scripts/python.exe -m uvicorn backend.main:app --port 8000` (backend currently DOWN — watchdog force-exited it; verify with `curl localhost:8000/health`); dev server `pnpm exec next dev -p 3000`. Watchdog default `GPU_TIMEOUT_AUDIOGEN=420` (config.py). GPU should be clean (~1 GB) — check `nvidia-smi`; kill strays with `scripts/gpu/pyprocs.ps1`.
+
+**Full-app sweep status (user asked for a decent full-app test):** interrupted mid-way by this bug hunt. Done so far: 68 backend tests ✓, 120 unit ✓, 21/21 e2e ✓, typecheck/lint ✓, build ✓, live battery 30/30 ✓, live UI boots + real SmolVLM NPC dialogue in UI ✓. STILL TODO next session: finish the live UI spot-checks (mesh gen button, texture gen button, export, store state) after the AudioGen slowdown is fixed, then docs + push.
+
 ## Session handoff checklist
 
 - Read `knowledge.md`, `docs/lessons-learned.md`, and this file

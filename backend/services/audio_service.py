@@ -1,16 +1,17 @@
 """AudioGen text-to-audio service with a procedural fallback (Task 3.1).
 
-The spec model is ``facebook/audiogen-medium`` — GATED on Hugging Face, and
+The spec model is ``facebook/audiogen-medium`` — PUBLIC on Hugging Face
+(verified via the HF API: gated=false; the earlier "gated" note was wrong).
 ``audiocraft==1.3.0`` pins ``torch==2.1.0`` which conflicts with this repo's
-torch 2.5 stack. Per the plan, audiocraft is installed *separately*
-(``--no-deps``, see backend/requirements-audiocraft.txt) so the torch 2.5
-stack stays intact. When audiocraft is missing OR the gated weights are not
-cached (no HF_TOKEN), the endpoint degrades to the deterministic procedural
-synthesizer in ``procedural_audio.py`` so the contract, UI, and tests always
-work.
+torch 2.5 stack, so audiocraft is installed *separately* (``--no-deps``, see
+backend/requirements-audiocraft.txt — includes a guarded xformers import
+patch since no torch-2.5 Windows wheel exists). When audiocraft is missing
+OR the weights are not cached, the endpoint degrades to the deterministic
+procedural synthesizer in ``procedural_audio.py`` so the contract, UI, and
+tests always work.
 
-Real-model verification needs: HF_TOKEN + accepted license, then
-``backend/scripts/download_models.py`` to finish the pre-cache.
+Real-model pre-cache (no token needed):
+``HF_HOME='G:\hf-cache' .venv/Scripts/python.exe backend/scripts/download_models.py``
 """
 
 from __future__ import annotations
@@ -44,13 +45,12 @@ def _load_audiogen():
     try:
         from audiocraft.models import AudioGen
 
-        logger.info("[AudioGen] loading %s ...", AUDIOGEN_REPO_ID)
-        model = AudioGen.get_pretrained(AUDIOGEN_REPO_ID)
-        model.eval()
-        if DEVICE == "cuda":
-            model = model.to(DEVICE)
+        logger.info("[AudioGen] loading %s (device=%s) ...", AUDIOGEN_REPO_ID, DEVICE)
+        # AudioGen is a wrapper ABC (not an nn.Module) — no .eval()/.to();
+        # get_pretrained moves the underlying LM to the requested device.
+        model = AudioGen.get_pretrained(AUDIOGEN_REPO_ID, device=DEVICE)
         return model
-    except Exception as exc:  # noqa: BLE001 - gated/uncached weights degrade gracefully
+    except Exception as exc:  # noqa: BLE001 - uncached weights degrade gracefully
         logger.warning("[AudioGen] load failed (%s) — using procedural fallback", exc)
         return None
 
@@ -92,12 +92,23 @@ class AudioService:
             return wav, True
 
         report("AUDIO", 30, "model loaded — sampling")
+        # make_loopable crossfades away the last `fade` seconds, so generate
+        # fade_sec MORE audio than requested and the loop lands at the exact
+        # requested duration. CRITICAL: AudioGen caps generation at its
+        # max_duration (10 s) — requesting more silently switches to the
+        # extended streaming continuation path, which is pathologically slow
+        # (~7 min for a 10.5 s clip on the RTX 2070; watchdog-killed live).
+        # Clamp the fade budget so duration + fade never exceeds max_duration;
+        # at the cap (10 s) we emit the raw one-shot (no crossfade).
+        max_dur = float(getattr(model, "max_duration", 10.0) or 10.0)
+        fade_budget = min(procedural_audio.LOOP_FADE_SEC, max(0.0, max_dur - duration_sec))
+        model.set_generation_params(duration=duration_sec + fade_budget)
         with torch.no_grad():
             generated = model.generate([prompt], progress=False)
         audio = generated[0, 0].cpu().numpy().astype(np.float32)
 
         report("AUDIO", 80, "making loop seamless")
-        looped = procedural_audio.make_loopable(audio, AUDIO_SAMPLE_RATE)
+        looped = procedural_audio.make_loopable(audio, AUDIO_SAMPLE_RATE, fade_sec=fade_budget)
         return procedural_audio.encode_wav(looped, AUDIO_SAMPLE_RATE), False
 
 

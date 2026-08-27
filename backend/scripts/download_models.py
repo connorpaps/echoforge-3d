@@ -7,9 +7,11 @@ don't block on network fetches.
 Models:
   - stabilityai/TripoSR          (image-to-3D mesh)
   - stabilityai/sdxl-turbo       (single-step texture/diffusion)
-  - facebook/audiogen-medium     (text-to-audio) — GATED: requires an
-                                  accepted license + HF_TOKEN, so it is
-                                  skipped unless HF_TOKEN is set.
+  - facebook/audiogen-medium     (text-to-audio) — PUBLIC (not gated;
+                                  verified via the HF API 2026-08-26). Weights
+                                  ~3.9 GB: state_dict.bin + EnCodec
+                                  compression_state_dict.bin. Needs audiocraft
+                                  installed (see requirements-audiocraft.txt).
   - HuggingFaceTB/SmolVLM-Instruct (viewport visual QA / NPC dialogue)
 
 Run:  .venv/Scripts/python.exe backend/scripts/download_models.py
@@ -36,7 +38,6 @@ MODELS = [
     {
         "repo_id": "facebook/audiogen-medium",
         "allow_patterns": ["*"],
-        "gated": True,
     },
     {
         "repo_id": "HuggingFaceTB/SmolVLM-Instruct",

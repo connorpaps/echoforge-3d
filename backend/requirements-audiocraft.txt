@@ -1,0 +1,28 @@
+# audiocraft (real AudioGen path) — installed SEPARATELY from requirements.txt
+#
+# audiocraft==1.3.0 pins torch==2.1.0 / torchvision==0.16.0 / torchaudio<2.1.2 /
+# xformers<0.0.23 / av==11.0.0, which CONFLICT with this repo's torch 2.5.0+cu121
+# stack. Install it with --no-deps and provide the compatible runtime deps:
+#
+#   .venv/Scripts/python.exe -m pip install --no-deps audiocraft
+#   .venv/Scripts/python.exe -m pip install torchaudio==2.5.0+cu121 --index-url https://download.pytorch.org/whl/cu121
+#   .venv/Scripts/python.exe -m pip install soundfile julius num2words flashy hydra-core hydra_colorlog sentencepiece encodec demucs librosa torchmetrics spacy tqdm protobuf
+#
+# Version compatibility notes (verified 2026-08-26 on torch 2.5.0+cu121, RTX 2070):
+#   - torchaudio 2.5.0+cu121 is the exact counterpart of the installed torch.
+#   - xformers: NO Windows wheel exists for torch 2.5 on the pytorch index
+#     (newest there, 0.0.27, pins torch 2.4). Instead of downgrading torch, the
+#     unconditional `from xformers import ops` in
+#     audiocraft/modules/transformer.py was patched to a guarded try/except —
+#     audiocraft's DEFAULT attention backend is 'torch' (native SDPA), so
+#     xformers is only needed if set_efficient_attention_backend('xformers')
+#     is called (never in this app). Re-apply the patch after reinstalling
+#     audiocraft.
+#   - audio_service.py imports `audiocraft.models` lazily; when audiocraft is
+#     missing (or the model fails to load) the service degrades to the
+#     procedural synthesizer (synthetic=true).
+#
+# Real-model pre-cache (PUBLIC repo — no HF token needed, verified via the HF
+# API: gated=false; ~3.9 GB: state_dict.bin + compression_state_dict.bin):
+#
+#   HF_HOME='G:\hf-cache' .venv/Scripts/python.exe backend/scripts/download_models.py

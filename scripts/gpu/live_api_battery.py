@@ -1,7 +1,7 @@
 """Live API battery for Phase 3 — run against the real GPU backend on :8000.
 
 Covers: /health, /api/v1/generate-audio (WAV contract, duration, seamless
-loop, synthetic flag), /api/v1/npc-dialogue (fallback + validation),
+loop, synthetic flag), /api/v1/npc-dialogue (real SmolVLM / fallback),
 /api/v1/generate-texture (PNG), /api/v1/generate-mesh (REAL TripoSR on CUDA →
 valid GLB, face budget, world-frame bounds, vertex colors), the live
 WebSocket progress stream, and the VRAM ceiling after the GPU jobs.
@@ -80,7 +80,7 @@ def main() -> None:
     mid = float(np.max(np.abs(samples)))
     check("audio audible (peak > 0.1)", mid > 0.1, f"peak={mid:.3f}")
 
-    print("== npc-dialogue (SmolVLM fallback path) ==")
+    print("== npc-dialogue (real SmolVLM / fallback path) ==")
     r = httpx.post(
         f"{BASE}/api/v1/npc-dialogue",
         json={"frameBase64": frame_data_url(), "persona": "be terse"},
@@ -88,8 +88,14 @@ def main() -> None:
     )
     nb = r.json() if r.status_code == 200 else {}
     check("npc 200", r.status_code == 200, r.text[:120] if r.status_code != 200 else "")
-    check("npc returns dialogue text", len(nb.get("dialogueText", "")) > 10, nb.get("dialogueText", "")[:60])
-    check("npc marks fallback synthetic", nb.get("synthetic") is True)
+    # The REAL SmolVLM path can be terse ("Yes."), so any non-empty reply is
+    # fine; synthetic may be true (fallback) or false (real vision).
+    check("npc returns dialogue text", len(nb.get("dialogueText", "")) > 0, nb.get("dialogueText", "")[:60])
+    check(
+        "npc synthetic flag present",
+        nb.get("synthetic") in (True, False),
+        f"synthetic={nb.get('synthetic')}",
+    )
     check("npc jobId", bool(nb.get("jobId")))
     r = httpx.post(f"{BASE}/api/v1/npc-dialogue", json={"frameBase64": "not base64!!"}, timeout=30)
     check("npc rejects garbage frame (400)", r.status_code == 400)
