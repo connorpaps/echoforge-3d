@@ -1649,3 +1649,12 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
 
   - docs/activity-log.md
   - docs/lessons-learned.md
+
+## 2026-09-04 18:41 — `aea4b2e`
+**fix(mesh): preserve shading and improve Hunyuan materials**
+
+  - backend/services/hunyuan_service.py
+  - backend/services/mesh_processing.py
+  - backend/tests/test_hunyuan_service.py
+  - backend/tests/test_mesh_processing.py
+  - docs/activity-log.md

@@ -233,3 +233,16 @@ _Enriched in-place: see the full entry directly above ("2026-08-26 — Real Audi
     - scripts/gpu/start_hunyuan_sidecar.sh
     - src/components/viewport/GridFloor.tsx
   - TODO (agent): expand with Symptom / Root cause / Fix / Avoid in future, then remove the '(auto-captured, needs enrichment)' marker.
+
+## 2026-09-04 18:41 — `aea4b2e`
+**fix(mesh): preserve shading and improve Hunyuan materials**
+
+- **Symptom:** Hunyuan exports rendered more faceted than expected, and neutral
+  geometry-only output was too orange for dark wooden references.
+- **Root cause:** The final Trimesh normal cache was not touched before GLB
+  export, so `NORMAL` was omitted. The default fallback color also used a
+  brighter orange-brown base.
+- **Fix:** Compute final vertex normals before export, switch the fallback to a
+  darker walnut base, and add regression assertions for `NORMAL` and `COLOR_0`.
+- **Avoid in future:** Validate exported GLB attributes and inspect a real
+  generated asset, rather than relying only on mesh validity or unit tests.
