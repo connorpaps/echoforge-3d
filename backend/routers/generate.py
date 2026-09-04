@@ -25,6 +25,7 @@ from pydantic import BaseModel, Field
 from ..config import (
     API_V1_PREFIX,
     AUDIO_DURATION_DEFAULT,
+    MESH_BACKEND,
     MAX_AUDIO_SECONDS,
     MESH_MAX_FACES,
     MESH_RESOLUTION,
@@ -33,7 +34,7 @@ from ..config import (
     SDXL_SIZE,
     SDXL_STEPS,
 )
-from ..services import audio_service, mesh_processing, sdxl_service, tsr_service
+from ..services import audio_service, hunyuan_service, mesh_processing, sdxl_service, tsr_service
 from ..services.image_utils import ImageDecodeError, decode_image
 from ..services.progress_bus import progress_bus
 from ..services.vram_manager import vram_manager
@@ -105,6 +106,15 @@ def _publish_terminal(job_id: str, event: dict) -> None:
     progress_bus.publish_sync({"jobId": job_id, **event})
 
 
+async def _select_mesh_backend() -> str:
+    """Select Hunyuan only when explicitly requested or healthy in auto mode."""
+    if MESH_BACKEND == "hunyuan":
+        return "hunyuan"
+    if MESH_BACKEND == "auto" and await asyncio.to_thread(hunyuan_service.hunyuan_service.is_available):
+        return "hunyuan"
+    return "triposr"
+
+
 # --- endpoints ------------------------------------------------------------------
 
 @router.post("/generate-mesh", response_model=GenerateMeshResponse)
@@ -120,16 +130,25 @@ async def generate_mesh(request: GenerateMeshRequest) -> GenerateMeshResponse:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     try:
-        report("RECONSTRUCTION", 0, "queued for GPU")
+        backend_name = await _select_mesh_backend()
+        if backend_name == "hunyuan":
+            extract = hunyuan_service.hunyuan_service.extract
+        else:
+            extract = tsr_service.tsr_service.extract
+        report("RECONSTRUCTION", 0, f"queued for GPU ({backend_name})")
         mesh = await vram_manager.run(
-            "triposr",
-            tsr_service.tsr_service.extract,
+            backend_name,
+            extract,
             _image_bytes(request.imageBase64),
             request.resolution,
             report,
         )
         processed = await asyncio.to_thread(
-            mesh_processing.process_mesh, mesh, request.maxFaces, report
+            mesh_processing.process_mesh,
+            mesh,
+            request.maxFaces,
+            report,
+            backend_name == "hunyuan",
         )
     except HTTPException:
         raise

@@ -50,6 +50,12 @@ TRIPOSR_REPO_ID = os.environ.get("TRIPOSR_REPO_ID", "stabilityai/TripoSR")
 TRIPOSR_CONFIG_NAME = "config.yaml"
 TRIPOSR_WEIGHTS_NAME = "model.ckpt"
 
+# Optional quality-upgrade provider. ``auto`` uses the local Hunyuan3D-2GP
+# sidecar when it is healthy and falls back to TripoSR when it is absent.
+MESH_BACKEND = os.environ.get("ECHOFORGE_MESH_BACKEND", "auto").lower()
+HUNYUAN_SIDECAR_URL = os.environ.get("HUNYUAN_SIDECAR_URL", "http://127.0.0.1:8081")
+HUNYUAN_TIMEOUT_S = float(os.environ.get("HUNYUAN_TIMEOUT_S", "900"))
+
 SDXL_REPO_ID = os.environ.get("SDXL_REPO_ID", "stabilityai/sdxl-turbo")
 SMOLVLM_REPO_ID = os.environ.get("SMOLVLM_REPO_ID", "HuggingFaceTB/SmolVLM-Instruct")
 SDXL_VARIANT = "fp16"
@@ -74,6 +80,7 @@ assert MAX_CONCURRENT_GPU_TASKS == 1, "EchoForge 3D only supports a single seria
 GPU_JOB_TIMEOUT_S = int(os.environ.get("GPU_JOB_TIMEOUT_S", "300"))
 GPU_SLOT_TIMEOUT_S: dict[str, int] = {
     "triposr": int(os.environ.get("GPU_TIMEOUT_TRIPOSR", "300")),
+    "hunyuan": int(os.environ.get("GPU_TIMEOUT_HUNYUAN", "900")),
     "sdxl-turbo": int(os.environ.get("GPU_TIMEOUT_SDXL", "120")),
     # AudioGen 1.5B is autoregressive (~50 lm steps/sec of audio); a 10 s
     # clip can take minutes on an 8 GB card, so allow a wide window.

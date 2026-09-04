@@ -13,6 +13,7 @@ import io
 import numpy as np
 import pytest
 from PIL import Image
+import trimesh
 
 from backend.services.mesh_processing import validate_glb
 
@@ -75,6 +76,29 @@ def test_generate_mesh_rejects_out_of_range_resolution(client):
         json={"imageBase64": _data_url_image(), "resolution": 1024},
     )
     assert response.status_code == 422
+
+
+def test_generate_mesh_auto_selects_hunyuan_when_sidecar_is_healthy(client, monkeypatch):
+    """The quality provider is selected by health without changing the API contract."""
+    from backend.routers import generate
+    from backend.services import hunyuan_service
+
+    called = {"value": False}
+    monkeypatch.setattr(generate, "MESH_BACKEND", "auto")
+    monkeypatch.setattr(hunyuan_service.hunyuan_service, "is_available", lambda: True)
+
+    def fake_extract(model, image_bytes, resolution=192, progress=None):
+        called["value"] = True
+        return trimesh.creation.icosphere(subdivisions=2)
+
+    monkeypatch.setattr(hunyuan_service.hunyuan_service, "extract", fake_extract)
+    response = client.post(
+        "/api/v1/generate-mesh",
+        json={"imageBase64": _data_url_image()},
+    )
+
+    assert response.status_code == 200, response.text
+    assert called["value"] is True
 
 
 # --- generate-texture ------------------------------------------------------------

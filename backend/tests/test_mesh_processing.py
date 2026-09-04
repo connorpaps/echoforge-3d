@@ -192,3 +192,19 @@ def test_orient_upright_front_faces_z():
     lo, hi = z.min(), z.max()
     front_colors = out.visual.vertex_colors[z > hi - 0.15 * (hi - lo)][:, :3]
     assert front_colors[:, 0].mean() > 150, "warm front must face +Z"
+
+
+def test_flip_mesh_vertical_regrounds_and_reverses_height():
+    mesh = trimesh.creation.box(extents=[1.0, 2.0, 1.0])
+    mesh.apply_translation([0.0, 1.0, 0.0])
+    colors = np.zeros((len(mesh.vertices), 4), dtype=np.uint8)
+    colors[mesh.vertices[:, 1] > 1.5] = [220, 20, 20, 255]
+    colors[mesh.vertices[:, 1] <= 1.5] = [20, 20, 220, 255]
+    mesh.visual.vertex_colors = colors
+
+    out = mesh_processing.flip_mesh_vertical(mesh.copy())
+
+    assert abs(float(out.bounds[0][1])) < 1e-6
+    y = np.asarray(out.vertices)[:, 1]
+    top_colors = np.asarray(out.visual.vertex_colors)[y > y.max() - 0.1][:, :3]
+    assert top_colors[:, 2].mean() > top_colors[:, 0].mean()

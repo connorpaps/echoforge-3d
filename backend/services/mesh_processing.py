@@ -190,6 +190,29 @@ def orient_upright(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
     return mesh
 
 
+def flip_mesh_vertical(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
+    """Rotate an already upright mesh 180° about X and re-ground it."""
+    bounds = np.asarray(mesh.bounds, dtype=np.float64)
+    midpoint = (float(bounds[0, 1]) + float(bounds[1, 1])) / 2.0
+    flip = np.eye(4)
+    flip[:3, :3] = np.array(
+        [[1.0, 0.0, 0.0], [0.0, -1.0, 0.0], [0.0, 0.0, -1.0]]
+    )
+    pivot = np.eye(4)
+    pivot[:3, 3] = [0.0, midpoint, 0.0]
+    mesh.apply_transform(pivot @ flip @ np.linalg.inv(pivot))
+
+    lo, hi = np.asarray(mesh.bounds, dtype=np.float64)
+    reground = np.eye(4)
+    reground[:3, 3] = [
+        -(float(lo[0]) + float(hi[0])) / 2.0,
+        -float(lo[1]),
+        -(float(lo[2]) + float(hi[2])) / 2.0,
+    ]
+    mesh.apply_transform(reground)
+    return mesh
+
+
 def sanitize_mesh(mesh: trimesh.Trimesh, vertex_colors: np.ndarray | None = None) -> trimesh.Trimesh:
     """Remove degenerate faces, merge duplicate vertices, fix winding.
 
@@ -252,6 +275,7 @@ def process_mesh(
     mesh: trimesh.Trimesh,
     max_faces: int = MESH_MAX_FACES,
     progress: ProgressCallback | None = None,
+    vertical_flip: bool = False,
 ) -> dict[str, Any]:
     """Full optimization pipeline. Returns GLB bytes + asset metadata."""
     progress = progress or _noop_progress
@@ -273,6 +297,8 @@ def process_mesh(
     # orient to world y-up now while vertex colors are still attached (the
     # flip decision reads them). Bounds afterwards: min-y = 0, x/z centered.
     original = orient_upright(original)
+    if vertical_flip:
+        original = flip_mesh_vertical(original)
     original_colors = (
         np.asarray(original.visual.vertex_colors, dtype=np.uint8).copy()
         if original.visual.kind == "vertex" and len(original.visual.vertex_colors) == len(original.vertices)

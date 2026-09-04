@@ -2,6 +2,8 @@
 
 import { useMemo } from 'react';
 import * as THREE from 'three';
+import { Grid } from '@react-three/drei';
+import { useThree } from '@react-three/fiber';
 import {
   abs,
   fract,
@@ -34,6 +36,31 @@ const SECTION_W = 0.2; // world-unit half-width of section lines
 const FADE_DISTANCE = 45;
 
 export function GridFloor() {
+  const gl = useThree((state) => state.gl);
+
+  // drei's ShaderMaterial is the stable WebGL path. WebGPU needs the TSL
+  // implementation below because ShaderMaterial is not NodeBuilder-safe.
+  if (!('isWebGPURenderer' in gl)) {
+    return (
+      <Grid
+        args={[GRID_SIZE, GRID_SIZE]}
+        cellSize={1}
+        cellThickness={0.7}
+        cellColor="#16181d"
+        sectionSize={SECTION_EVERY}
+        sectionThickness={1.2}
+        sectionColor="#10b981"
+        fadeDistance={FADE_DISTANCE}
+        fadeStrength={1}
+        infiniteGrid={false}
+      />
+    );
+  }
+
+  return <TslGrid />;
+}
+
+function TslGrid() {
   const geometry = useMemo(() => {
     const geo = new THREE.PlaneGeometry(GRID_SIZE, GRID_SIZE);
     geo.rotateX(-Math.PI / 2);
@@ -59,7 +86,11 @@ export function GridFloor() {
     const fade = oneMinus(
       smoothstep(FADE_DISTANCE * 0.55, FADE_DISTANCE, length(positionWorld.xz)),
     );
-    const lineColor = mix(vec3(0x16, 0x18, 0x1d), vec3(0x10, 0xb9, 0x81), sectionMask);
+    const lineColor = mix(
+      vec3(0x16 / 255, 0x18 / 255, 0x1d / 255),
+      vec3(0x10 / 255, 0xb9 / 255, 0x81 / 255),
+      sectionMask,
+    );
 
     return new MeshBasicNodeMaterial({
       colorNode: lineColor,
