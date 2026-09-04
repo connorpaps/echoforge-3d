@@ -335,6 +335,11 @@ def process_mesh(
         if sampled is not None and len(sampled) == len(working.vertices):
             working.visual.vertex_colors = sampled
 
+    # Trimesh only emits NORMAL when the vertex-normal cache has been touched.
+    # Compute it after the final transform/color pass so Three.js and other
+    # glTF viewers receive smooth-shading data instead of a flat default.
+    _ = working.vertex_normals
+
     progress("DECIMATION", 80, "baking collision hull")
     hulls = compute_convex_hulls(working)
 

@@ -40,7 +40,9 @@ def apply_default_wood_material(mesh: trimesh.Trimesh) -> trimesh.Trimesh:
 
     vertices = np.asarray(mesh.vertices, dtype=np.float64)
     grain = 0.94 + 0.06 * np.sin(vertices[:, 0] * 31.0 + vertices[:, 2] * 23.0)
-    base = np.array([153.0, 76.0, 23.0])
+    # Match the dark walnut tone in common wooden reference images without
+    # losing enough red bias to read as wood under neutral scene lighting.
+    base = np.array([120.0, 58.0, 20.0])
     colored = np.clip(base[None, :] * grain[:, None], 0, 255).astype(np.uint8)
     mesh.visual.vertex_colors = np.column_stack(
         [colored, np.full(len(colored), 255, dtype=np.uint8)]

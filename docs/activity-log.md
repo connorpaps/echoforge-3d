@@ -1643,3 +1643,9 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - docs/mesh-backends.md
   - scripts/gpu/start_hunyuan_sidecar.sh
   - src/components/viewport/GridFloor.tsx
+
+## 2026-09-04 17:05 — `61aab48`
+**docs: record Hunyuan mesh upgrade**
+
+  - docs/activity-log.md
+  - docs/lessons-learned.md

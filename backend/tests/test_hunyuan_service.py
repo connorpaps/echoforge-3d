@@ -70,4 +70,4 @@ def test_neutral_hunyuan_colors_get_warm_wood_material():
 
     colors = mesh.visual.vertex_colors[:, :3]
     assert colors[:, 0].mean() > colors[:, 1].mean() > colors[:, 2].mean()
-    assert colors[:, 0].mean() > 120
+    assert 95 < colors[:, 0].mean() < 135

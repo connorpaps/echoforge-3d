@@ -77,6 +77,8 @@ def test_process_mesh_full_pipeline():
     assert mesh_processing.validate_glb(glb)
     # Vertex colors must survive into the exported GLB (COLOR_0 attribute).
     assert b"COLOR_0" in glb
+    # Smooth shading must survive the export boundary too.
+    assert b"NORMAL" in glb
 
 
 def test_process_mesh_decimates_oversized_input():
