@@ -215,3 +215,21 @@ _Enriched in-place: see the full entry directly above ("2026-08-26 — Real Audi
     - scripts/gpu/time_audio_curl.py
     - scripts/gpu/ui_audio_timing.mjs
   - TODO (agent): expand with Symptom / Root cause / Fix / Avoid in future, then remove the '(auto-captured, needs enrichment)' marker.
+
+## 2026-09-04 17:04 — `87b44f8` (auto-captured, needs enrichment)
+**feat(mesh): add Hunyuan3D provider and orientation fix**
+
+  - Files:
+    - .agents/skills/echoforge-mesh-quality/SKILL.md
+    - backend/.env.example
+    - backend/config.py
+    - backend/routers/generate.py
+    - backend/services/hunyuan_service.py
+    - backend/services/mesh_processing.py
+    - backend/tests/test_generate.py
+    - backend/tests/test_hunyuan_service.py
+    - backend/tests/test_mesh_processing.py
+    - docs/mesh-backends.md
+    - scripts/gpu/start_hunyuan_sidecar.sh
+    - src/components/viewport/GridFloor.tsx
+  - TODO (agent): expand with Symptom / Root cause / Fix / Avoid in future, then remove the '(auto-captured, needs enrichment)' marker.

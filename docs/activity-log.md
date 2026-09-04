@@ -1627,3 +1627,19 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
 
   - docs/activity-log.md
   - docs/lessons-learned.md
+
+## 2026-09-04 17:04 — `87b44f8`
+**feat(mesh): add Hunyuan3D provider and orientation fix**
+
+  - .agents/skills/echoforge-mesh-quality/SKILL.md
+  - backend/.env.example
+  - backend/config.py
+  - backend/routers/generate.py
+  - backend/services/hunyuan_service.py
+  - backend/services/mesh_processing.py
+  - backend/tests/test_generate.py
+  - backend/tests/test_hunyuan_service.py
+  - backend/tests/test_mesh_processing.py
+  - docs/mesh-backends.md
+  - scripts/gpu/start_hunyuan_sidecar.sh
+  - src/components/viewport/GridFloor.tsx
