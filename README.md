@@ -14,9 +14,9 @@ Turn a reference image into a usable 3D asset, sketch terrain, add spatial inter
 
 > **Portfolio project:** a local-first multimodal 3D workstation demonstrating GPU orchestration, browser 3D, physics, spatial audio, persistence, and production-minded validation in one coherent application.
 
-![EchoForge 3D terrain sketch workflow](docs/assets/echoforge-terrain-sketch.gif)
+![EchoForge 3D Hunyuan3D bishop turntable](docs/assets/bishop-turntable.gif)
 
-*Verified local UI capture: drawing on the topographic canvas produces terrain telemetry in the workstation. The browser capture uses the hermetic fixture seam; it does not claim real-model reconstruction quality.*
+*Verified local render of a Hunyuan3D-2GP output after EchoForge mesh processing. The turntable shows the full GLB asset and its validation metadata; it is not a claim of perfect single-image reconstruction.*
 
 ## Why this project is worth opening
 
@@ -186,13 +186,21 @@ CI runs frontend checks, backend tests, and hermetic Playwright on GitHub Action
 
 ## Visual proof
 
-The repository includes a reviewed visual capture of the core interaction:
+The strongest evidence is a real generated artifact, presented with the validation data that matters:
+
+![EchoForge 3D validated Hunyuan3D output](docs/assets/bishop-evidence.png)
+
+This local RTX 2070 capture shows a Hunyuan3D-2GP bishop after orientation, grounding, mesh processing, shading, and GLB export. The artifact was validated at 20,000 faces, 10,002 vertices, one connected component, watertight geometry, `Y = 0` grounding, `NORMAL`, and `COLOR_0` attributes.
+
+The UI workflow is also captured separately:
 
 ![EchoForge 3D workstation](docs/assets/echoforge-workspace.png)
 
-This capture is intentionally labeled as fixture-backed UI evidence. It demonstrates the terrain canvas, browser workstation layout, Web Worker status, VRAM telemetry, prompt workflow, project actions, and export surface. It does **not** stand in for a real Hunyuan3D generation benchmark.
+![EchoForge 3D terrain sketch workflow](docs/assets/echoforge-terrain-sketch.gif)
 
-For a future GPU demo, add a separately reviewed capture showing the reference image, generated GLB, provider, renderer, GPU, face count, and export result. Do not blur the line between a reliable UI fixture and a perceptual model-quality claim. Recruiters can handle nuance; they dislike bait-and-switch more.
+The workstation and terrain captures use the hermetic fixture seam. They demonstrate the browser UI, terrain sketching, telemetry, project actions, and export surface. They do **not** stand in for a real GPU generation benchmark.
+
+The source reference image is intentionally not redistributed because it contains a third-party stock watermark. The generated GLB render and structural metadata are included instead.
 
 ## Resume-ready summary
 
