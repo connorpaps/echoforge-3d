@@ -1664,3 +1664,50 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
 
   - docs/activity-log.md
   - docs/lessons-learned.md
+
+## 2026-09-04 20:24 — `493e91e`
+**feat: harden local-first worldbuilding release**
+
+  - .github/workflows/ci.yml
+  - LICENSE
+  - README.md
+  - THIRD_PARTY_LICENSES.md
+  - backend/.env.example
+  - backend/config.py
+  - backend/main.py
+  - backend/rate_limit.py
+  - backend/routers/generate.py
+  - backend/routers/npc.py
+  - backend/routers/progress.py
+  - backend/services/hunyuan_service.py
+  - backend/services/image_utils.py
+  - backend/services/mesh_processing.py
+  - backend/services/progress_bus.py
+  - backend/services/sdxl_service.py
+  - backend/services/smolvlm_service.py
+  - backend/services/tsr_service.py
+  - backend/services/vram_manager.py
+  - backend/tests/test_backend_hardening.py
+  - backend/tests/test_vram_manager.py
+  - docs/02_DESIGN_BRIEF.md
+  - docs/04_API_CONTRACTS.md
+  - docs/06_TESTING_AND_QA.md
+  - docs/07_SECURITY_AND_ENV.md
+  - docs/activity-log.md
+  - docs/capability-matrix.md
+  - src/app/globals.css
+  - src/components/canvas/TopoCanvas.test.tsx
+  - src/components/canvas/TopoCanvas.tsx
+  - src/components/generation/GenerationPanel.test.tsx
+  - src/components/generation/GenerationPanel.tsx
+  - src/components/viewport/SceneEntities.test.tsx
+  - src/components/viewport/SceneEntities.tsx
+  - src/components/workspace/BottomBar.tsx
+  - src/components/workspace/LeftDrawer.test.tsx
+  - src/components/workspace/LeftDrawer.tsx
+  - src/components/workspace/ProjectActions.test.tsx
+  - src/components/workspace/ProjectActions.tsx
+  - src/components/workspace/TopBar.tsx
+  - src/components/workspace/Workstation.tsx
+  - src/lib/persistence/projectPersistence.test.ts
+  - src/lib/persistence/projectPersistence.ts

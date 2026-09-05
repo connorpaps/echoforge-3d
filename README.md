@@ -14,6 +14,10 @@ Turn a reference image into a usable 3D asset, sketch terrain, add spatial inter
 
 > **Portfolio project:** a local-first multimodal 3D workstation demonstrating GPU orchestration, browser 3D, physics, spatial audio, persistence, and production-minded validation in one coherent application.
 
+![EchoForge 3D terrain sketch workflow](docs/assets/echoforge-terrain-sketch.gif)
+
+*Verified local UI capture: drawing on the topographic canvas produces terrain telemetry in the workstation. The browser capture uses the hermetic fixture seam; it does not claim real-model reconstruction quality.*
+
 ## Why this project is worth opening
 
 EchoForge is not just a prompt box around an API. It solves the difficult parts around AI-generated 3D:
@@ -180,16 +184,15 @@ pnpm test:e2e
 
 CI runs frontend checks, backend tests, and hermetic Playwright on GitHub Actions. The CI browser uses SwiftShader and fixture workers, so it does not download or execute the local GPU models.
 
-## Visual proof and demo capture
+## Visual proof
 
-A recruiter should be able to understand the product in seconds. The recommended repository evidence is:
+The repository includes a reviewed visual capture of the core interaction:
 
-1. A hero screenshot of the workstation with a generated asset in the viewport.
-2. A short GIF showing upload → generation → scene interaction → export.
-3. A comparison image showing the reference and generated chair or bishop asset.
-4. A short architecture image explaining browser workers, FastAPI, VRAM serialization, and the optional sidecar.
+![EchoForge 3D workstation](docs/assets/echoforge-workspace.png)
 
-Reviewed images belong under `docs/assets/` and should identify the provider, renderer, GPU, and whether the capture used a real model or a fixture seam. The repository does not currently claim a bundled screenshot that has not been reviewed.
+This capture is intentionally labeled as fixture-backed UI evidence. It demonstrates the terrain canvas, browser workstation layout, Web Worker status, VRAM telemetry, prompt workflow, project actions, and export surface. It does **not** stand in for a real Hunyuan3D generation benchmark.
+
+For a future GPU demo, add a separately reviewed capture showing the reference image, generated GLB, provider, renderer, GPU, face count, and export result. Do not blur the line between a reliable UI fixture and a perceptual model-quality claim. Recruiters can handle nuance; they dislike bait-and-switch more.
 
 ## Resume-ready summary
 
