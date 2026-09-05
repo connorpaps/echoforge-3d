@@ -1711,3 +1711,11 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - src/components/workspace/Workstation.tsx
   - src/lib/persistence/projectPersistence.test.ts
   - src/lib/persistence/projectPersistence.ts
+
+## 2026-09-04 20:35 — `686f82b`
+**docs: add recruiter-ready visual proof**
+
+  - README.md
+  - docs/activity-log.md
+  - docs/assets/echoforge-terrain-sketch.gif
+  - docs/assets/echoforge-workspace.png
