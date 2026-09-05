@@ -15,8 +15,8 @@ export function BottomBar() {
   const playerPos = usePlayerStore((s) => s.position);
 
   return (
-    <footer className="flex h-8 shrink-0 items-center justify-between border-t border-border-subtle bg-bg-canvas/80 px-4">
-      <div className="flex items-center gap-4">
+    <footer className="flex h-8 min-w-0 shrink-0 items-center justify-between gap-4 overflow-x-auto border-t border-border-subtle bg-bg-canvas/80 px-4">
+      <div className="flex shrink-0 items-center gap-4 whitespace-nowrap">
         <TelemetryText>Web Audio: 44.1kHz</TelemetryText>
         <TelemetryText data-testid="ambient-bus">
           Ambient Bus: {audioEmitterCount} emitter{audioEmitterCount === 1 ? '' : 's'}
@@ -34,7 +34,7 @@ export function BottomBar() {
           </TelemetryText>
         )}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex shrink-0 items-center gap-4 whitespace-nowrap">
         <TelemetryText>
           Frame Time: {frameTimeMs > 0 ? `${frameTimeMs.toFixed(1)}ms` : '--'}
         </TelemetryText>

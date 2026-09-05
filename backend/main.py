@@ -21,8 +21,11 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from .config import CORS_ORIGINS
+from .rate_limit import limiter, reset_rate_limit_storage
 from .routers import generate, health, npc, progress
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -37,6 +40,9 @@ def create_app() -> FastAPI:
         description="Sequential-VRAM generative backend (TripoSR, SDXL-Turbo).",
         version=APP_VERSION,
     )
+    reset_rate_limit_storage()
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
     app.add_middleware(
         CORSMiddleware,

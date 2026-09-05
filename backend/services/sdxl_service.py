@@ -70,6 +70,10 @@ class SDXLService:
         logger.info("[SDXL] pipeline loaded (device=%s, cpu_offload=%s)", DEVICE, CUDA_AVAILABLE)
         return self._pipe
 
+    def unload(self) -> None:
+        """Clear the pipeline reference owned by this service."""
+        self._pipe = None
+
     # -- generation -------------------------------------------------------------
 
     def generate(
@@ -126,4 +130,4 @@ class SDXLService:
 from .vram_manager import vram_manager  # noqa: E402
 
 sdxl_service = SDXLService()
-sdxl_slot = vram_manager.register("sdxl-turbo", sdxl_service.ensure_loaded)
+sdxl_slot = vram_manager.register("sdxl-turbo", sdxl_service.ensure_loaded, sdxl_service.unload)

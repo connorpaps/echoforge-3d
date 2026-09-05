@@ -15,8 +15,6 @@ line so the contract, UI, and tests always work.
 
 from __future__ import annotations
 
-import base64
-import io
 import logging
 from typing import Callable
 
@@ -76,12 +74,9 @@ def _load_smolvlm():
 
 
 def _decode_frame(frame_base64: str):
-    from PIL import Image
+    from .image_utils import decode_image
 
-    body = frame_base64.strip()
-    if body.startswith("data:"):
-        body = body.split(",", 1)[1]
-    return Image.open(io.BytesIO(base64.b64decode(body)))
+    return decode_image(frame_base64)
 
 
 class SmolVLMService:

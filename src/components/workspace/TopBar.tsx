@@ -4,6 +4,7 @@ import { KeycapBadge } from '@/components/ui/KeycapBadge';
 import { StatusPill } from '@/components/ui/StatusPill';
 import { VramMeter } from '@/components/generation/VramMeter';
 import { ExportMenu } from '@/components/workspace/ExportMenu';
+import { ProjectActions } from '@/components/workspace/ProjectActions';
 import { useSceneStore } from '@/lib/stores/useSceneStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
 
@@ -13,15 +14,15 @@ export function TopBar() {
   const togglePostFx = useUiStore((s) => s.togglePostFx);
 
   return (
-    <header className="flex h-12 shrink-0 items-center justify-between border-b border-border-subtle bg-bg-canvas/80 px-4">
-      <div className="flex items-center gap-4">
+    <header className="flex h-12 min-w-0 shrink-0 items-center justify-between gap-3 overflow-x-auto border-b border-border-subtle bg-bg-canvas/80 px-4">
+      <div className="flex min-w-0 shrink-0 items-center gap-4">
         <h1 className="text-sm font-semibold tracking-tight text-text-primary">
           EchoForge 3D
         </h1>
         <VramMeter />
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex min-w-0 shrink-0 items-center gap-4">
         <StatusPill tone={isRecording ? 'recording' : 'idle'}>
           <span className="size-1.5 rounded-full bg-current" />
           Voice: {isRecording ? 'Recording' : 'Ready'}
@@ -42,6 +43,7 @@ export function TopBar() {
           FX: {postFxEnabled ? 'On' : 'Off'}
         </button>
 
+        <ProjectActions />
         <ExportMenu />
       </div>
     </header>

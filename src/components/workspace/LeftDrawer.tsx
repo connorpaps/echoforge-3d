@@ -73,7 +73,8 @@ function SceneInspector() {
       </div>
       {Object.keys(entities).length === 0 ? (
         <p className="mt-2 text-[11px] leading-relaxed text-text-muted">
-          No entities yet. Sketch terrain to begin.
+          No entities yet. Sketch terrain to begin, upload an image or generate
+          an asset, then press Tab for play mode.
         </p>
       ) : (
         <ul className="mt-2 space-y-1.5">

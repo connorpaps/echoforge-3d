@@ -130,3 +130,22 @@
 @utility progress-sweep {
   animation: progress-sweep 1.1s ease-in-out infinite;
 }
+
+/* Keep essential state changes visible without motion for users who request it. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .voice-pulse,
+  .emerald-shimmer,
+  .progress-sweep,
+  .animate-pulse {
+    animation: none !important;
+  }
+}

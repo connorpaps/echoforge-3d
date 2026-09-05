@@ -18,7 +18,7 @@ import time
 import uuid
 from typing import Callable
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
@@ -28,12 +28,14 @@ from ..config import (
     MESH_BACKEND,
     MAX_AUDIO_SECONDS,
     MESH_MAX_FACES,
+    MESH_FACE_CAP,
     MESH_RESOLUTION,
     MAX_PROMPT_CHARS,
     SDXL_GUIDANCE,
     SDXL_SIZE,
     SDXL_STEPS,
 )
+from ..rate_limit import rate_limited
 from ..services import audio_service, hunyuan_service, mesh_processing, sdxl_service, tsr_service
 from ..services.image_utils import ImageDecodeError, decode_image
 from ..services.progress_bus import progress_bus
@@ -52,7 +54,7 @@ class GenerateMeshRequest(BaseModel):
     prompt: str = Field(default="", max_length=MAX_PROMPT_CHARS)
     imageBase64: str = Field(min_length=1, description="base64 or data-URL encoded image")
     resolution: int = Field(default=MESH_RESOLUTION, ge=64, le=512)
-    maxFaces: int = Field(default=MESH_MAX_FACES, ge=500, le=50000)
+    maxFaces: int = Field(default=MESH_MAX_FACES, ge=500, le=MESH_FACE_CAP)
 
 
 class GenerateMeshResponse(BaseModel):
@@ -117,7 +119,6 @@ async def _select_mesh_backend() -> str:
 
 # --- endpoints ------------------------------------------------------------------
 
-@router.post("/generate-mesh", response_model=GenerateMeshResponse)
 async def generate_mesh(request: GenerateMeshRequest) -> GenerateMeshResponse:
     job_id = _new_job()
     report = _make_progress(job_id)
@@ -136,13 +137,26 @@ async def generate_mesh(request: GenerateMeshRequest) -> GenerateMeshResponse:
         else:
             extract = tsr_service.tsr_service.extract
         report("RECONSTRUCTION", 0, f"queued for GPU ({backend_name})")
-        mesh = await vram_manager.run(
-            backend_name,
-            extract,
-            _image_bytes(request.imageBase64),
-            request.resolution,
-            report,
-        )
+        try:
+            mesh = await vram_manager.run(
+                backend_name,
+                extract,
+                _image_bytes(request.imageBase64),
+                request.resolution,
+                report,
+            )
+        except hunyuan_service.HunyuanSidecarUnavailable:
+            if MESH_BACKEND != "auto" or backend_name != "hunyuan":
+                raise
+            backend_name = "triposr"
+            report("RECONSTRUCTION", 0, "Hunyuan unavailable — falling back to TripoSR")
+            mesh = await vram_manager.run(
+                "triposr",
+                tsr_service.tsr_service.extract,
+                _image_bytes(request.imageBase64),
+                request.resolution,
+                report,
+            )
         processed = await asyncio.to_thread(
             mesh_processing.process_mesh,
             mesh,
@@ -154,8 +168,8 @@ async def generate_mesh(request: GenerateMeshRequest) -> GenerateMeshResponse:
         raise
     except Exception as exc:  # noqa: BLE001 — surface as a 500 with a progress ERROR
         logger.exception("generate-mesh failed (job %s)", job_id)
-        _publish_terminal(job_id, {"stage": "ERROR", "percent": 0, "message": str(exc)})
-        raise HTTPException(status_code=500, detail=f"mesh generation failed: {exc}") from exc
+        _publish_terminal(job_id, {"stage": "ERROR", "percent": 0, "message": "mesh generation failed"})
+        raise HTTPException(status_code=500, detail="mesh generation failed") from exc
 
     elapsed_ms = int((time.monotonic() - started) * 1000)
     _publish_terminal(
@@ -177,7 +191,6 @@ async def generate_mesh(request: GenerateMeshRequest) -> GenerateMeshResponse:
     )
 
 
-@router.post("/generate-texture", response_model=GenerateTextureResponse)
 async def generate_texture(request: GenerateTextureRequest) -> GenerateTextureResponse:
     job_id = _new_job()
     report = _make_progress(job_id)
@@ -197,8 +210,8 @@ async def generate_texture(request: GenerateTextureRequest) -> GenerateTextureRe
         )
     except Exception as exc:  # noqa: BLE001
         logger.exception("generate-texture failed (job %s)", job_id)
-        _publish_terminal(job_id, {"stage": "ERROR", "percent": 0, "message": str(exc)})
-        raise HTTPException(status_code=500, detail=f"texture generation failed: {exc}") from exc
+        _publish_terminal(job_id, {"stage": "ERROR", "percent": 0, "message": "texture generation failed"})
+        raise HTTPException(status_code=500, detail="texture generation failed") from exc
 
     elapsed_ms = int((time.monotonic() - started) * 1000)
     _publish_terminal(job_id, {"stage": "DONE", "percent": 100, "message": f"texture ready in {elapsed_ms} ms"})
@@ -210,7 +223,6 @@ async def generate_texture(request: GenerateTextureRequest) -> GenerateTextureRe
     )
 
 
-@router.post("/generate-audio")
 async def generate_audio(request: GenerateAudioRequest) -> StreamingResponse:
     job_id = _new_job()
     report = _make_progress(job_id)
@@ -228,8 +240,8 @@ async def generate_audio(request: GenerateAudioRequest) -> StreamingResponse:
         )
     except Exception as exc:  # noqa: BLE001
         logger.exception("generate-audio failed (job %s)", job_id)
-        _publish_terminal(job_id, {"stage": "ERROR", "percent": 0, "message": str(exc)})
-        raise HTTPException(status_code=500, detail=f"audio generation failed: {exc}") from exc
+        _publish_terminal(job_id, {"stage": "ERROR", "percent": 0, "message": "audio generation failed"})
+        raise HTTPException(status_code=500, detail="audio generation failed") from exc
 
     elapsed_ms = int((time.monotonic() - started) * 1000)
     _publish_terminal(
@@ -254,3 +266,21 @@ def _image_bytes(image_base64: str) -> bytes:
     if body.startswith("data:"):
         body = body.split(",", 1)[1]
     return base64.b64decode(body)
+
+
+@router.post("/generate-mesh", response_model=GenerateMeshResponse)
+@rate_limited
+async def _generate_mesh_http(request: Request, payload: GenerateMeshRequest) -> GenerateMeshResponse:
+    return await generate_mesh(payload)
+
+
+@router.post("/generate-texture", response_model=GenerateTextureResponse)
+@rate_limited
+async def _generate_texture_http(request: Request, payload: GenerateTextureRequest) -> GenerateTextureResponse:
+    return await generate_texture(payload)
+
+
+@router.post("/generate-audio")
+@rate_limited
+async def _generate_audio_http(request: Request, payload: GenerateAudioRequest) -> StreamingResponse:
+    return await generate_audio(payload)

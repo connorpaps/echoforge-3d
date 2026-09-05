@@ -103,7 +103,7 @@ class Hunyuan3DService:
             )
             response.raise_for_status()
         except httpx.HTTPError as exc:
-            raise RuntimeError(f"Hunyuan sidecar generation failed: {exc}") from exc
+            raise HunyuanSidecarUnavailable("Hunyuan sidecar generation unavailable") from exc
         if response.content[:4] != b"glTF":
             raise RuntimeError("Hunyuan sidecar returned a non-GLB response")
         if progress is not None:

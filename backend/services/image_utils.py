@@ -30,7 +30,7 @@ import re
 import numpy as np
 from PIL import Image, ImageFilter
 
-from ..config import MAX_IMAGE_BYTES
+from ..config import MAX_IMAGE_BYTES, MAX_IMAGE_DIMENSION, MAX_IMAGE_PIXELS
 
 logger = logging.getLogger(__name__)
 
@@ -97,9 +97,25 @@ def decode_image(image_base64: str) -> Image.Image:
     except (binascii.Error, ValueError) as exc:
         raise ImageDecodeError("imageBase64 is not valid base64") from exc
 
+    return decode_image_bytes(payload)
+
+
+def decode_image_bytes(payload: bytes) -> Image.Image:
+    """Decode already-unwrapped image bytes with the same safety limits."""
+    if len(payload) > MAX_IMAGE_BYTES:
+        raise ImageDecodeError(f"image payload exceeds {MAX_IMAGE_BYTES // (2**20)} MiB limit")
     try:
         image = Image.open(io.BytesIO(payload))
+        width, height = image.size
+        if (
+            width > MAX_IMAGE_DIMENSION
+            or height > MAX_IMAGE_DIMENSION
+            or width * height > MAX_IMAGE_PIXELS
+        ):
+            raise ImageDecodeError("image dimensions exceed configured limits")
         image.load()
+    except ImageDecodeError:
+        raise
     except Exception as exc:  # PIL raises several error types
         raise ImageDecodeError("imageBase64 is not a decodable image") from exc
 

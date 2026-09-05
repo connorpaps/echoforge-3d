@@ -36,7 +36,7 @@ export function Workstation() {
             <>
               <Panel
                 defaultSize={30}
-                minSize={25}
+                minSize={0}
                 maxSize={40}
                 className="min-w-0"
               >
@@ -45,7 +45,7 @@ export function Workstation() {
               <PanelResizeHandle className="w-px shrink-0 bg-border-subtle transition-colors hover:bg-accent-primary/50" />
             </>
           )}
-          <Panel defaultSize={70} minSize={60} className="relative min-w-0">
+          <Panel defaultSize={70} minSize={0} className="relative min-w-0">
             <ViewportCanvas />
             {activeMode === 'play' && <CrosshairHud />}
             {/* Spawns generated meshes into the scene on success */}

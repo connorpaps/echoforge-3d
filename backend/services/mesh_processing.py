@@ -32,7 +32,7 @@ from typing import Any, Callable
 import numpy as np
 import trimesh
 
-from ..config import MESH_MAX_FACES
+from ..config import MESH_FACE_CAP, MESH_MAX_FACES
 
 ProgressCallback = Callable[[str, int, str], None]
 
@@ -278,6 +278,8 @@ def process_mesh(
     vertical_flip: bool = False,
 ) -> dict[str, Any]:
     """Full optimization pipeline. Returns GLB bytes + asset metadata."""
+    if not 500 <= max_faces <= MESH_FACE_CAP:
+        raise ValueError(f"max_faces must be between 500 and {MESH_FACE_CAP}")
     progress = progress or _noop_progress
     progress("DECIMATION", 0, "sanitizing mesh")
 

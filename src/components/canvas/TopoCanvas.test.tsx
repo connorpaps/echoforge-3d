@@ -26,5 +26,9 @@ describe('TopoCanvas', () => {
   it('shows the AI status chip while the worker loads', () => {
     render(<TopoCanvas />);
     expect(screen.getByText('AI: loading…')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /topographic terrain drawing surface/i })).toHaveAttribute(
+      'aria-describedby',
+    );
+    expect(screen.getByRole('status')).toHaveTextContent(/worker is loading/i);
   });
 });

@@ -148,6 +148,12 @@ export function TopoCanvas() {
   };
 
   const aiReady = workerStatus === 'ready';
+  const workerMessage =
+    workerStatus === 'error'
+      ? 'AI worker failed. Terrain will remain available for drawing; try refreshing to retry.'
+      : aiReady
+        ? 'AI worker is ready. Draw on the canvas to create terrain.'
+        : 'AI worker is loading. You can draw while it prepares.';
 
   return (
     <div className="p-3">
@@ -156,16 +162,23 @@ export function TopoCanvas() {
         <span
           className={cn(
             'font-mono text-[10px] uppercase tracking-wider',
-            aiReady ? 'text-accent-primary' : 'animate-pulse text-text-muted',
+            workerStatus === 'error'
+              ? 'text-accent-danger'
+              : aiReady
+                ? 'text-accent-primary'
+                : 'animate-pulse text-text-muted',
           )}
         >
-          AI: {aiReady ? 'ready' : 'loading…'}
+          AI: {workerStatus === 'error' ? 'error' : aiReady ? 'ready' : 'loading…'}
         </span>
       </div>
 
       <canvas
         ref={canvasRef}
         data-testid="topo-canvas"
+        role="img"
+        aria-label="Topographic terrain drawing surface"
+        aria-describedby="topo-canvas-instructions topo-canvas-status"
         width={BUFFER_SIZE}
         height={BUFFER_SIZE}
         className="mt-2 aspect-square w-full cursor-crosshair touch-none rounded-sm border border-border-subtle bg-bg-subtle"
@@ -174,6 +187,18 @@ export function TopoCanvas() {
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
       />
+      <p id="topo-canvas-instructions" className="sr-only">
+        Draw with a pointer to raise terrain. Adjust radius and height, then use
+        Clear or Invert as needed.
+      </p>
+      <p
+        id="topo-canvas-status"
+        role={workerStatus === 'error' ? 'alert' : 'status'}
+        aria-live="polite"
+        className="sr-only"
+      >
+        {workerMessage}
+      </p>
 
       <div className="mt-2 space-y-2">
         <label className="flex items-center justify-between gap-2 text-[11px] text-text-muted">

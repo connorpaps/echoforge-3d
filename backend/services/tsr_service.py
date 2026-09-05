@@ -111,6 +111,10 @@ class TripoSRService:
         )
         return self._model
 
+    def unload(self) -> None:
+        """Clear the pipeline reference owned by this service."""
+        self._model = None
+
     # -- generation -------------------------------------------------------------
 
     def extract(
@@ -160,15 +164,13 @@ class TripoSRService:
 
 
 def _decode(image_bytes: bytes):
-    from PIL import Image
+    from .image_utils import decode_image_bytes
 
-    import io
-
-    return Image.open(io.BytesIO(image_bytes))
+    return decode_image_bytes(image_bytes)
 
 
 # Module-level singletons registered with the VRAM manager at app startup.
 from .vram_manager import vram_manager  # noqa: E402
 
 tsr_service = TripoSRService()
-tsr_slot = vram_manager.register("triposr", tsr_service.ensure_loaded)
+tsr_slot = vram_manager.register("triposr", tsr_service.ensure_loaded, tsr_service.unload)

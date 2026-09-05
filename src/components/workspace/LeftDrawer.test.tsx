@@ -21,4 +21,11 @@ describe('LeftDrawer', () => {
     expect(screen.getByText('Scene Inspector')).toBeInTheDocument();
     expect(screen.getByText('2D Topographic Canvas')).toBeInTheDocument();
   });
+
+  it('explains the first-run path before the scene has content', () => {
+    render(<LeftDrawer />);
+    expect(screen.getByText(/sketch terrain/i)).toBeInTheDocument();
+    expect(screen.getByText(/upload an image or generate/i)).toBeInTheDocument();
+    expect(screen.getByText(/press tab for play mode/i)).toBeInTheDocument();
+  });
 });

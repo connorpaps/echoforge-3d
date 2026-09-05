@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import * as THREE from 'three';
+import { Html } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { useSceneStore, type SceneEntity } from '@/lib/stores/useSceneStore';
 
@@ -9,7 +10,7 @@ import { useSceneStore, type SceneEntity } from '@/lib/stores/useSceneStore';
  * Renders every `mesh` entity in the scene store that carries a GLB asset.
  *
  * Uses an imperative GLTFLoader (rather than drei's suspense-based useGLTF)
- * so a corrupt/placeholder payload degrades to "not rendered" instead of
+ * so a corrupt/placeholder payload can report an actionable error without
  * throwing through the render tree. Data URLs (the backend returns a base64
  * GLB) are supported by FileLoader natively.
  */
@@ -27,11 +28,16 @@ export function SceneEntities() {
 }
 
 function EntityMesh({ entity }: { entity: SceneEntity }) {
+  const removeEntity = useSceneStore((s) => s.removeEntity);
   const [loaded, setLoaded] = useState<THREE.Group | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let alive = true;
     let group: THREE.Group | null = null;
+    setLoaded(null);
+    setLoadError(null);
 
     if (!entity.glbUrl) return;
 
@@ -65,8 +71,9 @@ function EntityMesh({ entity }: { entity: SceneEntity }) {
       },
       undefined,
       (error) => {
-        // Unparseable payload (e.g., E2E placeholder) — skip silently.
-        if (alive) console.warn('[entities] failed to load GLB', error);
+        if (!alive) return;
+        const message = error instanceof Error ? error.message : 'Invalid GLB payload';
+        setLoadError(message);
       },
     );
 
@@ -85,7 +92,39 @@ function EntityMesh({ entity }: { entity: SceneEntity }) {
         }
       });
     };
-  }, [entity.glbUrl]);
+  }, [entity.glbUrl, retryCount]);
+
+  if (loadError) {
+    return (
+      <Html position={entity.position}>
+        <div
+          role="alert"
+          className="w-64 rounded-md border border-accent-danger/60 bg-bg-surface p-3 text-xs text-text-primary shadow-lg"
+        >
+          <p>Unable to load {entity.name}</p>
+          <p className="mt-1 text-[11px] text-text-secondary">{loadError}</p>
+          <div className="mt-2 flex justify-end gap-2">
+            <button
+              type="button"
+              data-testid={`remove-${entity.id}`}
+              onClick={() => removeEntity(entity.id)}
+              className="rounded-sm border border-border-subtle px-2 py-1 text-[11px]"
+            >
+              Remove
+            </button>
+            <button
+              type="button"
+              data-testid={`retry-${entity.id}`}
+              onClick={() => setRetryCount((count) => count + 1)}
+              className="rounded-sm border border-accent-primary/50 px-2 py-1 text-[11px] text-accent-primary"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </Html>
+    );
+  }
 
   if (!loaded) return null;
 

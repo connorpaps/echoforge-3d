@@ -46,9 +46,10 @@ T = TypeVar("T")
 class ModelSlot(Generic[T]):
     """A lazily-loaded, evictable model held by the VRAM manager."""
 
-    def __init__(self, name: str, loader: Callable[[], T]) -> None:
+    def __init__(self, name: str, loader: Callable[[], T], unload: Callable[[], None] | None = None) -> None:
         self.name = name
         self._loader = loader
+        self._unload = unload
         self._model: T | None = None
         self.load_count = 0
 
@@ -69,11 +70,15 @@ class ModelSlot(Generic[T]):
         """Drop the model reference and flush the CUDA allocator."""
         if self._model is not None:
             logger.info("[VRAM] unloading model slot '%s'", self.name)
-        self._model = None
-        if CUDA_AVAILABLE:
-            gc.collect()
-            torch.cuda.empty_cache()
-            torch.cuda.ipc_collect()
+        try:
+            if self._unload is not None:
+                self._unload()
+        finally:
+            self._model = None
+            if CUDA_AVAILABLE:
+                gc.collect()
+                torch.cuda.empty_cache()
+                torch.cuda.ipc_collect()
 
     def __repr__(self) -> str:  # pragma: no cover - debug aid
         return f"<ModelSlot name={self.name!r} loaded={self.is_loaded}>"
@@ -150,11 +155,16 @@ class SequentialVRAMManager:
 
     # -- registration ---------------------------------------------------------
 
-    def register(self, name: str, loader: Callable[[], T]) -> ModelSlot[T]:
+    def register(
+        self,
+        name: str,
+        loader: Callable[[], T],
+        unload: Callable[[], None] | None = None,
+    ) -> ModelSlot[T]:
         """Register a model slot. Loading is deferred until first use."""
         if name in self._slots:
             raise ValueError(f"Model slot '{name}' is already registered")
-        slot: ModelSlot[T] = ModelSlot(name, loader)
+        slot: ModelSlot[T] = ModelSlot(name, loader, unload)
         self._slots[name] = slot
         return slot
 

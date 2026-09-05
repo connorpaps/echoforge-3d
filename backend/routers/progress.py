@@ -7,8 +7,8 @@ generation job:
                       | "AUDIO" | "DONE" | "ERROR",
      "percent": 0-100, "message": "..."}
 
-The client filters by ``jobId`` to follow its own request. The channel is
-fan-out (each subscriber gets every event); event delivery is best-effort for
+Clients may pass ``?jobId=<id>`` to receive only that job's events. A missing
+filter preserves the legacy all-events stream. Delivery is best-effort for
 slow clients (newest-wins queue policy in the bus).
 """
 
@@ -27,7 +27,8 @@ router = APIRouter(tags=["progress"])
 @router.websocket("/ws/progress")
 async def ws_progress(websocket: WebSocket) -> None:
     await websocket.accept()
-    queue = progress_bus.subscribe()
+    job_id = websocket.query_params.get("jobId")
+    queue = progress_bus.subscribe(job_id=job_id)
     try:
         while True:
             event: dict[str, Any] = await queue.get()

@@ -16,10 +16,10 @@ Every build and pull request must verify these four primary journeys end-to-end:
 - **Step 3:** The client-side `depth.worker.ts` receives the `ImageBitmap` and dispatches depth data.
 - **Verification Gate:** The Three.js `PlaneGeometry` vertex height values reflect non-zero elevation within 150ms.
 
-### CUJ-02: Voice Command to 3D Asset Spawn & Audio Binding
+### CUJ-02: Voice-assisted Prompt to 3D Asset Spawn & Audio Binding
 - **Step 1:** User holds key `<M>` (`data-testid="voice-pill"`).
 - **Step 2:** Mock audio stream dispatches *"Place a bonfire on the hill"*.
-- **Step 3:** Distil-Whisper transcribes, Qwen2.5-Coder formats JSON, and backend returns mock `.glb` + `.wav`.
+- **Step 3:** Distil-Whisper transcribes the prompt and the generation flow returns mock `.glb` + `.wav`.
 - **Verification Gate:** Scene graph adds new `SceneEntity` with valid Rapier collision bounds and an attached `SpatialAudioEmitter`.
 
 ### CUJ-03: First-Person Mode Transition & Physics Locomotion
@@ -46,7 +46,8 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   timeout: 45000,
-  fullyParallel: true,
+  fullyParallel: false,
+  workers: 1,
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
@@ -69,6 +70,13 @@ export default defineConfig({
   ]
 });
 ```
+
+### Current verified test baseline
+
+Fresh local verification records **133 frontend unit tests across 27 files**,
+**86 backend tests passed**, and **21 hermetic Playwright journeys passed**.
+Historical planning milestones may show smaller counts; they are not release
+totals. GPU-only backend checks can skip on CPU-only runners.
 
 ---
 

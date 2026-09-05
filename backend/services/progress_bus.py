@@ -18,27 +18,27 @@ from typing import Any
 
 
 class ProgressBus:
-    """Broadcast progress events to all subscribed WebSocket clients."""
+    """Fan out progress events, optionally restricted to one job per client."""
 
     def __init__(self) -> None:
-        self._subscribers: set[asyncio.Queue[dict[str, Any]]] = set()
+        self._subscribers: dict[asyncio.Queue[dict[str, Any]], str | None] = {}
         self._loop: asyncio.AbstractEventLoop | None = None
         self._lock = threading.Lock()
 
     # -- lifecycle ----------------------------------------------------------
 
-    def subscribe(self) -> asyncio.Queue[dict[str, Any]]:
+    def subscribe(self, job_id: str | None = None) -> asyncio.Queue[dict[str, Any]]:
         """Create a subscription queue (call from the event loop thread)."""
         if self._loop is None:
             self._loop = asyncio.get_running_loop()
         queue: asyncio.Queue[dict[str, Any]] = asyncio.Queue(maxsize=256)
         with self._lock:
-            self._subscribers.add(queue)
+            self._subscribers[queue] = job_id
         return queue
 
     def unsubscribe(self, queue: asyncio.Queue[dict[str, Any]]) -> None:
         with self._lock:
-            self._subscribers.discard(queue)
+            self._subscribers.pop(queue, None)
 
     def subscriber_count(self) -> int:
         with self._lock:
@@ -49,8 +49,10 @@ class ProgressBus:
     async def publish(self, event: dict[str, Any]) -> None:
         """Publish from an async context (event loop thread)."""
         with self._lock:
-            targets = list(self._subscribers)
-        for queue in targets:
+            targets = list(self._subscribers.items())
+        for queue, job_id in targets:
+            if job_id is not None and event.get("jobId") != job_id:
+                continue
             try:
                 queue.put_nowait(event)
             except asyncio.QueueFull:  # slow client: drop oldest, keep newest

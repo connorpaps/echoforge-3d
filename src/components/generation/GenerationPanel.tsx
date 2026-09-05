@@ -7,6 +7,10 @@ import { resumeAudioContext } from '@/lib/audio/spatialAudio';
 import { useGenerationStore } from '@/lib/stores/useGenerationStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_DIMENSION = 8192;
+const ACCEPTED_IMAGE_TYPES = new Set(['image/png', 'image/jpeg', 'image/webp']);
+
 /**
  * Generative asset panel (docs/02_DESIGN_BRIEF.md §4): upload a reference
  * image and press Generate Mesh (TripoSR image→3D) or Generate Texture
@@ -22,14 +26,46 @@ export function GenerationPanel() {
 
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageName, setImageName] = useState<string | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const clearImage = () => {
+    setImageDataUrl(null);
+    setImageName(null);
+    setUploadError(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   const handleFile = (file: File | undefined) => {
     if (!file) return;
+    setUploadError(null);
+
+    if (!ACCEPTED_IMAGE_TYPES.has(file.type)) {
+      setUploadError('Unsupported file type. Use PNG, JPG, or WebP.');
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      setUploadError('This file is too large. Maximum size is 10 MB.');
+      return;
+    }
+
     const reader = new FileReader();
-    reader.onload = () => setImageDataUrl(reader.result as string);
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      const image = new Image();
+      image.onload = () => {
+        if (image.naturalWidth > MAX_DIMENSION || image.naturalHeight > MAX_DIMENSION) {
+          setUploadError('Image dimensions are too large. Maximum is 8192 × 8192 pixels.');
+          return;
+        }
+        setImageDataUrl(dataUrl);
+        setImageName(file.name);
+      };
+      image.onerror = () => setUploadError('Unable to read this image.');
+      image.src = dataUrl;
+    };
+    reader.onerror = () => setUploadError('Unable to read this file.');
     reader.readAsDataURL(file);
-    setImageName(file.name);
   };
 
   const hasImage = imageDataUrl !== null;
@@ -42,19 +78,22 @@ export function GenerationPanel() {
         ref={fileInputRef}
         type="file"
         accept="image/png,image/jpeg,image/webp"
+        aria-label="Reference image upload"
         data-testid="image-upload"
         className="hidden"
         onChange={(event) => handleFile(event.target.files?.[0])}
       />
 
-      <button
-        type="button"
-        data-testid="upload-button"
-        onClick={() => fileInputRef.current?.click()}
-        className="mt-2 flex w-full items-center gap-2 rounded-md border border-dashed border-border-subtle bg-bg-subtle px-3 py-2.5 text-left transition-all duration-150 hover:border-accent-primary/50 active:scale-[0.99]"
-      >
-        {hasImage ? (
-          <>
+      <div className="mt-2 flex items-center gap-2 rounded-md border border-dashed border-border-subtle bg-bg-subtle px-3 py-2.5 transition-all duration-150 hover:border-accent-primary/50">
+        <button
+          type="button"
+          data-testid="upload-button"
+          aria-label="Upload reference image"
+          onClick={() => fileInputRef.current?.click()}
+          className="flex min-w-0 flex-1 items-center gap-2 text-left active:scale-[0.99]"
+        >
+          {hasImage ? (
+            <>
             {/* client-side data-URL preview; the image optimizer cannot process it */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -66,27 +105,31 @@ export function GenerationPanel() {
             <span className="min-w-0 flex-1 truncate text-[11px] text-text-secondary">
               {imageName}
             </span>
-            <span
-              role="button"
-              tabIndex={0}
-              data-testid="clear-image"
-              className="shrink-0 text-[10px] uppercase tracking-wider text-text-muted hover:text-accent-danger"
-              onClick={(event) => {
-                event.stopPropagation();
-                setImageDataUrl(null);
-                setImageName(null);
-                if (fileInputRef.current) fileInputRef.current.value = '';
-              }}
-            >
-              Clear
-            </span>
           </>
-        ) : (
-          <span className="text-[11px] text-text-muted">
-            Upload a reference image (PNG / JPG)
-          </span>
+          ) : (
+            <span className="text-[11px] text-text-muted">
+              Upload a reference image (PNG / JPG / WebP)
+            </span>
+          )}
+        </button>
+        {hasImage && (
+          <button
+            type="button"
+            data-testid="clear-image"
+            aria-label="Clear reference image"
+            className="shrink-0 text-[10px] uppercase tracking-wider text-text-muted hover:text-accent-danger"
+            onClick={clearImage}
+          >
+            Clear
+          </button>
         )}
-      </button>
+      </div>
+
+      {uploadError ? (
+        <p role="alert" className="mt-1.5 text-[11px] text-accent-danger">
+          {uploadError}
+        </p>
+      ) : null}
 
       <div className="mt-2 flex gap-2">
         <button

@@ -53,6 +53,10 @@ TRIPOSR_WEIGHTS_NAME = "model.ckpt"
 # Optional quality-upgrade provider. ``auto`` uses the local Hunyuan3D-2GP
 # sidecar when it is healthy and falls back to TripoSR when it is absent.
 MESH_BACKEND = os.environ.get("ECHOFORGE_MESH_BACKEND", "auto").lower()
+if MESH_BACKEND not in {"auto", "triposr", "hunyuan"}:
+    raise ValueError(
+        "ECHOFORGE_MESH_BACKEND must be one of: auto, triposr, hunyuan"
+    )
 HUNYUAN_SIDECAR_URL = os.environ.get("HUNYUAN_SIDECAR_URL", "http://127.0.0.1:8081")
 HUNYUAN_TIMEOUT_S = float(os.environ.get("HUNYUAN_TIMEOUT_S", "900"))
 
@@ -92,6 +96,7 @@ GPU_SLOT_TIMEOUT_S: dict[str, int] = {
 # --- API -------------------------------------------------------------------
 
 API_V1_PREFIX = "/api/v1"
+GENERATION_RATE_LIMIT = os.environ.get("ECHOFORGE_GENERATION_RATE_LIMIT", "10/minute")
 CORS_ORIGINS = os.environ.get(
     "CORS_ORIGINS",
     "http://localhost:3000,http://127.0.0.1:3000",
@@ -102,7 +107,12 @@ CORS_ORIGINS = os.environ.get(
 # ~2.3× slower than 192³ on 8 GB cards (density+colour queries over 16.7M
 # voxels). Drop back to 192 via MESH_RESOLUTION if generation feels too slow.
 MESH_RESOLUTION = int(os.environ.get("MESH_RESOLUTION", "256"))
+# Preserve the established application processing cap. This remains below the
+# broader raw-output safety ceiling documented in AGENTS.md.
+MESH_FACE_CAP = 20_000
 MESH_MAX_FACES = int(os.environ.get("MESH_MAX_FACES", "20000"))
+if not 500 <= MESH_MAX_FACES <= MESH_FACE_CAP:
+    raise ValueError(f"MESH_MAX_FACES must be between 500 and {MESH_FACE_CAP}")
 SDXL_STEPS = int(os.environ.get("SDXL_STEPS", "1"))
 SDXL_GUIDANCE = float(os.environ.get("SDXL_GUIDANCE", "0.0"))
 SDXL_SIZE = int(os.environ.get("SDXL_SIZE", "512"))
@@ -116,4 +126,6 @@ MAX_AUDIO_SECONDS = float(os.environ.get("MAX_AUDIO_SECONDS", "30"))
 
 # Input guardrails
 MAX_IMAGE_BYTES = int(os.environ.get("MAX_IMAGE_BYTES", str(10 * 1024 * 1024)))  # 10 MiB
+MAX_IMAGE_PIXELS = int(os.environ.get("MAX_IMAGE_PIXELS", str(16 * 1024 * 1024)))
+MAX_IMAGE_DIMENSION = int(os.environ.get("MAX_IMAGE_DIMENSION", "8192"))
 MAX_PROMPT_CHARS = int(os.environ.get("MAX_PROMPT_CHARS", "2000"))

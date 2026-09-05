@@ -88,7 +88,7 @@
 | Hotkey | Action | Scope |
 | :--- | :--- | :--- |
 | `<Tab>` | Toggle between Editor Mode and First-Person Walk Mode | Global |
-| `<M>` (Hold) | Push-to-talk voice command dictation | Editor Mode |
+| `<M>` (Hold) | Push-to-talk voice dictation | Editor Mode |
 | `<W> <A> <S> <D>` | Character locomotion | First-Person Mode |
 | `<Space>` | Character jump (gravity physics) | First-Person Mode |
 | `<E>` | Interact with nearest NPC (trigger visual dialogue) | First-Person Mode |

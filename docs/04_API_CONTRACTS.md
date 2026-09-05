@@ -23,9 +23,13 @@
 
 ---
 
-## 2. Structured JSON Tool Calling Schema
+## 2. Prompt-assisted generation (not a voice command parser)
 
-The LLM (Qwen2.5-Coder / SmolVLM) translates natural language voice input into deterministic JSON delta operations:
+Voice input is push-to-talk transcription that feeds the existing natural-language
+prompt and generation flow. EchoForge does **not** currently guarantee a
+deterministic structured-command parse from speech. The schema below documents
+an integration contract for clients that already produce scene deltas; it is
+not a claim that the voice pill emits these operations directly.
 
 ```json
 {

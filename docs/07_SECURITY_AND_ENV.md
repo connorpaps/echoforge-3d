@@ -37,7 +37,7 @@
 import trimesh
 import numpy as np
 
-MAX_ALLOWED_FACES = 25000
+MAX_ALLOWED_FACES = 20000
 
 def sanitize_and_decimate_glb(input_path: str, output_path: str) -> dict:
     """Sanitizes raw AI-generated meshes, enforces vertex/face limits,

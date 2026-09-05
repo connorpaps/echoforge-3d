@@ -15,10 +15,11 @@ import time
 import uuid
 from typing import Callable
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from ..config import API_V1_PREFIX, MAX_PROMPT_CHARS
+from ..rate_limit import rate_limited
 from ..services import smolvlm_service
 from ..services.image_utils import ImageDecodeError, decode_image
 from ..services.progress_bus import progress_bus
@@ -43,7 +44,6 @@ class NpcDialogueResponse(BaseModel):
     elapsedMs: int
 
 
-@router.post("/npc-dialogue", response_model=NpcDialogueResponse)
 async def npc_dialogue(request: NpcDialogueRequest) -> NpcDialogueResponse:
     job_id = uuid.uuid4().hex[:12]
     started = time.monotonic()
@@ -70,8 +70,8 @@ async def npc_dialogue(request: NpcDialogueRequest) -> NpcDialogueResponse:
         )
     except Exception as exc:  # noqa: BLE001
         logger.exception("npc-dialogue failed (job %s)", job_id)
-        report("NPC", 0, f"ERROR: {exc}")
-        raise HTTPException(status_code=500, detail=f"NPC dialogue failed: {exc}") from exc
+        report("NPC", 0, "NPC dialogue failed")
+        raise HTTPException(status_code=500, detail="NPC dialogue failed") from exc
 
     elapsed_ms = int((time.monotonic() - started) * 1000)
     report("NPC", 100, "response ready")
@@ -81,3 +81,9 @@ async def npc_dialogue(request: NpcDialogueRequest) -> NpcDialogueResponse:
         synthetic=synthetic,
         elapsedMs=elapsed_ms,
     )
+
+
+@router.post("/npc-dialogue", response_model=NpcDialogueResponse)
+@rate_limited
+async def _npc_dialogue_http(request: Request, payload: NpcDialogueRequest) -> NpcDialogueResponse:
+    return await npc_dialogue(payload)

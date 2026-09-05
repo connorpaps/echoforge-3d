@@ -1658,3 +1658,9 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - backend/tests/test_hunyuan_service.py
   - backend/tests/test_mesh_processing.py
   - docs/activity-log.md
+
+## 2026-09-04 18:42 — `b21e250`
+**docs: capture mesh quality lesson**
+
+  - docs/activity-log.md
+  - docs/lessons-learned.md

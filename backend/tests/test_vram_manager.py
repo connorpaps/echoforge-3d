@@ -21,6 +21,8 @@ import time
 import pytest
 import torch
 
+from backend.services.sdxl_service import SDXLService
+from backend.services.tsr_service import TripoSRService
 from backend.services.vram_manager import SequentialVRAMManager, release_cuda_memory
 
 CUDA = torch.cuda.is_available()
@@ -74,6 +76,26 @@ async def test_evicts_between_runs():
     await _run_once(manager, "a")
     slot = manager.slot("a")
     assert slot.load_count == 2  # evicted and reloaded on the second run
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("slot_name", "service", "attribute"),
+    [
+        ("triposr", TripoSRService(), "_model"),
+        ("sdxl-turbo", SDXLService(), "_pipe"),
+    ],
+)
+async def test_manager_eviction_clears_provider_owned_reference(slot_name, service, attribute):
+    """Manager eviction must clear the provider's own model reference too."""
+    model = object()
+    setattr(service, attribute, model)
+    manager = SequentialVRAMManager()
+    manager.register(slot_name, lambda: model, service.unload)
+
+    await manager.run(slot_name, lambda loaded: loaded)
+
+    assert getattr(service, attribute) is None
 
 
 @pytest.mark.asyncio
