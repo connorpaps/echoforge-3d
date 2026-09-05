@@ -1719,3 +1719,10 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - docs/activity-log.md
   - docs/assets/echoforge-terrain-sketch.gif
   - docs/assets/echoforge-workspace.png
+
+## 2026-09-04 20:47 — `751a7d3`
+**docs: showcase validated 3d output**
+
+  - README.md
+  - docs/assets/bishop-evidence.png
+  - docs/assets/bishop-turntable.gif
