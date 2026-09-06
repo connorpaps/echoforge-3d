@@ -1726,3 +1726,75 @@ Raw per-save events (if the watcher is running) go to `docs/activity-watch.log` 
   - README.md
   - docs/assets/bishop-evidence.png
   - docs/assets/bishop-turntable.gif
+
+## 2026-09-06 00:28 — `a348b81`
+**feat: ship EchoForge field workbench**
+
+  - DESIGN.md
+  - README.md
+  - backend/routers/generate.py
+  - backend/routers/health.py
+  - backend/tests/test_backend_hardening.py
+  - backend/tests/test_health.py
+  - docs/01_PRD.md
+  - docs/02_DESIGN_BRIEF.md
+  - docs/06_TESTING_AND_QA.md
+  - docs/GETTING_STARTED.md
+  - docs/UI_UX_AUDIT.md
+  - docs/UI_UX_REDESIGN_2_AUDIT.md
+  - docs/assets/echoforge-hunyuan-live.png
+  - docs/capability-matrix.md
+  - e2e/first-person-journey.spec.ts
+  - e2e/npc-journey.spec.ts
+  - e2e/terrain-journey.spec.ts
+  - e2e/viewport-shell.spec.ts
+  - package.json
+  - public/exporter/runtime.js
+  - scripts/doctor.py
+  - scripts/start_local.py
+  - scripts/test_setup_tools.py
+  - scripts/test_start_local.py
+  - src/app/globals.css
+  - src/app/layout.tsx
+  - src/components/generation/GeneratedAudioBridge.test.tsx
+  - src/components/generation/GeneratedAudioBridge.tsx
+  - src/components/generation/GenerationPanel.test.tsx
+  - src/components/generation/GenerationPanel.tsx
+  - src/components/generation/ResultToast.test.tsx
+  - src/components/generation/ResultToast.tsx
+  - src/components/generation/VramMeter.test.tsx
+  - src/components/generation/VramMeter.tsx
+  - src/components/ui/GlassPanel.tsx
+  - src/components/ui/SectionLabel.tsx
+  - src/components/viewport/EmptySceneState.test.tsx
+  - src/components/viewport/EmptySceneState.tsx
+  - src/components/viewport/GridFloor.tsx
+  - src/components/viewport/Scene.tsx
+  - src/components/viewport/SceneEntities.test.tsx
+  - src/components/viewport/SceneEntities.tsx
+  - src/components/viewport/ViewportCanvas.tsx
+  - src/components/workspace/BottomBar.tsx
+  - src/components/workspace/EditorRail.test.tsx
+  - src/components/workspace/EditorRail.tsx
+  - src/components/workspace/ExportMenu.tsx
+  - src/components/workspace/LeftDrawer.test.tsx
+  - src/components/workspace/LeftDrawer.tsx
+  - src/components/workspace/ProjectActions.tsx
+  - src/components/workspace/PromptBar.tsx
+  - src/components/workspace/ProviderStatusPanel.test.tsx
+  - src/components/workspace/ProviderStatusPanel.tsx
+  - src/components/workspace/SceneInspector.test.tsx
+  - src/components/workspace/SceneInspector.tsx
+  - src/components/workspace/SceneTree.test.tsx
+  - src/components/workspace/SceneTree.tsx
+  - src/components/workspace/TopBar.tsx
+  - src/components/workspace/Workstation.tsx
+  - src/lib/api/generate.ts
+  - src/lib/export/exportScene.test.ts
+  - src/lib/export/exportScene.ts
+  - src/lib/persistence/projectPersistence.test.ts
+  - src/lib/persistence/projectPersistence.ts
+  - src/lib/stores/useGenerationStore.test.ts
+  - src/lib/stores/useGenerationStore.ts
+  - src/lib/stores/useSceneStore.test.ts
+  - src/lib/stores/useSceneStore.ts
