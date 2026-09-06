@@ -15,6 +15,7 @@ import type { AudioResult } from '@/lib/api/generate';
  */
 export function GeneratedAudioBridge() {
   const addEntity = useSceneStore((s) => s.addEntity);
+  const selectEntity = useSceneStore((s) => s.selectEntity);
   const status = useGenerationStore((s) => s.status);
   const kind = useGenerationStore((s) => s.kind);
   const result = useGenerationStore((s) => s.result);
@@ -33,8 +34,9 @@ export function GeneratedAudioBridge() {
       cameraRef.y - 1,
       cameraRef.z,
     ];
+    const entityId = `audio-${audio.jobId}`;
     addEntity({
-      id: `audio-${audio.jobId}`,
+      id: entityId,
       name: 'Ambient Loop',
       type: 'audio_emitter',
       position,
@@ -45,7 +47,8 @@ export function GeneratedAudioBridge() {
       falloffDistance: 15,
       physics: { colliderType: 'none', mass: 0 },
     });
-  }, [status, kind, result, addEntity]);
+    selectEntity(entityId);
+  }, [status, kind, result, addEntity, selectEntity]);
 
   return null;
 }

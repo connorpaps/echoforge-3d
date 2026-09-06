@@ -15,6 +15,9 @@ export function ResultToast() {
   const errorMessage = useGenerationStore((s) => s.errorMessage);
   const retry = useGenerationStore((s) => s.retry);
   const dismiss = useGenerationStore((s) => s.dismiss);
+  const textureTargetId = useGenerationStore((s) => s.textureTargetId);
+  const textureApplied = useGenerationStore((s) => s.textureApplied);
+  const applyTexture = useGenerationStore((s) => s.applyTexture);
 
   if (status === 'error') {
     return (
@@ -81,6 +84,27 @@ export function ResultToast() {
           ) : (
             <MeshSummary result={result as MeshResult} kind={kind} />
           )}
+          {kind === 'texture' ? (
+            <div className="mt-2 flex items-center justify-between gap-2">
+              {textureTargetId ? (
+                <button
+                  type="button"
+                  data-testid="apply-texture"
+                  disabled={textureApplied}
+                  onClick={() => {
+                    applyTexture();
+                  }}
+                  className="rounded-sm border border-accent-secondary/60 bg-accent-secondary/10 px-2.5 py-1 text-[11px] font-medium text-accent-secondary transition-all duration-150 hover:border-accent-secondary disabled:cursor-default disabled:opacity-70"
+                >
+                  {textureApplied ? 'Applied' : 'Apply to selected object'}
+                </button>
+              ) : (
+                <p className="text-[11px] text-text-muted">
+                  Select an object before generating to apply this texture.
+                </p>
+              )}
+            </div>
+          ) : null}
           <div className="mt-2 flex justify-end">
             <button
               type="button"

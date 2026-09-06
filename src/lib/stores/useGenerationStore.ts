@@ -10,6 +10,7 @@ import {
   type ProgressStage,
   type TextureResult,
 } from '@/lib/api/generate';
+import { useSceneStore } from '@/lib/stores/useSceneStore';
 
 export type GenerationKind = 'mesh' | 'texture' | 'audio';
 export type GenerationStatus = 'idle' | 'generating' | 'success' | 'error';
@@ -20,6 +21,7 @@ interface PendingRequest {
   kind: GenerationKind;
   prompt: string;
   imageBase64: string;
+  targetId?: string | null;
 }
 
 interface GenerationState {
@@ -32,10 +34,13 @@ interface GenerationState {
   errorMessage: string | null;
 
   generateMesh: (prompt: string, imageBase64: string) => Promise<void>;
-  generateTexture: (prompt: string) => Promise<void>;
+  generateTexture: (prompt: string, targetId?: string | null) => Promise<void>;
   generateAudio: (prompt: string, durationSec?: number) => Promise<void>;
   retry: () => Promise<void>;
   dismiss: () => void;
+  textureTargetId: string | null;
+  textureApplied: boolean;
+  applyTexture: () => boolean;
   /** Internal — applied from progress events; exported for tests. */
   _applyProgress: (event: ProgressEvent) => void;
 }
@@ -59,6 +64,8 @@ export const useGenerationStore = create<GenerationState>()((set, get) => {
       message: 'queued',
       result: null,
       errorMessage: null,
+      textureTargetId: request.targetId ?? null,
+      textureApplied: false,
     });
     unsubscribe?.();
     unsubscribe = subscribeProgress((event) => get()._applyProgress(event));
@@ -86,6 +93,8 @@ export const useGenerationStore = create<GenerationState>()((set, get) => {
     message: '',
     result: null,
     errorMessage: null,
+    textureTargetId: null,
+    textureApplied: false,
 
     _applyProgress: (event) =>
       set({
@@ -103,8 +112,8 @@ export const useGenerationStore = create<GenerationState>()((set, get) => {
       }
     },
 
-    generateTexture: async (prompt) => {
-      begin({ kind: 'texture', prompt, imageBase64: '' });
+    generateTexture: async (prompt, targetId) => {
+      begin({ kind: 'texture', prompt, imageBase64: '', targetId });
       try {
         finish(await apiGenerateTexture({ prompt, seed: 42 }));
       } catch (error) {
@@ -127,10 +136,30 @@ export const useGenerationStore = create<GenerationState>()((set, get) => {
       if (request.kind === 'mesh') {
         await get().generateMesh(request.prompt, request.imageBase64);
       } else if (request.kind === 'texture') {
-        await get().generateTexture(request.prompt);
+        await get().generateTexture(request.prompt, request.targetId);
       } else {
         await get().generateAudio(request.prompt);
       }
+    },
+
+    applyTexture: () => {
+      const state = get();
+      if (
+        state.kind !== 'texture' ||
+        state.status !== 'success' ||
+        !state.textureTargetId ||
+        !state.result ||
+        !('imageBase64' in state.result)
+      ) {
+        return false;
+      }
+      const target = useSceneStore.getState().entities[state.textureTargetId];
+      if (!target || (target.type !== 'mesh' && target.type !== 'npc')) return false;
+      useSceneStore.getState().updateEntity(state.textureTargetId, {
+        materialUrl: `data:image/png;base64,${state.result.imageBase64}`,
+      });
+      set({ textureApplied: true });
+      return true;
     },
 
     dismiss: () => {
@@ -142,6 +171,8 @@ export const useGenerationStore = create<GenerationState>()((set, get) => {
         message: '',
         result: null,
         errorMessage: null,
+        textureTargetId: null,
+        textureApplied: false,
       });
     },
   };

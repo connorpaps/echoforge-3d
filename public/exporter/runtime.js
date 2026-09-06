@@ -157,6 +157,30 @@
         ),
       );
     });
+    if (entity.materialBase64) {
+      try {
+        new THREE.TextureLoader().load(
+          'data:image/png;base64,' + entity.materialBase64,
+          function (texture) {
+            texture.colorSpace = THREE.SRGBColorSpace;
+            group.traverse(function (object) {
+              if (!object.isMesh) return;
+              var materials = Array.isArray(object.material)
+                ? object.material
+                : [object.material];
+              materials.forEach(function (material) {
+                if (!material) return;
+                material.map = texture;
+                if (material.color) material.color.set(0xffffff);
+                material.needsUpdate = true;
+              });
+            });
+          },
+        );
+      } catch (err) {
+        // Keep the exported geometry usable if the optional image is invalid.
+      }
+    }
     scene.add(group);
   }
 

@@ -5,5 +5,5 @@ export function GlassPanel({
   className,
   ...props
 }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('glass-panel rounded-md', className)} {...props} />;
+  return <div className={cn('glass-panel', className)} {...props} />;
 }

@@ -158,6 +158,14 @@ describe('collectSceneSnapshot', () => {
     expect(snapshot.entities[0].position).toEqual([1, 2, 3]);
   });
 
+  it('includes an applied material image in standalone scene data', () => {
+    useSceneStore.getState().addEntity(
+      meshEntity({ materialUrl: 'data:image/png;base64,material-data' }),
+    );
+    const snapshot = collectSceneSnapshot();
+    expect(snapshot.entities[0].materialBase64).toBe('material-data');
+  });
+
   it('serializes the terrain heightmap at the terrain grid size', () => {
     const heightmap = new Float32Array([0.1, 0.2, 0.3, 0.4]);
     useSceneStore.setState({ terrainHeightmap: heightmap });

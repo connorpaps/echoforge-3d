@@ -43,6 +43,36 @@ describe('useSceneStore', () => {
     expect(entity.scale).toEqual([2, 2, 2]);
   });
 
+  it('records transform edits so undo and redo restore the transform', () => {
+    useSceneStore.getState().addEntity(makeEntity());
+    useSceneStore
+      .getState()
+      .updateEntityTransform('1', [1, 2, 3], [0, 0.5, 0], [2, 2, 2]);
+
+    useSceneStore.getState().undo();
+    expect(useSceneStore.getState().entities['1'].position).toEqual([0, 0, 0]);
+
+    useSceneStore.getState().redo();
+    expect(useSceneStore.getState().entities['1'].position).toEqual([1, 2, 3]);
+  });
+
+  it('selects, renames, and duplicates an entity', () => {
+    useSceneStore.getState().addEntity(makeEntity());
+    useSceneStore.getState().selectEntity('1');
+    expect(useSceneStore.getState().selectedEntityId).toBe('1');
+
+    useSceneStore.getState().renameEntity('1', 'Tower');
+    expect(useSceneStore.getState().entities['1'].name).toBe('Tower');
+
+    const duplicateId = useSceneStore.getState().duplicateEntity('1', '2');
+    expect(duplicateId).toBe('2');
+    expect(useSceneStore.getState().entities['2']).toMatchObject({
+      id: '2',
+      name: 'Tower copy',
+      position: [0, 0, 0],
+    });
+  });
+
   it('patches arbitrary entity fields via updateEntity', () => {
     useSceneStore
       .getState()

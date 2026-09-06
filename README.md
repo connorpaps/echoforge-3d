@@ -7,7 +7,7 @@
 Turn a reference image into a usable 3D asset, sketch terrain, add spatial interactions, and export a portable scene. EchoForge combines browser-based 3D rendering with a locally orchestrated GPU generation pipeline built for an 8 GB RTX 2070.
 
 [![CI](https://github.com/connorpaps/echoforge-3d/actions/workflows/ci.yml/badge.svg)](https://github.com/connorpaps/echoforge-3d/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-133%20frontend%20%7C%2086%20backend-10b981)](https://github.com/connorpaps/echoforge-3d)
+[![Tests](https://img.shields.io/badge/tests-148%20frontend%20%7C%2089%20backend-0f766e)](https://github.com/connorpaps/echoforge-3d)
 [![License](https://img.shields.io/badge/license-MIT-10b981.svg)](LICENSE)
 
 </div>
@@ -18,6 +18,10 @@ Turn a reference image into a usable 3D asset, sketch terrain, add spatial inter
 
 *Verified local render of a Hunyuan3D-2GP output after EchoForge mesh processing. The turntable shows the full GLB asset and its validation metadata; it is not a claim of perfect single-image reconstruction.*
 
+![EchoForge live Hunyuan3D workflow](docs/assets/echoforge-hunyuan-live.png)
+
+*Live 1440×900 workstation capture: a synthetic chair fixture went through Hunyuan3D-2GP, entered the scene, and reached the mesh-ready state. FX is disabled in this evidence frame so the dark vertex-colored mesh remains readable; the fixture is intentionally synthetic and not user data.*
+
 ## Why this project is worth opening
 
 EchoForge is not just a prompt box around an API. It solves the difficult parts around AI-generated 3D:
@@ -26,6 +30,7 @@ EchoForge is not just a prompt box around an API. It solves the difficult parts 
 - **Asset quality control:** generated meshes are sanitized, oriented, grounded, decimated, collision-processed, shaded, and exported as GLB.
 - **Real interactive output:** the result enters a React Three Fiber scene with terrain, Rapier physics, spatial audio, NPC dialogue, and first-person movement.
 - **Resilient local UX:** uploads are validated, failed GLBs expose retry/remove actions, projects persist locally, and provider failures have explicit fallback behavior.
+- **Visible runtime truth:** the workstation provider panel reports the selected mesh provider, optional model paths, browser workers, and active fallbacks from the local health endpoint.
 - **Honest capability boundaries:** optional, experimental, synthetic, and hardware-dependent paths are documented instead of being presented as equal-quality production features.
 
 ## Product loop
@@ -59,8 +64,8 @@ Play mode, physics, audio, NPC dialogue             Standalone export
 
 The current local verification baseline is:
 
-- **133 frontend unit tests** across 27 test files
-- **86 backend tests** using the project Python environment
+- **148 frontend unit tests** across 32 test files
+- **89 backend tests** using the project Python environment
 - **21/21 Playwright journeys** using the hermetic fixture-backed browser mode
 - TypeScript typecheck, ESLint, production build, YAML validation, and `git diff --check` passing
 - Real chair and bishop generation outputs previously validated for connected geometry, watertightness, grounding, normals, colors, and the 20,000-face application cap
@@ -97,12 +102,38 @@ The automated browser suite intentionally does not claim to prove CUDA quality o
 
 The maintained matrix is in [`docs/capability-matrix.md`](docs/capability-matrix.md). The short version:
 
-- **Ready local paths:** terrain sketching, image-to-mesh plumbing, GLB export, first-person terrain interaction, local project Save/Load.
+- **Ready local paths:** terrain sketching, image-to-mesh plumbing, selectable scene editing, GLB export, first-person terrain interaction, local project Save/Load, and first-run diagnostics.
 - **Primary quality path:** Hunyuan3D-2GP, when its separately managed sidecar and model terms are available.
 - **Fallback path:** TripoSR, retained for a simpler local setup and provider resilience.
-- **Optional paths:** SDXL-Turbo textures, AudioGen, SmolVLM NPC dialogue, and Kokoro browser TTS.
+- **Optional paths:** SDXL-Turbo textures, AudioGen, SmolVLM NPC dialogue, and Kokoro browser TTS. Generated textures can be previewed, applied to a selected mesh, and persisted locally; full texture baking remains outside v1.
 - **Voice scope:** push-to-talk transcription that feeds the existing prompt workflow. It is not a structured scene-command parser.
 - **Not a hosted product:** authentication, tenancy, durable server jobs, and public ingress are intentionally outside this local portfolio release.
+
+## First-run onboarding
+
+The fastest safe path for a first-time user is:
+
+```bash
+python scripts/doctor.py
+python scripts/start_local.py
+```
+
+Open <http://localhost:3000>. The left drawer includes a live provider-readiness
+panel, so you can see whether Hunyuan3D-2GP is available or TripoSR is active
+before starting a generation. The launcher starts the browser and FastAPI
+services, but it does **not** start a heavyweight GPU model automatically.
+That keeps first launch predictable and avoids competing CUDA processes.
+
+Run the Hunyuan sidecar separately only after its model terms, environment,
+and hardware requirements have been reviewed:
+
+```bash
+python scripts/start_local.py --with-hunyuan
+```
+
+The doctor reports missing tools, ports, GPU visibility, backend health, and
+optional model readiness without printing environment values or credentials.
+For a step-by-step explanation, see [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md).
 
 ## Run locally on Windows
 
@@ -163,6 +194,9 @@ pnpm dev --hostname 127.0.0.1 -p 3000
 
 Open <http://localhost:3000>. The backend health endpoint is <http://localhost:8000/health>.
 
+For subsequent runs, prefer `python scripts/start_local.py` so the frontend
+and backend use the documented ports and shut down together with Ctrl+C.
+
 ### Optional Hunyuan3D-2GP
 
 Hunyuan runs in a separate local environment and is not redistributed by this repository. After reviewing its model terms and preparing the compatible checkout, start the sidecar on `127.0.0.1:8081` using [`scripts/gpu/start_hunyuan_sidecar.sh`](scripts/gpu/start_hunyuan_sidecar.sh). With `ECHOFORGE_MESH_BACKEND=auto`, EchoForge prefers Hunyuan when healthy and falls back to TripoSR if the sidecar becomes unavailable.
@@ -208,7 +242,7 @@ The source reference image is intentionally not redistributed because it contain
 
 - Built a Next.js and React Three Fiber 3D workstation that turns reference images into interactive GLB assets with terrain sketching, physics, spatial audio, NPC dialogue, and standalone export.
 - Integrated Hunyuan3D-2GP and TripoSR behind a FastAPI service with serialized VRAM management, provider fallback, watchdog deadlines, mesh sanitation, collision processing, and a 20,000-face application cap for an 8 GB GPU.
-- Added versioned IndexedDB project persistence, worker-backed browser inference, validated upload/error states, safe API errors, configurable rate limiting, job-scoped WebSocket progress, CI, and 240+ automated tests across frontend, backend, and browser journeys.
+- Added versioned IndexedDB project persistence, worker-backed browser inference, validated upload/error states, safe API errors, configurable rate limiting, job-scoped WebSocket progress, CI, and 250+ automated tests across frontend, backend, and browser journeys.
 
 ## Limitations worth stating plainly
 

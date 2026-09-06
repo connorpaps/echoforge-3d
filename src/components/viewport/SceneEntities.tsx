@@ -1,10 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { Html } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { useSceneStore, type SceneEntity } from '@/lib/stores/useSceneStore';
+
+export function applyGeneratedTexture(root: THREE.Object3D, texture: THREE.Texture) {
+  root.traverse((object) => {
+    const mesh = object as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    const materials = Array.isArray(mesh.material)
+      ? mesh.material
+      : [mesh.material];
+    materials.forEach((material) => {
+      if (!material) return;
+      const texturedMaterial = material as THREE.Material & {
+        color?: THREE.Color;
+        map?: THREE.Texture | null;
+        needsUpdate: boolean;
+      };
+      texturedMaterial.map = texture;
+      texturedMaterial.color?.set(0xffffff);
+      texturedMaterial.needsUpdate = true;
+    });
+  });
+}
 
 /**
  * Renders every `mesh` entity in the scene store that carries a GLB asset.
@@ -29,9 +50,15 @@ export function SceneEntities() {
 
 function EntityMesh({ entity }: { entity: SceneEntity }) {
   const removeEntity = useSceneStore((s) => s.removeEntity);
+  const selectEntity = useSceneStore((s) => s.selectEntity);
+  const selected = useSceneStore((s) => s.selectedEntityId === entity.id);
   const [loaded, setLoaded] = useState<THREE.Group | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
+  const bounds = useMemo(
+    () => (loaded ? new THREE.Box3().setFromObject(loaded) : null),
+    [loaded],
+  );
 
   useEffect(() => {
     let alive = true;
@@ -94,6 +121,23 @@ function EntityMesh({ entity }: { entity: SceneEntity }) {
     };
   }, [entity.glbUrl, retryCount]);
 
+  useEffect(() => {
+    if (!loaded || !entity.materialUrl) return;
+    let alive = true;
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(entity.materialUrl, (texture) => {
+      if (!alive) {
+        texture.dispose();
+        return;
+      }
+      texture.colorSpace = THREE.SRGBColorSpace;
+      applyGeneratedTexture(loaded, texture);
+    });
+    return () => {
+      alive = false;
+    };
+  }, [entity.materialUrl, loaded]);
+
   if (loadError) {
     return (
       <Html position={entity.position}>
@@ -126,15 +170,34 @@ function EntityMesh({ entity }: { entity: SceneEntity }) {
     );
   }
 
-  if (!loaded) return null;
+  if (!loaded || !bounds) return null;
+
+  const size = bounds.getSize(new THREE.Vector3());
+  const center = bounds.getCenter(new THREE.Vector3());
+  const highlightSize = [
+    Math.max(size.x, 0.1) * 1.08,
+    Math.max(size.y, 0.1) * 1.08,
+    Math.max(size.z, 0.1) * 1.08,
+  ] as [number, number, number];
 
   return (
     <group
+      data-testid={`scene-entity-${entity.id}`}
       position={entity.position}
       rotation={entity.rotation}
       scale={entity.scale}
+      onPointerDown={(event) => {
+        event.stopPropagation();
+        selectEntity(entity.id);
+      }}
     >
       <primitive object={loaded} />
+      {selected ? (
+        <mesh position={center}>
+          <boxGeometry args={highlightSize} />
+          <meshBasicMaterial color="#34d399" wireframe transparent opacity={0.8} />
+        </mesh>
+      ) : null}
     </group>
   );
 }

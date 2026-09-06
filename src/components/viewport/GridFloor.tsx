@@ -26,7 +26,7 @@ import { MeshBasicNodeMaterial } from 'three/webgpu';
  * `NodeBuilder: Material "ShaderMaterial" is not compatible.` and swaps in an
  * empty NodeMaterial, so the grid silently disappears on the WebGPU path
  * (verified live on the RTX 2070). This TSL version draws the same design
- * (cell lines + emerald section lines every 4 units + radial fade) with node
+ * (cell lines + rust section lines every 4 units + radial fade) with node
  * materials, so it renders identically on WebGL and WebGPU.
  */
 const GRID_SIZE = 64;
@@ -46,10 +46,10 @@ export function GridFloor() {
         args={[GRID_SIZE, GRID_SIZE]}
         cellSize={1}
         cellThickness={0.7}
-        cellColor="#16181d"
+        cellColor="#b7b5ac"
         sectionSize={SECTION_EVERY}
         sectionThickness={1.2}
-        sectionColor="#10b981"
+        sectionColor="#c8643f"
         fadeDistance={FADE_DISTANCE}
         fadeStrength={1}
         infiniteGrid={false}
@@ -87,8 +87,8 @@ function TslGrid() {
       smoothstep(FADE_DISTANCE * 0.55, FADE_DISTANCE, length(positionWorld.xz)),
     );
     const lineColor = mix(
-      vec3(0x16 / 255, 0x18 / 255, 0x1d / 255),
-      vec3(0x10 / 255, 0xb9 / 255, 0x81 / 255),
+      vec3(0xb7 / 255, 0xb5 / 255, 0xac / 255),
+      vec3(0xc8 / 255, 0x64 / 255, 0x3f / 255),
       sectionMask,
     );
 

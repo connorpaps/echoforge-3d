@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { LeftDrawer } from '@/components/workspace/LeftDrawer';
 
@@ -13,19 +14,24 @@ describe('LeftDrawer', () => {
     delete process.env.NEXT_PUBLIC_E2E;
   });
 
-  it('renders the topo canvas, voice pill, and inspector stubs', () => {
+  it('starts in the creation region with the core image-to-3D controls', () => {
     render(<LeftDrawer />);
-    expect(screen.getByTestId('topo-canvas')).toBeInTheDocument();
+    expect(screen.getByTestId('editor-rail')).toBeInTheDocument();
     expect(screen.getByTestId('voice-pill')).toBeInTheDocument();
     expect(screen.getByTestId('prompt-input')).toBeInTheDocument();
-    expect(screen.getByText('Scene Inspector')).toBeInTheDocument();
-    expect(screen.getByText('2D Topographic Canvas')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /create a 3d asset/i })).toBeInTheDocument();
   });
 
-  it('explains the first-run path before the scene has content', () => {
+  it('switches between creation, scene, and tools without changing the viewport workflow', async () => {
+    const user = userEvent.setup();
     render(<LeftDrawer />);
-    expect(screen.getByText(/sketch terrain/i)).toBeInTheDocument();
-    expect(screen.getByText(/upload an image or generate/i)).toBeInTheDocument();
-    expect(screen.getByText(/press tab for play mode/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Scene' }));
+    expect(screen.getByTestId('scene-tree')).toBeInTheDocument();
+    expect(screen.getByText(/no objects in this scene/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Tools' }));
+    expect(screen.getByTestId('topo-canvas')).toBeInTheDocument();
+    expect(screen.getByText('2D Topographic Canvas')).toBeInTheDocument();
   });
 });

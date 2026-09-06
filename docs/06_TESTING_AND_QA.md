@@ -73,10 +73,32 @@ export default defineConfig({
 
 ### Current verified test baseline
 
-Fresh local verification records **133 frontend unit tests across 27 files**,
-**86 backend tests passed**, and **21 hermetic Playwright journeys passed**.
+Fresh local verification records **148 frontend unit tests across 32 files**,
+**89 backend tests passed**, and **21 hermetic Playwright journeys passed**.
 Historical planning milestones may show smaller counts; they are not release
 totals. GPU-only backend checks can skip on CPU-only runners.
+
+### Real Hunyuan vertical-slice evidence
+
+On the local RTX 2070 workstation, with the existing Hunyuan3D-2GP sidecar
+healthy on `127.0.0.1:8081`, a clean synthetic chair reference completed the
+real workflow:
+
+```text
+upload → Hunyuan3D-2GP → processed GLB → scene placement
+      → local Save Project → New Project → Load Project
+      → standalone HTML export
+```
+
+The returned GLB was loadable, one connected component, watertight, finite,
+grounded at `Y=0`, carried normals and vertex colors, and stayed within the
+20,000-face application cap. The browser flow reported `Mesh ready`, saved and
+reloaded the project, downloaded the standalone HTML, and finished with zero
+page or console errors. The reviewed capture is
+[`docs/assets/echoforge-hunyuan-live.png`](assets/echoforge-hunyuan-live.png).
+It uses the app's FX-off toggle so the dark vertex-colored mesh remains
+readable; it is synthetic fixture evidence, not a claim of universal model
+quality.
 
 ---
 

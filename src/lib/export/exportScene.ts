@@ -22,6 +22,7 @@ export interface ExportEntity {
   rotation: [number, number, number];
   scale: [number, number, number];
   glbBase64?: string;
+  materialBase64?: string;
 }
 
 export interface SceneSnapshot {
@@ -49,6 +50,7 @@ export function collectSceneSnapshot(): SceneSnapshot {
       rotation: e.rotation,
       scale: e.scale,
       glbBase64: glbDataUrlToBase64(e.glbUrl),
+      materialBase64: glbDataUrlToBase64(e.materialUrl),
     }));
   return {
     entities: exportEntities,
@@ -92,7 +94,7 @@ export async function buildStandaloneHtml(snapshot: SceneSnapshot): Promise<stri
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>EchoForge 3D — Exported Scene</title>
 <style>
-  html, body { margin: 0; height: 100%; background: #08090a; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #f2f0eb; overflow: hidden; }
   canvas { display: block; }
   #hud { position: fixed; left: 12px; bottom: 12px; color: #34d399;
          font: 11px ui-monospace, SFMono-Regular, monospace; opacity: 0.8;

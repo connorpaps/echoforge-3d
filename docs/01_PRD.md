@@ -39,10 +39,10 @@ EchoForge 3D provides a unified **canvas-to-engine loop** directly in the browse
 
 ## 3. Prioritized Feature Scope Matrix
 
-### 3.1 P0: MVP Core (Months 1–3) — Mandatory
+### 3.1 P0: MVP Core (focused completion scope)
 - **2D Topographic Canvas:** HTML5 drawing canvas with radial falloff elevation brushes, converting luminance into 3D heightfield displacement in real time.
-- **Voice-to-Scene Dictation:** Browser-based speech transcription (<150ms) via Distil-Whisper WebGPU, converted to structured JSON tool calls by Qwen2.5-Coder.
-- **Automated 3D Asset Synthesis:** Single-image-to-3D mesh generation (TripoSR / TRELLIS) with automated decimation (<25k faces) and collision hull authoring.
+- **Voice-assisted prompting:** Browser-based speech transcription via a dedicated Distil-Whisper worker, feeding the existing prompt flow. Structured scene tool calls are a later, constrained enhancement and are not claimed by the current voice pill.
+- **Automated 3D Asset Synthesis:** Single-image-to-3D mesh generation through Hunyuan3D-2GP with TripoSR fallback, automated decimation to the application safety cap of 20,000 faces, and collision hull authoring.
 - **In-Browser 3D Viewport:** Three.js / WebGPU renderer with TSL shaders, dynamic lighting, and Rapier3D Wasm character physics.
 - **Positional 3D Audio:** Web Audio API HRTF spatial panner nodes bound to 3D scene objects with AudioGen synthesized environmental loops.
 - **Vision-Reactive NPC:** SmolVLM-powered agent that inspects player viewport canvas frames and responds via in-browser Kokoro-82M neural TTS voice.

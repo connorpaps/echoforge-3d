@@ -9,7 +9,10 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "doctor": "python scripts/doctor.py",
+    "start:local": "python scripts/start_local.py",
+    "test:setup": "python scripts/test_setup_tools.py && python scripts/test_start_local.py"
   },
   "dependencies": {
     "@huggingface/transformers": "^3.0.2",

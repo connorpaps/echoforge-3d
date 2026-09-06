@@ -5,6 +5,7 @@ import { GlassPanel } from '@/components/ui/GlassPanel';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { resumeAudioContext } from '@/lib/audio/spatialAudio';
 import { useGenerationStore } from '@/lib/stores/useGenerationStore';
+import { useSceneStore } from '@/lib/stores/useSceneStore';
 import { useUiStore } from '@/lib/stores/useUiStore';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
@@ -23,6 +24,7 @@ export function GenerationPanel() {
   const generateMesh = useGenerationStore((s) => s.generateMesh);
   const generateTexture = useGenerationStore((s) => s.generateTexture);
   const generateAudio = useGenerationStore((s) => s.generateAudio);
+  const selectedEntityId = useSceneStore((s) => s.selectedEntityId);
 
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
   const [imageName, setImageName] = useState<string | null>(null);
@@ -71,20 +73,27 @@ export function GenerationPanel() {
   const hasImage = imageDataUrl !== null;
 
   return (
-    <GlassPanel className="p-3">
-      <SectionLabel>Generate</SectionLabel>
+    <GlassPanel className="editor-region p-4">
+      <SectionLabel>Create</SectionLabel>
+      <h2 className="mt-1 text-lg font-semibold tracking-[-0.02em] text-text-primary">
+        Create a 3D asset
+      </h2>
+      <p className="mt-1 text-xs leading-5 text-text-secondary">
+        Upload a reference image to create a model, then edit it in the viewport.
+      </p>
 
       <input
         ref={fileInputRef}
         type="file"
         accept="image/png,image/jpeg,image/webp"
+        id="image-upload"
         aria-label="Reference image upload"
         data-testid="image-upload"
         className="hidden"
         onChange={(event) => handleFile(event.target.files?.[0])}
       />
 
-      <div className="mt-2 flex items-center gap-2 rounded-md border border-dashed border-border-subtle bg-bg-subtle px-3 py-2.5 transition-all duration-150 hover:border-accent-primary/50">
+      <div className="mt-4 flex items-center gap-2 border border-dashed border-border-interactive bg-bg-subtle px-3 py-3 transition-all duration-150 hover:border-accent-primary/60">
         <button
           type="button"
           data-testid="upload-button"
@@ -100,15 +109,16 @@ export function GenerationPanel() {
               src={imageDataUrl ?? ''}
               alt="Reference"
               data-testid="image-preview"
-              className="size-9 shrink-0 rounded-sm border border-border-subtle object-cover"
+              className="size-9 shrink-0 border border-border-subtle object-cover"
             />
             <span className="min-w-0 flex-1 truncate text-[11px] text-text-secondary">
               {imageName}
             </span>
           </>
           ) : (
-            <span className="text-[11px] text-text-muted">
-              Upload a reference image (PNG / JPG / WebP)
+            <span className="text-xs text-text-secondary">
+              Upload a reference image
+              <span className="mt-0.5 block text-[11px] text-text-muted">PNG, JPG, or WebP · up to 10 MB</span>
             </span>
           )}
         </button>
@@ -131,40 +141,40 @@ export function GenerationPanel() {
         </p>
       ) : null}
 
-      <div className="mt-2 flex gap-2">
-        <button
-          type="button"
-          data-testid="generate-mesh"
-          disabled={!hasImage || generating}
-          onClick={() => void generateMesh(prompt, imageDataUrl ?? '')}
-          className="flex-1 rounded-md border border-accent-primary/50 bg-accent-primary/10 px-3 py-1.5 text-xs font-medium text-accent-primary transition-all duration-150 hover:border-accent-primary disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.98]"
-        >
-          Generate Mesh
-        </button>
+      <button
+        type="button"
+        data-testid="generate-mesh"
+        disabled={!hasImage || generating}
+        onClick={() => void generateMesh(prompt, imageDataUrl ?? '')}
+        className="mt-3 flex min-h-11 w-full items-center justify-center border border-accent-primary bg-accent-primary px-3 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:bg-accent-primary/90 disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.99]"
+      >
+        Generate Mesh
+      </button>
+
+      <div className="mt-3 grid grid-cols-2 gap-2 border-t border-border-subtle pt-3">
         <button
           type="button"
           data-testid="generate-texture"
           disabled={prompt.trim().length === 0 || generating}
-          onClick={() => void generateTexture(prompt)}
-          className="flex-1 rounded-md border border-accent-secondary/50 bg-accent-secondary/10 px-3 py-1.5 text-xs font-medium text-accent-secondary transition-all duration-150 hover:border-accent-secondary disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.98]"
+          onClick={() => void generateTexture(prompt, selectedEntityId)}
+          className="rounded-md border border-border-subtle bg-bg-subtle px-3 py-2 text-xs font-medium text-text-secondary transition-all duration-150 hover:border-accent-secondary/50 hover:text-accent-secondary disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.98]"
         >
           Generate Texture
         </button>
+        <button
+          type="button"
+          data-testid="generate-audio"
+          disabled={prompt.trim().length === 0 || generating}
+          onClick={() => {
+            // The click is the user gesture that unlocks the AudioContext.
+            resumeAudioContext();
+            void generateAudio(prompt);
+          }}
+          className="rounded-md border border-border-subtle bg-bg-subtle px-3 py-2 text-xs font-medium text-text-secondary transition-all duration-150 hover:border-accent-cyan/50 hover:text-accent-cyan disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.98]"
+        >
+          Ambient Audio
+        </button>
       </div>
-
-      <button
-        type="button"
-        data-testid="generate-audio"
-        disabled={prompt.trim().length === 0 || generating}
-        onClick={() => {
-          // The click is the user gesture that unlocks the AudioContext.
-          resumeAudioContext();
-          void generateAudio(prompt);
-        }}
-        className="mt-2 w-full rounded-md border border-accent-cyan/40 bg-accent-cyan/10 px-3 py-1.5 text-xs font-medium text-accent-cyan transition-all duration-150 hover:border-accent-cyan disabled:cursor-not-allowed disabled:opacity-40 active:scale-[0.98]"
-      >
-        Generate Ambient Audio
-      </button>
     </GlassPanel>
   );
 }

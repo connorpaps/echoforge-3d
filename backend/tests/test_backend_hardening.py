@@ -62,6 +62,17 @@ def test_auto_mesh_generation_retries_triposr_when_hunyuan_drops(monkeypatch):
     assert caught.value.detail == "mesh generation failed"
 
 
+def test_explicit_hunyuan_mode_selects_triposr_when_sidecar_is_unavailable(monkeypatch):
+    from backend.routers import generate
+
+    monkeypatch.setattr(generate, "MESH_BACKEND", "hunyuan")
+    monkeypatch.setattr(generate.hunyuan_service.hunyuan_service, "is_available", lambda: False)
+
+    import asyncio
+
+    assert asyncio.run(generate._select_mesh_backend()) == "triposr"
+
+
 def test_generation_errors_do_not_expose_exception_text(client, monkeypatch):
     from backend.routers import generate
 

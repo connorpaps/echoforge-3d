@@ -13,6 +13,7 @@ import {
   generateTexture,
 } from '@/lib/api/generate';
 import { useGenerationStore } from '@/lib/stores/useGenerationStore';
+import { useSceneStore } from '@/lib/stores/useSceneStore';
 
 const mockGenerateMesh = vi.mocked(generateMesh);
 const mockGenerateTexture = vi.mocked(generateTexture);
@@ -20,6 +21,7 @@ const mockGenerateAudio = vi.mocked(generateAudio);
 
 function resetStore() {
   useGenerationStore.getState().dismiss();
+  useSceneStore.setState({ entities: {}, selectedEntityId: null });
 }
 
 describe('useGenerationStore', () => {
@@ -74,6 +76,63 @@ describe('useGenerationStore', () => {
     await useGenerationStore.getState().retry();
     expect(useGenerationStore.getState().status).toBe('success');
     expect(mockGenerateTexture).toHaveBeenCalledTimes(2);
+  });
+
+  it('applies a generated texture to the target captured at request time', async () => {
+    useSceneStore.setState({
+      entities: {
+        'mesh-1': {
+          id: 'mesh-1',
+          name: 'Tower',
+          type: 'mesh',
+          position: [0, 0, 0],
+          rotation: [0, 0, 0],
+          scale: [1, 1, 1],
+          physics: { colliderType: 'none', mass: 0 },
+        },
+      },
+      selectedEntityId: 'mesh-1',
+    });
+    mockGenerateTexture.mockResolvedValue({
+      jobId: 'j-texture',
+      imageBase64: 'PNGDATA',
+      seed: 42,
+      elapsedMs: 10,
+    });
+
+    await useGenerationStore.getState().generateTexture('stone', 'mesh-1');
+    expect(useGenerationStore.getState().textureTargetId).toBe('mesh-1');
+    expect(useGenerationStore.getState().applyTexture()).toBe(true);
+    expect(useSceneStore.getState().entities['mesh-1'].materialUrl).toBe(
+      'data:image/png;base64,PNGDATA',
+    );
+    expect(useGenerationStore.getState().textureApplied).toBe(true);
+  });
+
+  it('rejects applying a generated texture to an audio emitter', () => {
+    useSceneStore.setState({
+      entities: {
+        'audio-1': {
+          id: 'audio-1',
+          name: 'Ambient',
+          type: 'audio_emitter',
+          position: [0, 0, 0],
+          rotation: [0, 0, 0],
+          scale: [1, 1, 1],
+          physics: { colliderType: 'none', mass: 0 },
+        },
+      },
+      selectedEntityId: 'audio-1',
+    });
+    useGenerationStore.setState({
+      kind: 'texture',
+      status: 'success',
+      textureTargetId: 'audio-1',
+      result: { jobId: 'j-audio-target', imageBase64: 'PNGDATA', seed: 42, elapsedMs: 10 },
+    });
+
+    expect(useGenerationStore.getState().applyTexture()).toBe(false);
+    expect(useSceneStore.getState().entities['audio-1'].materialUrl).toBeUndefined();
   });
 
   it('transitions idle → generating → success on audio generation', async () => {

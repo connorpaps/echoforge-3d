@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 test.describe('CUJ-01: 2D elevation sketch to 3D terrain displacement', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await page.locator('[data-testid="rail-tools"]').click();
     await page.waitForSelector('[data-testid="topo-canvas"]', {
       state: 'visible',
     });
@@ -14,6 +15,7 @@ test.describe('CUJ-01: 2D elevation sketch to 3D terrain displacement', () => {
 
     // Simulate a mouse drag stroke across the topo canvas.
     const canvas = page.locator('[data-testid="topo-canvas"]');
+    await canvas.scrollIntoViewIfNeeded();
     const box = (await canvas.boundingBox())!;
     await page.mouse.move(
       box.x + box.width * 0.45,
@@ -36,6 +38,7 @@ test.describe('CUJ-01: 2D elevation sketch to 3D terrain displacement', () => {
 
   test('Clear resets the terrain', async ({ page }) => {
     const canvas = page.locator('[data-testid="topo-canvas"]');
+    await canvas.scrollIntoViewIfNeeded();
     const box = (await canvas.boundingBox())!;
     await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5);
     await page.mouse.down();

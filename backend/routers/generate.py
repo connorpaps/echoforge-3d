@@ -109,10 +109,10 @@ def _publish_terminal(job_id: str, event: dict) -> None:
 
 
 async def _select_mesh_backend() -> str:
-    """Select Hunyuan only when explicitly requested or healthy in auto mode."""
-    if MESH_BACKEND == "hunyuan":
-        return "hunyuan"
-    if MESH_BACKEND == "auto" and await asyncio.to_thread(hunyuan_service.hunyuan_service.is_available):
+    """Select Hunyuan only when configured and its sidecar is healthy."""
+    if MESH_BACKEND in {"auto", "hunyuan"} and await asyncio.to_thread(
+        hunyuan_service.hunyuan_service.is_available
+    ):
         return "hunyuan"
     return "triposr"
 
@@ -146,7 +146,7 @@ async def generate_mesh(request: GenerateMeshRequest) -> GenerateMeshResponse:
                 report,
             )
         except hunyuan_service.HunyuanSidecarUnavailable:
-            if MESH_BACKEND != "auto" or backend_name != "hunyuan":
+            if backend_name != "hunyuan":
                 raise
             backend_name = "triposr"
             report("RECONSTRUCTION", 0, "Hunyuan unavailable — falling back to TripoSR")

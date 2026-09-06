@@ -24,6 +24,8 @@ describe('GenerationPanel', () => {
 
   it('disables Generate Mesh until an image is selected', () => {
     render(<GenerationPanel />);
+    expect(screen.getByRole('heading', { name: /create a 3d asset/i })).toBeInTheDocument();
+    expect(screen.getByText(/upload a reference image to create a model/i)).toBeInTheDocument();
     expect(screen.getByTestId('generate-mesh')).toBeDisabled();
     expect(screen.getByTestId('generate-texture')).toBeDisabled();
   });

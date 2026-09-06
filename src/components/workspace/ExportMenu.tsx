@@ -46,13 +46,15 @@ export function ExportMenu() {
         type="button"
         data-testid="export-btn"
         onClick={() => setOpen((o) => !o)}
-        className="rounded-sm border border-accent-secondary/50 px-3 py-1 text-xs font-medium text-accent-secondary transition-all duration-150 hover:border-accent-secondary active:scale-[0.98]"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        className="rounded-md bg-accent-secondary px-2.5 py-1.5 text-xs font-semibold text-white shadow-[0_6px_16px_rgba(51,78,104,0.16)] transition-all duration-150 hover:bg-accent-secondary/90 active:scale-[0.98]"
       >
-        {busy ? 'Exporting…' : 'Export .GLB / Scene'}
+        {busy ? 'Exporting…' : 'Export'}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-40 mt-1.5 w-60 rounded-md border border-border-subtle bg-bg-surface p-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.4)] backdrop-blur-md">
+        <div role="menu" className="absolute right-0 top-full z-40 mt-2 w-64 rounded-lg border border-border-subtle bg-bg-surface p-1.5 shadow-[0_16px_40px_rgba(30,41,59,0.16)] backdrop-blur-md">
           <button
             type="button"
             data-testid="export-html"

@@ -23,7 +23,7 @@ function Ground() {
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]}>
       <planeGeometry args={[64, 64]} />
-      <meshStandardMaterial color="#16181d" roughness={0.95} metalness={0} />
+      <meshStandardMaterial color="#e7e5df" roughness={0.95} metalness={0} />
     </mesh>
   );
 }
@@ -80,10 +80,10 @@ export function Scene() {
 
   return (
     <>
-      <color attach="background" args={['#08090a']} />
-      <hemisphereLight args={['#5e6ad2', '#08090a', 1.0]} />
-      <directionalLight position={[10, 15, 8]} intensity={2.2} />
-      <directionalLight position={[-8, 6, -10]} intensity={0.6} color="#9fb4ff" />
+      <color attach="background" args={['#e7e4dc']} />
+      <hemisphereLight args={['#f1eee6', '#a6aaa3', 1.5]} />
+      <directionalLight position={[10, 15, 8]} intensity={2.4} color="#fffaf0" />
+      <directionalLight position={[-8, 6, -10]} intensity={0.8} color="#c9d6d2" />
 
       <Physics gravity={[0, -9.81, 0]}>
         {hasTerrain ? <TerrainMesh /> : <Ground />}

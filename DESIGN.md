@@ -1,122 +1,129 @@
-# EchoForge 3D: Custom Design System Specification (`DESIGN.md`)
+# EchoForge 3D Design System
 
-A tailored **`DESIGN.md`** visual specification engineered specifically for **EchoForge 3D**. 
+EchoForge is a local-first worldbuilding editor. Its interface should feel like a field instrument for turning a visual reference into a staged 3D scene, not like an AI dashboard or a marketing landing page.
 
-This design system blends the best architectural elements from three tier-1 products in `VoltAgent/awesome-design-md`:
-- **Linear:** High-density keyboard-first toolbars, hairline 1px borders, and muted card surfaces.
-- **Raycast:** Dark chrome glassmorphism, floating HUD chips, and keycap badges.
-- **Supabase:** Clean telemetry readouts, monospace data chips, and emerald accent glows.
+## 1. Visual stance
 
----
+**Cartographic Field Workbench**
 
-## 1. Visual Atmosphere & Creative Stance
+> A reference image enters a field console, becomes a forged object, and is staged in a living scene.
 
-```
-  +---------------------------------------------------------------------------------------+
-  | Aesthetic: Obsidian Dark Studio / Neon Emerald Telemetry / Glassmorphic HUD Overlays |
-  +---------------------------------------------------------------------------------------+
-```
-- **The Stance:** EchoForge 3D is a professional, high-performance creative workstation, not a marketing landing page.
-- **Visual Weight:** Dark, deep obsidian surfaces (`#08090a`) that make the 3D WebGPU canvas and displaced terrain meshes stand out.
-- **Hierarchy:** The 3D canvas is the central visual anchor. UI sidebars, elevation brush drawers, and inspector chips float unobtrusively using semi-transparent frosted glass.
+The primary surface archetype is **Command / Inspect**, with **Explore** as the secondary behavior. The viewport is the dominant surface. Creation, hierarchy, and selected-object properties are quiet editor regions around it.
 
----
+The visual system borrows structural conventions from mature creative tools, including a central canvas, scene hierarchy, contextual inspector, compact tool rail, and task-specific regions. It does not copy Blender, Unity, Figma, Spline, Meshy, Substance, or Runway.
 
-## 2. Color Palette & Semantic Tokens
+## 2. Color tokens
 
-### 2.1 Surface & Background Tokens
-- `{bg.canvas}`: `#08090a` (Main application background & viewport clear color)
-- `{bg.surface}`: `rgba(18, 20, 24, 0.75)` (Glassmorphic cards, drawers, and modal panels)
-- `{bg.subtle}`: `rgba(255, 255, 255, 0.03)` (Hover rows, inactive tool wells)
-- `{bg.elevated}`: `#16181d` (Dropdown menus, context tooltips, popovers)
+### 2.1 Surfaces
 
-### 2.2 Border & Hairline Tokens
-- `{border.subtle}`: `rgba(255, 255, 255, 0.08)` (Default 1px hairline border for all panels)
-- `{border.focus}`: `rgba(16, 185, 129, 0.50)` (Active tool selection, focused input fields)
-- `{border.interactive}`: `rgba(255, 255, 255, 0.16)` (Button hover border)
+- `{bg.canvas}`: `#e7e4dc`, mineral viewport field.
+- `{bg.chrome}`: `#202522`, graphite application chrome.
+- `{bg.surface}`: `#f4f1e9`, paper editor regions and docks.
+- `{bg.subtle}`: `rgba(32, 37, 34, 0.05)`, inactive wells and hover rows.
+- `{bg.elevated}`: `#fffdf8`, inputs and menus.
 
-### 2.3 Brand & Telemetry Accents
-- `{accent.primary}`: `#10b981` (Emerald Glow — Active tool indicators, recording pill)
-- `{accent.primary.rgb}`: `16, 185, 129` (Used for dynamic CSS drop shadows)
-- `{accent.secondary}`: `#5e6ad2` (Linear Violet — Mode toggles, export actions)
-- `{accent.cyan}`: `#06b6d4` (Cyan Glow — 3D vertex counts, VRAM memory meters)
-- `{accent.danger}`: `#ef4444` (Error toasts, GPU reset warnings)
+### 2.2 Borders
 
-### 2.4 Typography Color Hierarchy
-- `{text.primary}`: `#f8fafc` (High-contrast active labels, titles, prompt text)
-- `{text.secondary}`: `#94a3b8` (Subtitles, parameter names, helper descriptions)
-- `{text.muted}`: `#64748b` (Inactive hotkeys, disabled states)
-- `{text.telemetry}`: `#34d399` (Monospace coordinate text, memory figures)
+- `{border.subtle}`: `rgba(32, 37, 34, 0.15)`, structural hairlines.
+- `{border.focus}`: `rgba(200, 100, 63, 0.55)`, keyboard and input focus.
+- `{border.interactive}`: `rgba(32, 37, 34, 0.30)`, controls and hover states.
 
----
+### 2.3 Semantic accents
 
-## 3. Typography & Font Hierarchy
+- `{accent.forge}`: `#c8643f`, creation, generation, and object selection.
+- `{accent.echo}`: `#65aeb0`, spatial audio, waveform, and ambient signal only.
+- `{accent.warning}`: `#b77932`, recoverable warnings.
+- `{accent.danger}`: `#a9473a`, destructive actions and failures.
+- `{accent.secondary}`: `#202522`, neutral secondary emphasis.
 
-- **Interface Font:** `Inter` or `Geist Sans`
-- **Telemetry & Coordinate Font:** `JetBrains Mono` or `Geist Mono`
+Rust is the product signature. Blue-green must not become a second brand color. It is reserved for audio and spatial feedback so the UI communicates meaning through color.
 
-| UI Element | Font Family | Size | Weight | Tracking / Case |
+## 3. Typography
+
+- **Interface:** IBM Plex Sans, weights 400, 500, and 600.
+- **Technical metadata:** IBM Plex Mono, weights 400 and 500.
+- **Headings:** sentence case, tight tracking, no decorative all-caps.
+- **Kickers:** mono, 9px, uppercase, `0.12em` tracking, used only for coordinates and workflow markers.
+- **Telemetry:** mono, 9px to 11px, tabular numerals.
+
+| Element | Font | Size | Weight | Treatment |
 | :--- | :--- | :--- | :--- | :--- |
-| **Workspace Header** | Interface | `14px (text-sm)` | `600 (Semibold)` | `-0.01em` |
-| **Section Labels** | Interface | `11px (text-xs)` | `500 (Medium)` | `+0.05em (UPPERCASE)` |
-| **Standard Controls** | Interface | `13px (text-sm)` | `400 (Regular)` | `normal` |
-| **3D Telemetry Readouts** | Telemetry | `11px (text-xs)` | `500 (Medium)` | `tabular-nums (Mono)` |
-| **Keycap Badges (KBD)** | Telemetry | `10px (text-[10px])` | `600 (Semibold)` | `monospace` |
+| Application wordmark | IBM Plex Sans | 13px | 500 | tight tracking |
+| Region title | IBM Plex Sans | 16px to 18px | 500 or 600 | sentence case |
+| Standard control | IBM Plex Sans | 11px to 13px | 400 or 500 | compact |
+| Workflow kicker | IBM Plex Mono | 9px | 400 | sparse uppercase |
+| Telemetry | IBM Plex Mono | 9px to 11px | 400 or 500 | tabular numerals |
 
----
+## 4. Geometry and depth
 
-## 4. Component Geometries & Interactive States
+- Canvas and editor regions use square corners.
+- Controls use `4px` corners at most.
+- Pills are reserved for transient status indicators such as recording state.
+- Major regions use hairline borders and no normal-state shadows.
+- Backdrop blur is not used for ordinary editor surfaces.
+- Selection uses rust borders, brackets, or axis frames. Do not use glow as the primary selection signal.
+- Motion is restrained and disabled under `prefers-reduced-motion`.
 
-### 4.1 Radii System
-- `{rounded.none}`: `0px` (Full-bleed 3D canvas viewport)
-- `{rounded.xs}`: `4px` (Keycap badges `<kbd>Tab</kbd>`, inline status chips)
-- `{rounded.sm}`: `6px` (Toolbar buttons, dropdown menu items)
-- `{rounded.md}`: `8px` (Floating HUD panels, prompt input bar, inspector drawers)
-- `{rounded.full}`: `9999px` (Recording indicator pills, avatar badges)
+`GlassPanel` remains as a compatibility name for feature components, but its implementation is a flat editor surface, not glassmorphism.
 
-### 4.2 Elevation & Glassmorphism
-- **Floating Panel Glass:** `backdrop-blur-md bg-[rgba(18,20,24,0.75)] border border-[rgba(255,255,255,0.08)] shadow-[0_8px_32px_rgba(0,0,0,0.4)]`
-- **Active Tool Glow:** `shadow-[0_0_15px_rgba(16,185,129,0.25)] border-emerald-500/60`
-- **Keycap Style:** `bg-zinc-800/80 border border-zinc-700 text-zinc-300 px-1.5 py-0.5 rounded text-[10px] font-mono shadow-inner`
+## 5. Editor shell
 
-### 4.3 Interactive Feedback Laws
-- **Buttons:** `active:scale-[0.98] transition-all duration-150`
-- **Tool Selection:** Instant border-color swap to `{accent.primary}` without layout shifting.
-- **Voice Recording Indicator:** Subtle pulsing emerald ring:
-  ```css
-  @keyframes voice-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  }
-  ```
-
----
-
-## 5. Screen Layout & Split-View Structure
-
-```
-+-------------------------------------------------------------------------------------------+
-| [Top Bar] Project Title | VRAM: 4.2GB/8GB (52%) | (•) Voice: Ready | [Export .GLB / Scene] |
-+-------------------------------------------------------------------------------------------+
-| [Left Drawer - Resizable]            | [Right Viewport - Full Bleed]                     |
-| ├── 2D Topographic Canvas            |                                                   |
-| │    [ Elevation Brush: R=24 H=0.8 ] |   Three.js WebGPU 60 FPS Viewport                 |
-| ├── Natural Language Prompt Input    |   - Displaced Terrain Mesh                        |
-| │    "Spawn 3 stone pillars..."      |   - Baked Colliders & Physics                     |
-| └── Scene Entity Inspector           |   - Positional Audio Emitters (HRTF)              |
-|      - Monolith_01 (PBR Stone)       |                                                   |
-|      - Bonfire (WAV Audio Node)      |   [Floating HUD: Press <Tab> to Playtest]         |
-+-------------------------------------------------------------------------------------------+
-| [Bottom Bar] Ambient Audio Bus: 44.1kHz | Rapier3D: Running | Latency: 12ms                |
-+-------------------------------------------------------------------------------------------+
+```text
++------------------------------------------------------------------------------------------+
+| EchoForge 3D / field 01 | Edit  Play | drawer | save | export                            |
++------------------------------------------------------------------------------------------+
+| rail | source / scene dock       |                 viewport                  | inspector  |
+|      | 01 Reference intake      |        mineral field + 3D scene          | selection  |
+|      | 02 Scene hierarchy       |        selection frames + contours         | transform  |
+|      | 03 Field tools           |                                               |
++------------------------------------------------------------------------------------------+
+| Local scene                                                               Runtime +      |
++------------------------------------------------------------------------------------------+
 ```
 
----
+Desktop layout:
 
-## 6. Strict Design Anti-Patterns (Banned AI Defaults)
+- Tool rail: 52px, Create, Scene, and Tools.
+- Source and scene dock: approximately 280px to 300px.
+- Viewport: remaining width, with a minimum target of 60% of the desktop shell.
+- Context inspector: 280px to 320px when an object is selected.
+- Bottom status: one quiet readiness line with diagnostics in a revealable tray.
 
-- ❌ **NO Generic Purple Gradients:** Never use `bg-gradient-to-r from-purple-500 to-indigo-600` on cards or headers.
-- ❌ **NO Pure Black (#000000):** Pure black destroys shadow depth. Always use deep zinc/slate `#08090a`.
-- ❌ **NO Center-Aligned Feature Cards:** EchoForge 3D is a studio workstation, not a marketing template. All controls must be aligned to structural toolbars and docks.
-- ❌ **NO Layout-Blocking Overlays:** HUD containers must have `pointer-events-none` with child chips set to `pointer-events-auto` so 3D navigation is never blocked.
-- ❌ **NO Unstyled Dialogs:** Every modal must have a semi-transparent backdrop blur and 1px hairline border matching `{border.subtle}`.
+Compact layout:
+
+- The source dock becomes a left sheet, capped at 320px.
+- The viewport remains visible beside it.
+- Empty-state guidance moves into the visible viewport region.
+- Secondary project controls collapse before the primary save and export actions.
+
+## 6. Meaningful motifs
+
+Motifs must explain the workflow rather than decorate it:
+
+- Contour and grid lines: terrain and spatial context.
+- Registration ticks and framed thumbnails: reference alignment.
+- Rust brackets: selected or forged objects.
+- Waveform marks and blue-green signal: ambient audio.
+- Scene rows with object glyphs: hierarchy and staging.
+
+Do not add random scan lines, fake blueprint noise, aurora gradients, decorative grain, or colorful icon tiles.
+
+## 7. Interaction rules
+
+- One dominant action per state. In Create, that is Generate Mesh.
+- Creation uses rust. Audio uses blue-green. Warnings and destructive actions use their semantic colors.
+- Advanced terrain and provider diagnostics live in Tools, not in the first-run path.
+- Object selection synchronizes the viewport, Scene hierarchy, and right inspector.
+- Play mode recedes the editor chrome while retaining a small mode indicator and movement affordance.
+- Keyboard actions remain discoverable through labels and native focus states.
+
+## 8. Banned defaults
+
+- No generic purple or blue AI gradients.
+- No pure black canvas.
+- No repeated dashboard card grids.
+- No centered marketing card as the primary empty state.
+- No permanent telemetry wall.
+- No unearned blur or glow.
+- No default rounded-square product badge.
+- No visual expansion of scope merely to make the interface look richer.

@@ -50,14 +50,32 @@ export function ProjectActions() {
   };
 
   return (
-    <div className="flex items-center gap-1.5" aria-label="Project actions">
-      <button type="button" onClick={() => void run('save')} disabled={busy !== null}>
+    <div className="flex shrink-0 items-center gap-1" aria-label="Project actions">
+      <button
+        type="button"
+        aria-label="Save Project"
+        className="rounded-none border border-accent-primary/45 bg-accent-primary/10 px-2.5 py-1.5 text-[10px] font-medium text-accent-primary transition hover:border-accent-primary disabled:cursor-not-allowed disabled:opacity-40"
+        onClick={() => void run('save')}
+        disabled={busy !== null}
+      >
         {busy === 'save' ? 'Saving…' : 'Save Project'}
       </button>
-      <button type="button" onClick={() => void run('load')} disabled={busy !== null}>
+      <button
+        type="button"
+        aria-label="Load Project"
+        className="hidden rounded-none border border-border-subtle bg-bg-surface px-2.5 py-1.5 text-[10px] font-medium text-text-secondary transition hover:border-border-interactive hover:text-text-primary lg:inline-flex disabled:cursor-not-allowed disabled:opacity-40"
+        onClick={() => void run('load')}
+        disabled={busy !== null}
+      >
         {busy === 'load' ? 'Loading…' : 'Load Project'}
       </button>
-      <button type="button" onClick={newProject} disabled={busy !== null}>
+      <button
+        type="button"
+        aria-label="New Project"
+        className="hidden rounded-none border border-border-subtle bg-bg-surface px-2.5 py-1.5 text-[10px] font-medium text-text-secondary transition hover:border-border-interactive hover:text-text-primary lg:inline-flex disabled:cursor-not-allowed disabled:opacity-40"
+        onClick={newProject}
+        disabled={busy !== null}
+      >
         New Project
       </button>
       <span role="status" aria-live="polite" className="sr-only">

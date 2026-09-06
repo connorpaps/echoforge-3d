@@ -5,12 +5,14 @@ test.describe('CUJ-03: first-person mode transition & physics locomotion', () =>
     page,
   }) => {
     await page.goto('/');
+    await page.locator('[data-testid="rail-tools"]').click();
     await page.waitForSelector('[data-testid="topo-canvas"]', {
       state: 'visible',
     });
 
     // Raise terrain so the walk happens on a displaced heightfield.
     const canvas = page.locator('[data-testid="topo-canvas"]');
+    await canvas.scrollIntoViewIfNeeded();
     const box = (await canvas.boundingBox())!;
     await page.mouse.move(box.x + box.width * 0.5, box.y + box.height * 0.5);
     await page.mouse.down();
@@ -62,6 +64,7 @@ test.describe('CUJ-03: first-person mode transition & physics locomotion', () =>
 
     await page.keyboard.press('Tab');
     await expect(page.locator('[data-testid="crosshair-hud"]')).toBeHidden();
+    await page.locator('[data-testid="rail-tools"]').click();
     await expect(page.locator('[data-testid="topo-canvas"]')).toBeVisible();
   });
 });

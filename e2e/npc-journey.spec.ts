@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 test.describe('EchoForge 3D vision-NPC journey (E2E mock seam)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await page.click('[data-testid="rail-scene"]');
     await page.waitForSelector('[data-testid="spawn-npc"]', {
       state: 'visible',
     });

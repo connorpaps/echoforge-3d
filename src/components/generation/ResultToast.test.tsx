@@ -2,10 +2,12 @@ import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ResultToast } from '@/components/generation/ResultToast';
 import { useGenerationStore } from '@/lib/stores/useGenerationStore';
+import { useSceneStore } from '@/lib/stores/useSceneStore';
 
 describe('ResultToast', () => {
   beforeEach(() => {
     useGenerationStore.getState().dismiss();
+    useSceneStore.setState({ entities: {}, selectedEntityId: null });
   });
 
   it('renders nothing while idle', () => {
@@ -60,6 +62,34 @@ describe('ResultToast', () => {
     render(<ResultToast />);
     expect(screen.getByText('Texture ready')).toBeInTheDocument();
     expect(screen.getByTestId('texture-thumb')).toBeInTheDocument();
+  });
+
+  it('offers applying a generated texture to its captured scene target', () => {
+    useSceneStore.setState({
+      entities: {
+        'mesh-1': {
+          id: 'mesh-1',
+          name: 'Tower',
+          type: 'mesh',
+          position: [0, 0, 0],
+          rotation: [0, 0, 0],
+          scale: [1, 1, 1],
+          physics: { colliderType: 'none', mass: 0 },
+        },
+      },
+    });
+    useGenerationStore.setState({
+      status: 'success',
+      kind: 'texture',
+      textureTargetId: 'mesh-1',
+      textureApplied: false,
+      result: { jobId: 'j2', imageBase64: 'AAA=', seed: 42, elapsedMs: 10 },
+    });
+    render(<ResultToast />);
+    screen.getByRole('button', { name: 'Apply to selected object' }).click();
+    expect(useSceneStore.getState().entities['mesh-1'].materialUrl).toBe(
+      'data:image/png;base64,AAA=',
+    );
   });
 
   it('dismiss returns the store to idle', () => {

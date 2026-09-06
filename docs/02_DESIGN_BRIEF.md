@@ -1,96 +1,143 @@
 # 02. UI & UX Design Brief
 
 **Product:** EchoForge 3D  
-**Design Standard:** Linear + Raycast + Supabase Hybrid Studio Architecture  
+**Design Standard:** Cartographic Field Workbench
 **Authoritative Reference:** `./DESIGN.md`
 
 ---
 
-## 1. Design Tokens & Visual Atmosphere
+## 1. Design tokens and visual atmosphere
 
-```
+```text
 +----------------------------------------------------------------------------------------------------+
-| Visual Stance: Obsidian Dark Studio (`#08090a`) / Frosted Glass / Emerald Telemetry (`#10b981`)     |
+| Visual stance: Mineral field / Graphite chrome / Forge rust / Echo signal                         |
 +----------------------------------------------------------------------------------------------------+
 ```
 
-### 1.1 Color Tokens
-- **Canvas Base:** `#08090a` (Deep obsidian background)
-- **Glassmorphic Cards:** `rgba(18, 20, 24, 0.75)` with `backdrop-blur-md` and 1px border `rgba(255, 255, 255, 0.08)`
-- **Primary Accent (Emerald):** `#10b981` (RGB: `16, 185, 129`) for active tools, recording status, and camera nodes
-- **Secondary Accent (Linear Violet):** `#5e6ad2` for export actions and mode switches
-- **Telemetry Cyan:** `#06b6d4` for vertex counters, FPS telemetry, and VRAM monitors
-- **Error Danger:** `#ef4444` for GPU resets, out-of-bounds errors, and network disconnects
+EchoForge is a local-first spatial editor, not a dashboard. The viewport is the dominant surface, while source intake, scene hierarchy, and selected-object properties form quiet editor regions around it.
 
-### 1.2 Typography Hierarchy
-- **Interface Labels:** `Inter` or `Geist Sans` (Clean sans-serif for buttons, tooltips, tabs)
-- **3D Coordinates & Telemetry:** `JetBrains Mono` or `Geist Mono` (`tabular-nums` for vector math, memory meters)
+### 1.1 Color tokens
+
+- **Mineral canvas:** `#e7e4dc`
+- **Graphite chrome:** `#202522`
+- **Paper editor surface:** `#f4f1e9`
+- **Elevated input surface:** `#fffdf8`
+- **Forge rust:** `#c8643f`, creation, generation, and selection only
+- **Echo signal:** `#65aeb0`, spatial audio and ambient signal only
+- **Warning:** `#b77932`
+- **Danger:** `#a9473a`
+
+### 1.2 Typography hierarchy
+
+- **Interface:** IBM Plex Sans, 400, 500, and 600.
+- **Coordinates and telemetry:** IBM Plex Mono, 400 and 500.
+- **Region labels:** sentence case, compact, and readable.
+- **Workflow markers:** 9px mono kickers with sparse uppercase tracking.
 
 ---
 
-## 2. Screen Inventory & Split-Workstation Layout
+## 2. Editor shell
 
-```
+```text
 +----------------------------------------------------------------------------------------------------+
-| [Top Bar] EchoForge 3D | VRAM: 4.2GB/8GB [■■■■■□□□□□] | (•) Voice: Ready | [Export .GLB / Scene]    |
+| EchoForge 3D / field 01 | Edit  Play | drawer | save | export                                      |
 +----------------------------------------------------------------------------------------------------+
-| [Left Drawer - Resizable (25% - 40%)] | [Right Viewport - Full Bleed (60% - 75%)]                   |
-| ├── 2D Topographic Canvas (Elevation) |                                                             |
-| │    - Radius: [ 24px ]               |   Three.js WebGPU 60 FPS Viewport                           |
-| │    - Height Value: [ 0.85 ]         |   - Displaced Heightfield Terrain (TSL Shader)              |
-| ├── Voice & Text Prompt Input         |   - Rapier3D Wasm Rigid Body Physics                        |
-| │    "Place 3 pillars around fire"    |   - HRTF Positional Spatial Audio Nodes                     |
-| └── Scene Entity Inspector            |   - Inspectable NPC Agent (SmolVLM)                         |
-|      ├── Terrain (Heightmap Mesh)     |                                                             |
-|      ├── Gothic_Arch (PBR Stone)      |   [Floating HUD: Press <Tab> to Playtest]                   |
-|      └── Campfire (WAV Audio Node)    |                                                             |
+| rail | source / scene dock       |                 viewport                  | contextual inspector |
+|      | 01 Reference intake      |        mineral field + 3D scene          | selected object       |
+|      | 02 Scene hierarchy       |        contours + selection frame         | transform / audio    |
+|      | 03 Field tools           |                                               | NPC authoring        |
 +----------------------------------------------------------------------------------------------------+
-| [Bottom Bar] Web Audio: 44.1kHz | Rapier: Running | Frame Time: 14.2ms | FPS: 60                   |
+| Local scene                                                               Runtime + diagnostics  |
 +----------------------------------------------------------------------------------------------------+
 ```
 
----
+### 2.1 Desktop regions
 
-## 3. Component Specifications & Interaction States
+- **Editor rail:** 52px. Create, Scene, and Tools are real work regions, not decorative navigation.
+- **Source and scene dock:** approximately 280px to 300px. Create owns the reference-to-mesh action. Scene owns the hierarchy.
+- **Viewport:** the remaining width, targeted at a minimum of 60% of the desktop shell.
+- **Contextual inspector:** 280px to 320px when an entity is selected. The selected object synchronizes across the viewport, hierarchy, and inspector.
+- **Bottom status:** one readiness line. Detailed Web Audio, Rapier, frame-time, P95, FPS, and terrain counts live in a revealable runtime tray.
 
-### 3.1 2D Topographic Canvas
-- **Purpose:** Draw grayscale elevation contours.
-- **Controls:** Brush Size slider (8px–128px), Height Intensity slider (0.0 to 1.0), Clear Canvas, Invert Elevation.
-- **Feedback:** Real-time radial blur preview on hover; updates to Three.js terrain geometry debounced at 50ms.
+### 2.2 Compact behavior
 
-### 3.2 Voice Prompt Input Bar
-- **Purpose:** Dictate natural language scene operations.
-- **States:**
-  - `Idle`: Dark slate pill with microphone icon and hotkey prompt (`Hold M to Speak`).
-  - `Recording`: Emerald pulsing glow (`animation: voice-pulse`) with audio level waveform.
-  - `Transcribing`: Wireframe loading shimmer.
-  - `Executed`: Brief green confirmation flash with generated action summary badge.
-
-### 3.3 Three.js WebGPU Viewport & HUD
-- **HUD Non-Blocking Rule:** Parent HUD container has `pointer-events-none`. Floating chips (hotkeys, mini-stats) use `pointer-events-auto`.
-- **First-Person Transition:** Pressing `Tab` smoothly fades the left drawer, engages HTML5 pointer lock, and displays a center crosshair with interaction prompt (`[E] Talk to NPC`).
+- The source dock becomes a left sheet capped at 320px.
+- The viewport remains visible beside the sheet.
+- Empty-state guidance moves into the visible viewport region.
+- Secondary project controls collapse before Save and Export.
+- The selected-object inspector is desktop-first and never blocks the compact source workflow.
 
 ---
 
-## 4. State Matrix
+## 3. Component specifications
 
-| State | Visual Indication | User Action Available |
+### 3.1 Reference intake
+
+- **Purpose:** upload a PNG, JPG, or WebP reference and create a mesh.
+- **Primary action:** Generate Mesh, the only high-emphasis action in the Create region.
+- **Supporting actions:** Generate Texture and Ambient Audio stay subordinate until a prompt or target exists.
+- **Reference representation:** show the uploaded thumbnail and filename in the intake region.
+
+### 3.2 Scene hierarchy
+
+- **Purpose:** show the actual objects staged in the scene.
+- **Rows:** use object glyphs, names, type metadata, and a rust selection state.
+- **Empty state:** explain that forging a reference or adding an NPC creates the first scene entry.
+- **NPC entry point:** remain available from the hierarchy without requiring an invisible inspector.
+
+### 3.3 Contextual inspector
+
+- **Purpose:** edit the selected entity rather than expose every feature at once.
+- **Controls:** name, duplicate, delete, transform, audio emitter settings, NPC persona, and voice ID.
+- **Selection rule:** selection in the viewport and hierarchy opens the same inspector state.
+- **Destructive actions:** remain explicit and use the danger token.
+
+### 3.4 Field tools
+
+- **Purpose:** expose terrain painting and provider readiness without competing with creation.
+- **Terrain:** retain the existing topographic canvas and controls.
+- **System status:** reveal provider health and fallback provenance inside Tools.
+
+### 3.5 Prompt command bar
+
+- **Purpose:** enhance a selected scene object with material, soundscape, or NPC voice direction.
+- **Placement:** below Create in the source dock until a future contextual command bar is needed.
+- **Voice:** retain push-to-talk and the existing `M` shortcut.
+
+---
+
+## 4. Interaction states
+
+| State | Visual indication | User action |
 | :--- | :--- | :--- |
-| **Empty State** | Flat wireframe terrain grid with soft ambient fog. Top-left card displays *"Sketch terrain or press M to speak."* | Paint elevation brush or dictate prompt. |
-| **Generating State** | Targeted 3D bounding box glows with an animated emerald wireframe shimmer. Telemetry bar displays *"Generating mesh via TripoSR..."* | Viewport camera remains fully orbitable; UI is non-blocking. |
-| **Error State** | Floating glass toast at bottom-right with red border (`#ef4444`) and exact recovery action (*"GPU Queue Saturated - Retrying in 3s"*). | Dismiss button, Retry action button. |
-| **Success State** | Generated `.glb` mesh drops into scene with physical particle dust; audio emitter activates at mesh origin. | Undo action (`Cmd+Z`), select, move, scale. |
+| **Empty** | Mineral contour field, lower-left source-to-stage guidance, no centered marketing card | Add reference image or switch to Scene / Tools |
+| **Reference loaded** | Thumbnail and filename persist in Create, Generate Mesh becomes primary | Forge mesh |
+| **Generating** | Existing non-blocking generation HUD uses restrained forge motion | Continue orbiting or inspect other controls |
+| **Mesh ready** | Object becomes the dominant visual content, scene row appears, inspector opens on selection | Transform, rename, duplicate, material, audio, save, export |
+| **Play mode** | Editor chrome recedes, mode indicator and crosshair remain | Walk and interact with NPCs |
+| **Error** | Exact recovery message with danger token, no decorative glow | Retry or correct input |
 
 ---
 
-## 5. Hotkey & Navigation Mapping
+## 5. Hotkey and navigation mapping
 
 | Hotkey | Action | Scope |
 | :--- | :--- | :--- |
 | `<Tab>` | Toggle between Editor Mode and First-Person Walk Mode | Global |
 | `<M>` (Hold) | Push-to-talk voice dictation | Editor Mode |
 | `<W> <A> <S> <D>` | Character locomotion | First-Person Mode |
-| `<Space>` | Character jump (gravity physics) | First-Person Mode |
-| `<E>` | Interact with nearest NPC (trigger visual dialogue) | First-Person Mode |
+| `<Space>` | Character jump | First-Person Mode |
+| `<E>` | Interact with nearest NPC | First-Person Mode |
 | `<Cmd+Z> / <Ctrl+Z>` | Undo last scene graph transformation | Editor Mode |
-| `<Cmd+B> / <Ctrl+B>` | Toggle collapse/expand of left creation drawer | Editor Mode |
+| `<Cmd+B> / <Ctrl+B>` | Toggle the source dock | Editor Mode |
+
+---
+
+## 6. Visual guardrails
+
+- No generic AI gradients, aurora backgrounds, or pure black canvas.
+- No repeated feature-card grid or permanent telemetry wall.
+- No normal-state backdrop blur, glow, or large shadows on editor regions.
+- No colorful icon tile above every heading.
+- Do not copy a reference product literally.
+- Do not add feature scope merely to make the shell look richer.

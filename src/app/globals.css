@@ -5,32 +5,36 @@
    ============================================================ */
 
 @theme {
-  /* Surfaces (DESIGN.md §2.1) */
-  --color-bg-canvas: #08090a;
-  --color-bg-surface: rgba(18, 20, 24, 0.75);
-  --color-bg-subtle: rgba(255, 255, 255, 0.03);
-  --color-bg-elevated: #16181d;
+  /* Surfaces, mineral canvas and graphite editor chrome */
+  --color-bg-canvas: #e7e4dc;
+  --color-bg-chrome: #202522;
+  --color-bg-surface: #f4f1e9;
+  --color-bg-subtle: rgba(32, 37, 34, 0.05);
+  --color-bg-elevated: #fffdf8;
 
   /* Borders & hairlines (DESIGN.md §2.2) */
-  --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-border-focus: rgba(16, 185, 129, 0.5);
-  --color-border-interactive: rgba(255, 255, 255, 0.16);
+  --color-border-subtle: rgba(32, 37, 34, 0.15);
+  --color-border-focus: rgba(200, 100, 63, 0.55);
+  --color-border-interactive: rgba(32, 37, 34, 0.3);
 
   /* Brand & telemetry accents (DESIGN.md §2.3) */
-  --color-accent-primary: #10b981;
-  --color-accent-secondary: #5e6ad2;
-  --color-accent-cyan: #06b6d4;
-  --color-accent-danger: #ef4444;
+  --color-accent-primary: #c8643f;
+  --color-accent-forge: #c8643f;
+  --color-accent-secondary: #202522;
+  --color-accent-cyan: #65aeb0;
+  --color-accent-echo: #65aeb0;
+  --color-accent-danger: #a9473a;
+  --color-accent-warning: #b77932;
 
   /* Typography hierarchy (DESIGN.md §2.4) */
-  --color-text-primary: #f8fafc;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-text-telemetry: #34d399;
+  --color-text-primary: #202522;
+  --color-text-secondary: #4f5751;
+  --color-text-muted: #6c706a;
+  --color-text-telemetry: #2f7779;
 
   /* Fonts (DESIGN.md §3) */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, "SF Mono", monospace;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", monospace;
 
   /* Radii (DESIGN.md §4.1) */
   --radius-xs: 4px;
@@ -49,28 +53,90 @@
     color: var(--color-text-primary);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    color-scheme: light;
   }
 }
 
-/* Floating glass panel (DESIGN.md §4.2) */
+/* Legacy name retained for feature components. Major editor regions are flat. */
 @utility glass-panel {
-  backdrop-filter: blur(12px);
   background-color: var(--color-bg-surface);
   border: 1px solid var(--color-border-subtle);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+@layer components {
+  .editor-shell {
+    display: grid;
+    grid-template-columns: minmax(280px, 300px) minmax(0, 1fr);
+  }
+
+  .editor-shell[data-inspector='visible'] {
+    grid-template-columns: minmax(280px, 300px) minmax(0, 1fr) minmax(280px, 320px);
+  }
+
+  .editor-shell[data-drawer='hidden'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .editor-shell[data-drawer='hidden'][data-inspector='visible'] {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+  }
+
+  .editor-region,
+  .context-inspector {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+  }
+
+  .field-kicker {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .viewport-field {
+    background-color: var(--color-bg-canvas);
+    background-image:
+      linear-gradient(rgba(32, 37, 34, 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(32, 37, 34, 0.055) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .editor-shell[data-inspector='visible'] {
+    grid-template-columns: minmax(250px, 280px) minmax(0, 1fr) minmax(250px, 280px);
+  }
+}
+
+@media (max-width: 760px) {
+  .editor-shell {
+    display: block;
+  }
+
+  .empty-scene-state {
+    left: calc(min(86vw, 320px) + 1rem) !important;
+    right: 1rem;
+    bottom: 2.5rem;
+    z-index: 10;
+    width: auto;
+    max-width: none;
+  }
 }
 
 /* Keycap badge (DESIGN.md §4.2) */
 @utility keycap {
-  background-color: rgb(39 39 42 / 0.8);
-  border: 1px solid rgb(63 63 70);
-  color: rgb(212 212 216);
+  background-color: #eef2ef;
+  border: 1px solid #ccd6d1;
+  color: #334e68;
   padding: 1px 6px;
   border-radius: 4px;
   font-size: 10px;
   font-weight: 600;
   font-family: var(--font-mono);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 0 2px 4px rgba(30, 41, 59, 0.08);
   line-height: 1.4;
   white-space: nowrap;
 }

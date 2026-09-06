@@ -6,6 +6,7 @@ test.describe('EchoForge 3D viewport shell', () => {
     await page.waitForSelector('[data-testid="viewport-3d"]', {
       state: 'visible',
     });
+    await page.locator('[data-testid="rail-tools"]').click();
   });
 
   test('renders the 3D canvas and workstation chrome', async ({ page }) => {
@@ -13,9 +14,11 @@ test.describe('EchoForge 3D viewport shell', () => {
     await expect(viewport).toBeVisible();
     await expect(viewport.locator('canvas').first()).toBeVisible();
     await expect(page.locator('[data-testid="topo-canvas"]')).toBeVisible();
-    await expect(page.locator('[data-testid="voice-pill"]')).toContainText(
-      'Hold',
-    );
+    await expect(page.locator('[data-testid="editor-rail"]')).toBeVisible();
+    const emptyState = page.locator('[data-testid="empty-scene-state"]');
+    await expect(emptyState).toBeVisible();
+    const emptyBox = await emptyState.boundingBox();
+    expect(emptyBox?.x ?? 0).toBeGreaterThan(300);
     await expect(page.locator('header')).toContainText('EchoForge 3D');
     await expect(page.locator('footer')).toContainText('FPS');
   });
@@ -27,6 +30,21 @@ test.describe('EchoForge 3D viewport shell', () => {
     await expect(toggle).toContainText('Off');
     await toggle.click();
     await expect(toggle).toContainText('On');
+  });
+
+  test('keeps empty-state guidance visible beside the compact source sheet', async ({ page }) => {
+    await page.setViewportSize({ width: 760, height: 900 });
+    await page.reload();
+    await page.waitForSelector('[data-testid="viewport-3d"] canvas', { state: 'visible' });
+    const viewportBox = await page.locator('[data-testid="viewport-3d"]').boundingBox();
+    expect(viewportBox?.height ?? 0).toBeGreaterThan(700);
+    const emptyState = page.locator('[data-testid="empty-scene-state"]');
+    await expect(emptyState).toBeVisible();
+    const emptyBox = await emptyState.boundingBox();
+    expect(emptyBox?.width ?? 0).toBeGreaterThan(100);
+    expect(emptyBox?.x ?? 0).toBeGreaterThan(300);
+    expect((emptyBox?.x ?? Infinity) + (emptyBox?.width ?? Infinity)).toBeLessThanOrEqual(760);
+
   });
 
   test('render loop advances at the software-render floor (>= 30 FPS)', async ({
@@ -60,6 +78,7 @@ test.describe('EchoForge 3D viewport shell', () => {
     await expect(page.locator('[data-testid="topo-canvas"]')).toBeHidden();
 
     await page.keyboard.press('Tab');
+    await page.locator('[data-testid="rail-tools"]').click();
     await expect(page.locator('[data-testid="topo-canvas"]')).toBeVisible();
   });
 });

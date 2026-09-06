@@ -15,6 +15,7 @@ const entity = {
   rotation: [0.1, 0.2, 0.3] as [number, number, number],
   scale: [2, 2, 2] as [number, number, number],
   glbUrl: 'blob:http://localhost/live-mesh',
+  materialUrl: 'data:image/png;base64,material',
   audioUrl: 'blob:http://localhost/live-audio',
   volume: 0.45,
   falloffDistance: 32,
@@ -58,7 +59,9 @@ describe('project persistence', () => {
     });
     expect(JSON.stringify(saved.snapshot)).not.toContain('blob:http://localhost/live');
     expect(saved.snapshot.terrainHeightmap).toEqual([0, 0.25, 0.5, 1]);
-    expect(Object.keys(saved.assets)).toEqual(['npc-1:glb', 'npc-1:audio']);
+    expect(Object.keys(saved.assets).sort()).toEqual(
+      ['npc-1:glb', 'npc-1:audio', 'npc-1:material'].sort(),
+    );
   });
 
   it('round-trips entities, transforms, audio/NPC fields, terrain, and restores asset URLs', async () => {
@@ -77,8 +80,9 @@ describe('project persistence', () => {
       npcVoice: 'af_heart',
       physics: { colliderType: 'convexHull', mass: 4 },
     });
-    expect(loaded?.entities['npc-1'].glbUrl).toMatch(/^blob:restored-/);
-    expect(loaded?.entities['npc-1'].audioUrl).toMatch(/^blob:restored-/);
+    expect(loaded?.entities['npc-1'].glbUrl).toMatch(/^data:/);
+    expect(loaded?.entities['npc-1'].audioUrl).toMatch(/^data:/);
+    expect(loaded?.entities['npc-1'].materialUrl).toMatch(/^data:/);
     expect(loaded?.terrainHeightmap).toEqual(new Float32Array([0, 0.25, 0.5, 1]));
   });
 });

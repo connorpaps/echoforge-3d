@@ -48,6 +48,9 @@ export function VramMeter() {
   const { vramReservedMB, vramTotalMB } = health.cuda;
   const usedRatio = vramTotalMB > 0 ? vramReservedMB / vramTotalMB : 0;
   const filled = Math.round(usedRatio * SEGMENTS);
+  const meshProvider = health.providers?.mesh?.selected;
+  const meshLabel =
+    meshProvider === 'hunyuan3d-2gp' ? 'Hunyuan3D-2GP' : meshProvider === 'triposr' ? 'TripoSR' : null;
 
   return (
     <div
@@ -58,6 +61,11 @@ export function VramMeter() {
       <TelemetryText>
         VRAM: {formatGigabytes(vramReservedMB)}GB/{Math.round(vramTotalMB / 1024)}GB
       </TelemetryText>
+      {meshLabel ? (
+        <TelemetryText data-testid="mesh-provider" className="text-accent-primary">
+          Mesh: {meshLabel}
+        </TelemetryText>
+      ) : null}
       <span
         aria-hidden
         className="flex gap-px font-mono text-[9px] leading-none text-accent-cyan"

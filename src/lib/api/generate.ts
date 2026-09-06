@@ -28,6 +28,27 @@ export interface HealthInfo {
   status: string;
   vramMB: number;
   cuda: CudaInfo;
+  providers?: {
+    mesh?: {
+      configured: 'auto' | 'triposr' | 'hunyuan';
+      selected: string;
+      hunyuan?: { available: boolean; mode: string };
+      triposr?: { mode: string };
+    };
+    texture?: ProviderInfo;
+    audio?: ProviderInfo;
+    dialogue?: ProviderInfo;
+    speech?: ProviderInfo;
+    tts?: ProviderInfo;
+    depth?: ProviderInfo;
+  };
+}
+
+export interface ProviderInfo {
+  provider: string;
+  mode: string;
+  fallback?: string;
+  available?: boolean;
 }
 
 export interface MeshBounds {

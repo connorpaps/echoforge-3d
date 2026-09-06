@@ -16,8 +16,8 @@ export function PromptBar() {
   useEffect(() => registerPushToTalk({ begin, finish }), [begin, finish]);
 
   return (
-    <GlassPanel className="p-3">
-      <SectionLabel>Prompt</SectionLabel>
+    <GlassPanel className="editor-region p-3">
+      <SectionLabel>Command the field</SectionLabel>
       <div className="mt-2 flex flex-col gap-2">
         <VoicePill />
         <input
@@ -25,8 +25,8 @@ export function PromptBar() {
           type="text"
           value={prompt}
           onChange={(event) => setPrompt(event.target.value)}
-          placeholder="Spawn 3 stone pillars around a campfire…"
-          className="h-10 rounded-md border border-border-subtle bg-bg-elevated px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-border-focus focus:outline-none"
+          placeholder="Describe a material, soundscape, or NPC voice…"
+          className="h-10 border border-border-subtle bg-bg-elevated px-3 text-xs text-text-primary placeholder:text-text-muted focus:border-border-focus focus:outline-none"
         />
       </div>
     </GlassPanel>
