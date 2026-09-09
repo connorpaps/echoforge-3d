@@ -7,22 +7,24 @@
 Turn a reference image into a usable 3D asset, sketch terrain, add spatial interactions, and export a portable scene. EchoForge combines browser-based 3D rendering with a locally orchestrated GPU generation pipeline built for an 8 GB RTX 2070.
 
 [![CI](https://github.com/connorpaps/echoforge-3d/actions/workflows/ci.yml/badge.svg)](https://github.com/connorpaps/echoforge-3d/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-158%20frontend%20%7C%20100%20Python-0f766e)](https://github.com/connorpaps/echoforge-3d)
+[![Tests](https://img.shields.io/badge/tests-158%20frontend%20%7C%20102%20Python-0f766e)](https://github.com/connorpaps/echoforge-3d)
 [![License](https://img.shields.io/badge/license-MIT-10b981.svg)](LICENSE)
 
 </div>
 
-> **Portfolio project:** a local-first multimodal 3D workstation demonstrating GPU orchestration, browser 3D, physics, spatial audio, persistence, and production-minded validation in one coherent application.
+> **Engineering thesis:** make multimodal 3D generation useful under real constraints: limited VRAM, local execution, imperfect model output, and a browser editor that still needs to feel dependable.
 
 ![EchoForge 3D Hunyuan3D bishop turntable](docs/assets/bishop-turntable.gif)
 
 *Verified local render of a Hunyuan3D-2GP output after EchoForge mesh processing. The turntable shows the full GLB asset and its validation metadata; it is not a claim of perfect single-image reconstruction.*
 
+> **Try the editor without a GPU:** run `python scripts/start_local.py --demo` for the deterministic walkthrough. It exercises upload, asset handoff, scene placement, selection, persistence, and export without downloading model weights. It demonstrates the editor contract, not model quality.
+
 ![EchoForge live Hunyuan3D workflow](docs/assets/echoforge-hunyuan-live.png)
 
 *Live 1440×900 workstation capture: a synthetic chair fixture went through Hunyuan3D-2GP, entered the scene, and reached the mesh-ready state. FX is disabled in this evidence frame so the dark vertex-colored mesh remains readable; the fixture is intentionally synthetic and not user data.*
 
-## Why this project is worth opening
+## Engineering thesis in practice
 
 EchoForge is not just a prompt box around an API. It solves the difficult parts around AI-generated 3D:
 
@@ -59,6 +61,28 @@ Play mode, physics, audio, NPC dialogue             Standalone export
 | Persistence | Versioned scene snapshots plus IndexedDB-backed local assets |
 | Backend | FastAPI, structured routes, progress WebSocket, input limits, safe errors, rate limits |
 | Export | Standalone HTML and GLTF-compatible scene output |
+
+## Multimodal ML systems
+
+EchoForge uses the Hugging Face ecosystem as an engineering substrate, not as a
+collection of disconnected model demos. Each model is attached to a user-visible
+step in the worldbuilding loop, with an explicit execution boundary and fallback:
+
+| Workflow | Model or ecosystem | Product role | Runtime boundary |
+|---|---|---|---|
+| Image-to-3D | Hunyuan3D-2GP, TripoSR | Turn a reference into an editable GLB asset | Local GPU sidecar or serialized backend fallback |
+| Depth estimation | Transformers.js, Depth Anything V2 | Derive spatial structure from reference imagery | Dedicated browser worker |
+| Speech recognition | Transformers.js, Distil-Whisper | Feed spoken input into the prompt workflow | Dedicated browser worker |
+| Text-to-speech | Transformers.js, Kokoro-82M | Give NPC dialogue a local voice output | Dedicated browser worker |
+| Vision-language dialogue | SmolVLM | Ground NPC responses in the captured scene | Optional local backend provider |
+| Text-to-image | SDXL-Turbo | Generate optional texture and concept-art inputs | Serialized local GPU slot |
+| Text-to-audio | AudioGen | Generate optional environmental sound | Serialized local GPU slot with procedural fallback |
+
+The interesting problem is the orchestration around these tasks: browser workers
+keep inference off the main thread, `SequentialVRAMManager` prevents heavyweight
+models from competing for an 8 GB GPU, generated assets pass through mesh and
+collision validation, and degraded paths remain visible instead of silently
+pretending to be equivalent.
 
 ## Verified results
 
@@ -273,7 +297,7 @@ The workstation and terrain captures use the hermetic fixture seam. They demonst
 
 The source reference image is intentionally not redistributed because it contains a third-party stock watermark. The generated GLB render and structural metadata are included instead.
 
-## Resume-ready summary
+## Selected implementation outcomes
 
 **EchoForge 3D, Local-first AI Worldbuilding Workstation**
 
