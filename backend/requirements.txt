@@ -16,7 +16,7 @@ trimesh==4.5.1
 pyvista==0.44.1
 slowapi==0.1.9
 pydantic==2.9.2
-huggingface_hub==0.26.1
+huggingface_hub==1.30.0
 pytest==8.3.3
 # PyPI publishes CPU and CUDA wheels with the same version; pip defaults to CPU.
 # Install CUDA builds with:
