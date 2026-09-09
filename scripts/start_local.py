@@ -53,11 +53,29 @@ def _service_env() -> dict[str, str]:
     return env
 
 
-def build_specs(with_hunyuan: bool = False) -> list[ServiceSpec]:
+def build_specs(with_hunyuan: bool = False, demo: bool = False) -> list[ServiceSpec]:
     """Build commands without starting processes or loading model weights."""
     env = _service_env()
     pnpm = resolve_command("pnpm") or "pnpm"
     python = _project_python()
+    frontend_env = env | ({"NEXT_PUBLIC_E2E": "true"} if demo else {})
+    frontend = ServiceSpec(
+        name="frontend",
+        command=(
+            pnpm,
+            "dev",
+            "--hostname",
+            "127.0.0.1",
+            "-p",
+            "3000",
+        ),
+        port=3000,
+        cwd=ROOT,
+        env=frontend_env,
+    )
+    if demo:
+        return [frontend]
+
     specs = [
         ServiceSpec(
             name="backend",
@@ -75,20 +93,7 @@ def build_specs(with_hunyuan: bool = False) -> list[ServiceSpec]:
             cwd=ROOT,
             env=env,
         ),
-        ServiceSpec(
-            name="frontend",
-            command=(
-                pnpm,
-                "dev",
-                "--hostname",
-                "127.0.0.1",
-                "-p",
-                "3000",
-            ),
-            port=3000,
-            cwd=ROOT,
-            env=env,
-        ),
+        frontend,
     ]
     if with_hunyuan:
         bash = resolve_command("bash") or "bash"
@@ -177,12 +182,19 @@ def main() -> int:
         help="also start the separately managed Hunyuan sidecar",
     )
     parser.add_argument(
+        "--demo",
+        action="store_true",
+        help="start only the GPU-free deterministic fixture-backed frontend",
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="print commands without starting services",
     )
     args = parser.parse_args()
-    specs = build_specs(with_hunyuan=args.with_hunyuan)
+    if args.demo and args.with_hunyuan:
+        parser.error("--demo cannot be combined with --with-hunyuan")
+    specs = build_specs(with_hunyuan=args.with_hunyuan, demo=args.demo)
     if args.dry_run:
         _print_specs(specs)
         return 0

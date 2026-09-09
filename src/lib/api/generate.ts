@@ -1,4 +1,5 @@
 import { isE2EMode } from '@/workers/workerRegistry';
+import { buildDeterministicGlbDataUrl } from '@/lib/api/mockGlb';
 
 /**
  * EchoForge 3D — generative backend client (docs/04_API_CONTRACTS.md).
@@ -240,10 +241,11 @@ const mockHealth: HealthInfo = {
   },
 };
 
+const mockGlbUrl = buildDeterministicGlbDataUrl();
+
 const mockMeshResult: MeshResult = {
   jobId: 'e2e-mesh-000001',
-  glbUrl:
-    'data:model/gltf-binary;base64,AAAAGgIAAAAGbW9jaw==', // minimal placeholder payload
+  glbUrl: mockGlbUrl,
   bounds: {
     min: [-0.5, -0.5, -0.5],
     max: [0.5, 0.5, 0.5],
@@ -252,9 +254,15 @@ const mockMeshResult: MeshResult = {
   },
   faceCount: 18763,
   vertexCount: 9412,
-  glbSizeBytes: 400768,
+  glbSizeBytes: base64ByteLength(mockGlbUrl),
   elapsedMs: 2874,
 };
+
+function base64ByteLength(dataUrl: string): number {
+  const encoded = dataUrl.split(',', 2)[1] ?? '';
+  const padding = encoded.endsWith('==') ? 2 : encoded.endsWith('=') ? 1 : 0;
+  return (encoded.length * 3) / 4 - padding;
+}
 
 const mockTextureResult: TextureResult = {
   jobId: 'e2e-tex-000002',

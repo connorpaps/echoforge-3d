@@ -87,9 +87,37 @@ describe('useWorker', () => {
     mocks.createWorkerClient.mockReturnValue(fake);
     const requestMock = fake.request as unknown as ReturnType<typeof vi.fn>;
     requestMock.mockRejectedValueOnce(new Error('init failed'));
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
-    const { result } = renderHook(() => useWorker('tts'));
+    try {
+      const { result } = renderHook(() => useWorker('tts'));
+      await waitFor(() => expect(result.current.status).toBe('error'));
+      expect(errorSpy).toHaveBeenCalledOnce();
+    } finally {
+      errorSpy.mockRestore();
+    }
+  });
 
-    await waitFor(() => expect(result.current.status).toBe('error'));
+  it('does not log an initialization error after unmount disposes the worker', async () => {
+    const fake = makeFakeClient();
+    let rejectInit: ((reason: Error) => void) | undefined;
+    const requestMock = fake.request as unknown as ReturnType<typeof vi.fn>;
+    requestMock.mockImplementationOnce(
+      () => new Promise<never>((_, reject) => {
+        rejectInit = reject;
+      }),
+    );
+    mocks.createWorkerClient.mockReturnValue(fake);
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    const { unmount } = renderHook(() => useWorker('depth'));
+    unmount();
+
+    await act(async () => {
+      rejectInit?.(new Error('Worker disposed'));
+    });
+
+    expect(errorSpy).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
   });
 });

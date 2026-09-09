@@ -75,9 +75,9 @@ def sanitize_and_decimate_glb(input_path: str, output_path: str) -> dict:
 ### `.env.local` (Client-Side)
 ```bash
 # Next.js Public Flags
-NEXT_PUBLIC_API_URL="http://localhost:8000"
-NEXT_PUBLIC_WS_URL="ws://localhost:8000/ws"
-NEXT_PUBLIC_ENABLE_WEBGPU="true"
+NEXT_PUBLIC_API_BASE="http://localhost:8000"
+# WebSocket progress derives from NEXT_PUBLIC_API_BASE at /ws/progress.
+NEXT_PUBLIC_ENABLE_WEBGPU="false"
 ```
 
 ### `backend/.env` (Server-Side Microservice)

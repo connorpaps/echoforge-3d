@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ResultToast } from '@/components/generation/ResultToast';
 import { useGenerationStore } from '@/lib/stores/useGenerationStore';
@@ -86,7 +86,7 @@ describe('ResultToast', () => {
       result: { jobId: 'j2', imageBase64: 'AAA=', seed: 42, elapsedMs: 10 },
     });
     render(<ResultToast />);
-    screen.getByRole('button', { name: 'Apply to selected object' }).click();
+    fireEvent.click(screen.getByRole('button', { name: 'Apply to selected object' }));
     expect(useSceneStore.getState().entities['mesh-1'].materialUrl).toBe(
       'data:image/png;base64,AAA=',
     );
@@ -95,7 +95,7 @@ describe('ResultToast', () => {
   it('dismiss returns the store to idle', () => {
     useGenerationStore.setState({ status: 'error', errorMessage: 'x' });
     render(<ResultToast />);
-    screen.getByText('Dismiss').click();
+    fireEvent.click(screen.getByText('Dismiss'));
     expect(useGenerationStore.getState().status).toBe('idle');
   });
 
@@ -103,7 +103,7 @@ describe('ResultToast', () => {
     const spy = vi.spyOn(useGenerationStore.getState(), 'retry').mockResolvedValue();
     useGenerationStore.setState({ status: 'error', errorMessage: 'x' });
     render(<ResultToast />);
-    screen.getByTestId('retry-button').click();
+    fireEvent.click(screen.getByTestId('retry-button'));
     expect(spy).toHaveBeenCalledTimes(1);
     spy.mockRestore();
   });

@@ -159,7 +159,7 @@
 - Build TSL node post-processing pipeline: `pass(scene, camera).pipe(bloom).pipe(fxaa)`.
 - **Active Skills:** `webgpu-threejs-tsl`, `r3f-shaders`.
 - **Verification:** Glowing runes and campfire meshes emit realistic bloom without frame drops.
-- **Status:** ✅ Done (dual path) — WebGL UnrealBloomPass+FXAA verified in CI; WebGPU TSL path feature-detects bloom (three r185 TSL has no bloom nodes yet) — needs real-GPU verification.
+- **Status:** ✅ Done (dual path) — WebGL keeps the stable RenderPass+OutputPass path and bypasses bloom/FXAA when TSL materials are present; WebGPU feature-detects bloom (three r185 TSL has no bloom nodes yet) — needs real-GPU verification.
 
 ### Task 3.6: One-Click Engine Export Pipeline
 - Build exporter for standalone Three.js HTML bundles (embedded GLTF base64) and standard Godot/Unity `.gltf` scene trees.

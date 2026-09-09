@@ -29,6 +29,9 @@ export default function Viewport3D() {
           await renderer.init();
           return renderer;
         }}
+        onCreated={({ camera }) => {
+          camera.lookAt(0, 0, 0);
+        }}
         camera={{ position: [12, 10, 12], fov: 50, near: 0.1, far: 200 }}
       >
         <Suspense fallback={null}>
@@ -41,7 +44,8 @@ export default function Viewport3D() {
   return (
     <Canvas
       gl={{ antialias: true }}
-      onCreated={({ gl }) => {
+      onCreated={({ camera, gl }) => {
+        camera.lookAt(0, 0, 0);
         // three r185: the WebGL renderer only compiles TSL node materials
         // (MeshStandardNodeMaterial) after an explicit opt-in. Without this,
         // node materials have no vertex/fragment shader and WebGLProgram

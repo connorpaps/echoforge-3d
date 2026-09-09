@@ -14,8 +14,8 @@ import {
  * Post-processing mount (Task 3.5). Renders through the composer every frame
  * with a positive renderPriority, which tells R3F to skip its own render
  * (verified against fiber v9's loop: `internal.priority > 0` disables the
- * automatic `gl.render`). The FX toggle from the TopBar flips the bloom/FXAA
- * passes live.
+ * automatic `gl.render`). The FX toggle from the TopBar flips the optional
+ * bloom/FXAA passes live when the scene material path supports them.
  */
 export function PostFx() {
   const useWebGPU = process.env.NEXT_PUBLIC_ENABLE_WEBGPU === 'true';

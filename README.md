@@ -7,7 +7,7 @@
 Turn a reference image into a usable 3D asset, sketch terrain, add spatial interactions, and export a portable scene. EchoForge combines browser-based 3D rendering with a locally orchestrated GPU generation pipeline built for an 8 GB RTX 2070.
 
 [![CI](https://github.com/connorpaps/echoforge-3d/actions/workflows/ci.yml/badge.svg)](https://github.com/connorpaps/echoforge-3d/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-148%20frontend%20%7C%2089%20backend-0f766e)](https://github.com/connorpaps/echoforge-3d)
+[![Tests](https://img.shields.io/badge/tests-158%20frontend%20%7C%2089%20backend-0f766e)](https://github.com/connorpaps/echoforge-3d)
 [![License](https://img.shields.io/badge/license-MIT-10b981.svg)](LICENSE)
 
 </div>
@@ -64,9 +64,9 @@ Play mode, physics, audio, NPC dialogue             Standalone export
 
 The current local verification baseline is:
 
-- **148 frontend unit tests** across 32 test files
+- **158 frontend unit tests** across 36 test files
 - **89 backend tests** using the project Python environment
-- **21/21 Playwright journeys** using the hermetic fixture-backed browser mode
+- **22/22 Playwright journeys** using the hermetic fixture-backed browser mode
 - TypeScript typecheck, ESLint, production build, YAML validation, and `git diff --check` passing
 - Real chair and bishop generation outputs previously validated for connected geometry, watertightness, grounding, normals, colors, and the 20,000-face application cap
 
@@ -123,6 +123,18 @@ panel, so you can see whether Hunyuan3D-2GP is available or TripoSR is active
 before starting a generation. The launcher starts the browser and FastAPI
 services, but it does **not** start a heavyweight GPU model automatically.
 That keeps first launch predictable and avoids competing CUDA processes.
+
+For a GPU-free portfolio walkthrough, start the deterministic fixture-backed
+frontend instead:
+
+```bash
+python scripts/start_local.py --demo
+```
+
+This mode starts only the frontend, does not download model weights, and keeps
+the real editor flow available for terrain, scene placement, selection,
+inspection, persistence, and export demonstrations. It is a plumbing/demo
+mode, not evidence of model quality.
 
 Run the Hunyuan sidecar separately only after its model terms, environment,
 and hardware requirements have been reviewed:
@@ -229,6 +241,13 @@ This local RTX 2070 capture shows a Hunyuan3D-2GP bishop after orientation, grou
 The UI workflow is also captured separately:
 
 ![EchoForge 3D workstation](docs/assets/echoforge-workspace.png)
+
+![EchoForge 3D populated editor](docs/assets/echoforge-populated-demo.png)
+
+The populated editor capture shows the deterministic GPU-free demo asset loaded
+into the scene, selected in the hierarchy, visible in the viewport, and exposed
+through the transform inspector. It proves the editor and scene handoff, not
+model reconstruction quality.
 
 ![EchoForge 3D terrain sketch workflow](docs/assets/echoforge-terrain-sketch.gif)
 

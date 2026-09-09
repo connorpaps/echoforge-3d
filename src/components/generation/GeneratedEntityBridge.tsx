@@ -10,7 +10,6 @@ import {
 } from '@/lib/generation/spawn';
 import { cameraRef } from '@/lib/viewport/cameraRef';
 import { terrainHeightAt, TERRAIN_SIZE } from '@/lib/terrain/heightmap';
-import { isE2EMode } from '@/workers/workerRegistry';
 import type { MeshResult } from '@/lib/api/generate';
 
 /**
@@ -18,18 +17,18 @@ import type { MeshResult } from '@/lib/api/generate';
  *
  * When a mesh generation succeeds, its GLB is added to the entity store as a
  * `SceneEntity` (positioned + auto-scaled), which the viewport's
- * <SceneEntities> then renders. Skipped in E2E hermetic mode where the mock
- * GLB payload is a non-parseable placeholder and the fixture assertions only
- * cover the toast UI.
+ * <SceneEntities> then renders. Hermetic mode uses a valid tiny GLB, so this
+ * same bridge and loader path are exercised without a GPU.
  */
 export function GeneratedEntityBridge() {
   const addEntity = useSceneStore((s) => s.addEntity);
+  const selectEntity = useSceneStore((s) => s.selectEntity);
   const status = useGenerationStore((s) => s.status);
   const result = useGenerationStore((s) => s.result);
   const lastSpawnedJob = useRef<string | null>(null);
 
   useEffect(() => {
-    if (status !== 'success' || !result || isE2EMode()) return;
+    if (status !== 'success' || !result) return;
     if (!('glbUrl' in result)) return; // texture results don't spawn meshes
     if (lastSpawnedJob.current === result.jobId) return;
     lastSpawnedJob.current = result.jobId;
@@ -50,8 +49,10 @@ export function GeneratedEntityBridge() {
       SPAWN_POSITION[0],
       SPAWN_POSITION[2],
     );
-    addEntity(buildMeshEntity(result as MeshResult, groundOffset, facingAzimuth));
-  }, [status, result, addEntity]);
+    const entity = buildMeshEntity(result as MeshResult, groundOffset, facingAzimuth);
+    addEntity(entity);
+    selectEntity(entity.id);
+  }, [status, result, addEntity, selectEntity]);
 
   return null;
 }

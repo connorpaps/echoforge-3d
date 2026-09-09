@@ -73,8 +73,8 @@ export default defineConfig({
 
 ### Current verified test baseline
 
-Fresh local verification records **148 frontend unit tests across 32 files**,
-**89 backend tests passed**, and **21 hermetic Playwright journeys passed**.
+Fresh local verification records **158 frontend unit tests across 36 files**,
+**89 backend tests passed**, and **22 hermetic Playwright journeys passed**.
 Historical planning milestones may show smaller counts; they are not release
 totals. GPU-only backend checks can skip on CPU-only runners.
 

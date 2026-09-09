@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import * as THREE from 'three';
 import { Html } from '@react-three/drei';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { MeshStandardNodeMaterial } from 'three/webgpu';
 import { useSceneStore, type SceneEntity } from '@/lib/stores/useSceneStore';
 
 export function applyGeneratedTexture(root: THREE.Object3D, texture: THREE.Texture) {
@@ -68,41 +69,32 @@ function EntityMesh({ entity }: { entity: SceneEntity }) {
 
     if (!entity.glbUrl) return;
 
-    new GLTFLoader().load(
-      entity.glbUrl,
-      (gltf) => {
-        if (!alive) return;
-        group = gltf.scene;
-        gltf.scene.traverse((object) => {
-          if (!(object as THREE.Mesh).isMesh) return;
-          const mesh = object as THREE.Mesh;
-          mesh.castShadow = true;
-          mesh.receiveShadow = true;
-          // TripoSR GLBs carry baked vertex colors with no material; make sure
-          // they render (GLTFLoader assigns a default material that may not
-          // enable vertexColors).
-          if (mesh.geometry.getAttribute('color')) {
-            const material = mesh.material as
-              | THREE.MeshStandardMaterial
-              | THREE.MeshStandardMaterial[]
-              | undefined;
-            const apply = (m: THREE.MeshStandardMaterial) => {
-              m.vertexColors = true;
-              m.needsUpdate = true;
-            };
-            if (Array.isArray(material)) material.forEach(apply);
-            else if (material) apply(material);
-          }
-        });
+    const loader = new GLTFLoader();
+    const handleLoad = (gltf: { scene: THREE.Group }) => {
+      if (!alive) return;
+      group = gltf.scene;
+      try {
+        prepareLoadedMesh(gltf.scene);
         setLoaded(gltf.scene);
-      },
-      undefined,
-      (error) => {
-        if (!alive) return;
-        const message = error instanceof Error ? error.message : 'Invalid GLB payload';
-        setLoadError(message);
-      },
-    );
+      } catch (error) {
+        handleError(error);
+      }
+    };
+    const handleError = (error: unknown) => {
+      if (!alive) return;
+      const message = error instanceof Error ? error.message : 'Invalid GLB payload';
+      setLoadError(message);
+    };
+
+    if (entity.glbUrl.startsWith('data:')) {
+      try {
+        loader.parse(decodeBase64DataUrl(entity.glbUrl), '', handleLoad, handleError);
+      } catch (error) {
+        handleError(error);
+      }
+    } else {
+      loader.load(entity.glbUrl, handleLoad, undefined, handleError);
+    }
 
     return () => {
       alive = false;
@@ -193,11 +185,118 @@ function EntityMesh({ entity }: { entity: SceneEntity }) {
     >
       <primitive object={loaded} />
       {selected ? (
-        <mesh position={center}>
-          <boxGeometry args={highlightSize} />
-          <meshBasicMaterial color="#34d399" wireframe transparent opacity={0.8} />
-        </mesh>
+        <>
+          <mesh position={center}>
+            <boxGeometry args={highlightSize} />
+            <meshBasicMaterial color="#34d399" wireframe transparent opacity={0.8} />
+          </mesh>
+          <Html position={center} center pointerEvents="none">
+            <span
+              data-testid={`loaded-mesh-${entity.id}`}
+              className="rounded-sm border border-accent-forge/70 bg-bg-surface/90 px-2 py-1 font-mono text-[9px] uppercase tracking-wider text-accent-forge shadow-sm"
+            >
+              {entity.name} · GLB loaded
+            </span>
+          </Html>
+        </>
       ) : null}
     </group>
   );
+}
+
+function decodeBase64DataUrl(dataUrl: string): ArrayBuffer {
+  const encoded = dataUrl.slice(dataUrl.indexOf(',') + 1);
+  const binary = atob(encoded);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return bytes.buffer;
+}
+
+/** Keep imported GLBs compatible with the project's WebGL/WebGPU TSL path. */
+export function prepareLoadedMesh(root: THREE.Object3D): void {
+  root.traverse((object) => {
+    const mesh = object as THREE.Mesh;
+    if (!mesh.isMesh) return;
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    const nodeMaterials = materials.map((material) => {
+      const source = material as THREE.Material & Record<string, unknown>;
+      const nodeMaterial = new MeshStandardNodeMaterial({
+        color: source.color instanceof THREE.Color ? source.color.clone() : new THREE.Color(0xc8643f),
+        map: source.map instanceof THREE.Texture ? source.map : null,
+        metalness: typeof source.metalness === 'number' ? source.metalness : 0,
+        roughness: typeof source.roughness === 'number' ? source.roughness : 0.72,
+      });
+      preserveMaterialProperties(source, nodeMaterial);
+      nodeMaterial.vertexColors = Boolean(mesh.geometry.getAttribute('color'));
+      nodeMaterial.needsUpdate = true;
+      material.dispose();
+      return nodeMaterial;
+    });
+    mesh.material = Array.isArray(mesh.material) ? nodeMaterials : nodeMaterials[0];
+  });
+}
+
+const MATERIAL_PROPERTIES_TO_PRESERVE = [
+  'transparent',
+  'opacity',
+  'alphaTest',
+  'side',
+  'depthTest',
+  'depthWrite',
+  'colorWrite',
+  'dithering',
+  'toneMapped',
+  'polygonOffset',
+  'polygonOffsetFactor',
+  'polygonOffsetUnits',
+  'normalMap',
+  'normalScale',
+  'bumpMap',
+  'bumpScale',
+  'displacementMap',
+  'displacementScale',
+  'displacementBias',
+  'aoMap',
+  'aoMapIntensity',
+  'roughnessMap',
+  'metalnessMap',
+  'emissive',
+  'emissiveMap',
+  'emissiveIntensity',
+  'alphaMap',
+  'clearcoat',
+  'clearcoatMap',
+  'clearcoatRoughness',
+  'clearcoatRoughnessMap',
+  'clearcoatNormalMap',
+  'clearcoatNormalScale',
+  'transmission',
+  'transmissionMap',
+  'thickness',
+  'thicknessMap',
+  'ior',
+  'attenuationDistance',
+  'attenuationColor',
+] as const;
+
+function preserveMaterialProperties(
+  source: THREE.Material & Record<string, unknown>,
+  target: THREE.Material,
+): void {
+  const targetValues = target as unknown as Record<string, unknown>;
+  for (const key of MATERIAL_PROPERTIES_TO_PRESERVE) {
+    const value = source[key];
+    if (value === undefined || !(key in targetValues)) continue;
+    targetValues[key] =
+      value instanceof THREE.Color ||
+      value instanceof THREE.Vector2 ||
+      value instanceof THREE.Vector3 ||
+      value instanceof THREE.Vector4
+        ? value.clone()
+        : value;
+  }
 }

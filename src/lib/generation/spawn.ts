@@ -6,7 +6,7 @@ import type { SceneEntity } from '@/lib/stores/useSceneStore';
  * Near the origin — the default camera at (12, 10, 12) looks at the origin,
  * so the asset lands inside the editor's field of view on any viewport.
  */
-export const SPAWN_POSITION: [number, number, number] = [2, 0, 0];
+export const SPAWN_POSITION: [number, number, number] = [0, 0, 0];
 
 /** Target world-space height (meters) for a generated mesh. */
 export const SPAWN_TARGET_HEIGHT = 2.0;

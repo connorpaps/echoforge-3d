@@ -10,7 +10,8 @@ import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
  * Post-processing (Task 3.5) — dual path:
  *
  *  * WebGL (default, what CI exercises): three/addons EffectComposer with
- *    UnrealBloomPass + FXAA + OutputPass. No new npm dependency.
+ *    RenderPass + OutputPass. Bloom and FXAA stay enabled for classic-material
+ *    scenes and are bypassed automatically when TSL materials are present.
  *  * WebGPU (opt-in via NEXT_PUBLIC_ENABLE_WEBGPU): three/webgpu PostProcessing
  *    with a TSL `pass(scene, camera)` chain. NOTE: three r185's TSL build has
  *    no chainable bloom/fxaa nodes yet — the runtime feature-detects
@@ -31,8 +32,9 @@ export function createWebGlPostFx(
   renderer: THREE.WebGLRenderer,
   scene: THREE.Scene,
   camera: THREE.Camera,
-  enabled = true,
+  initialEnabled = true,
 ): PostFxHandle {
+  let enabled = initialEnabled;
   const composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
 
@@ -50,14 +52,32 @@ export function createWebGlPostFx(
   const outputPass = new OutputPass();
   composer.addPass(outputPass);
 
-  const apply = (on: boolean) => {
-    bloomPass.enabled = on;
-    fxaaPass.enabled = on;
+  const updatePasses = () => {
+    let hasNodeMaterial = false;
+    scene.traverse((object) => {
+      const mesh = object as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+      if (materials.some((material) => Boolean((material as THREE.Material & { isNodeMaterial?: boolean }).isNodeMaterial))) {
+        hasNodeMaterial = true;
+      }
+    });
+    const safeForScene = !hasNodeMaterial;
+    bloomPass.enabled = enabled && safeForScene;
+    fxaaPass.enabled = enabled && safeForScene;
+  };
+
+  const apply = (nextEnabled: boolean) => {
+    enabled = nextEnabled;
+    updatePasses();
   };
   apply(enabled);
 
   return {
-    render: () => composer.render(),
+    render: () => {
+      updatePasses();
+      composer.render();
+    },
     setEnabled: apply,
     setSize: (width, height) => {
       composer.setSize(width, height);

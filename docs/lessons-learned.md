@@ -106,7 +106,7 @@
 ## 2026-08-26 — three r185 TSL build has no chainable bloom/ssao/fxaa nodes (Task 3.5)
 - **Symptom:** the spec's `pass(scene, camera).pipe(bloom).pipe(fxaa)` WebGPU post chain couldn't be built; `import { bloom } from 'three/tsl'` didn't exist.
 - **Root cause:** three 0.185's `three.tsl.js` exports `pass`/`passTexture` but NO post-processing effect nodes (`grep bloom` = 0; the chainable `.bloom()`/`.ssao()` methods landed in later releases).
-- **Fix:** dual path — WebGL (default, CI-verified): `three/addons` EffectComposer + UnrealBloomPass + FXAA + OutputPass (zero new deps). WebGPU: `PostProcessing` + `pass(scene, camera)` with runtime feature-detection of `passNode.bloom()` so a future three upgrade unlocks the chain with no code change.
+- **Fix:** dual path — WebGL (default): `three/addons` EffectComposer with a TSL-safe RenderPass + OutputPass fallback and guarded UnrealBloomPass + FXAA for classic-material scenes (zero new deps). WebGPU: `PostProcessing` + `pass(scene, camera)` with runtime feature-detection of `passNode.bloom()` so a future three upgrade unlocks the chain with no code change.
 - **Avoid in future:** check the installed three version's TSL exports before promising chainable post nodes; feature-detect runtime APIs when the version is pinned.
 - **Status:** fixed
 

@@ -67,6 +67,18 @@ The launcher intentionally does not start Hunyuan3D by default. This avoids a
 surprise model download and prevents multiple heavy CUDA processes from
 competing for the same 8 GB GPU.
 
+For a GPU-free portfolio walkthrough, use the deterministic fixture-backed
+frontend demo:
+
+```bash
+python scripts/start_local.py --demo
+```
+
+Open <http://localhost:3000>. Demo mode starts only the frontend, downloads no
+model weights, and exercises the real editor workflow with deterministic mesh,
+audio, progress, and browser-worker fixtures. It proves application plumbing,
+not generative model quality.
+
 To start the separately managed Hunyuan sidecar in an environment that has
 already been prepared:
 

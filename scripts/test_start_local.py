@@ -26,6 +26,11 @@ class LocalLauncherTests(unittest.TestCase):
         self.assertEqual([spec.name for spec in specs], ["backend", "frontend", "hunyuan"])
         self.assertTrue(any("start_hunyuan_sidecar" in part for spec in specs for part in spec.command))
 
+    def test_demo_mode_starts_only_the_fixture_backed_frontend(self):
+        specs = launcher.build_specs(demo=True)
+        self.assertEqual([spec.name for spec in specs], ["frontend"])
+        self.assertEqual(specs[0].env["NEXT_PUBLIC_E2E"], "true")
+
 
 if __name__ == "__main__":
     unittest.main()

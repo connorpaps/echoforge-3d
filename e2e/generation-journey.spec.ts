@@ -28,6 +28,29 @@ test.describe('EchoForge 3D generation journey (E2E mock seam)', () => {
     const toast = page.locator('[data-testid="success-toast"]');
     await expect(toast).toContainText('Mesh ready', { timeout: 10000 });
     await expect(toast).toContainText('18,763 faces');
+
+    // The generated result must cross the state bridge into the editor, not
+    // stop at a success toast.
+    await page.click('[data-testid="rail-scene"]');
+    await expect(page.locator('[data-testid="scene-tree"]')).toContainText(
+      'Generated Mesh',
+    );
+    await expect(
+      page
+        .getByTestId('scene-tree')
+        .getByRole('button', { name: 'Select Generated Mesh' }),
+    ).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('[data-testid="scene-inspector"]')).toContainText(
+      'Transform',
+    );
+    await expect(page.getByText('Unable to load Generated Mesh')).toHaveCount(0);
+    await expect(page.getByTestId('loaded-mesh-mesh-e2e-mesh-000001')).toHaveText(
+      'Generated Mesh · GLB loaded',
+    );
+    await page.screenshot({
+      path: 'docs/assets/echoforge-populated-demo.png',
+      fullPage: true,
+    });
   });
 
   test('texture generation shows the DIFFUSION shimmer and a preview', async ({

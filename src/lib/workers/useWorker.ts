@@ -23,13 +23,16 @@ export function useWorker(id: WorkerId) {
     const client = createWorkerClient(createWorker(id));
     clientRef.current = client;
     const unsubscribe = client.onStatus(setStatus);
+    let active = true;
 
     client.request('INIT').catch((err: unknown) => {
+      if (!active) return;
       console.error(`[worker:${id}] initialization failed`, err);
       setStatus('error');
     });
 
     return () => {
+      active = false;
       unsubscribe();
       client.dispose();
       clientRef.current = null;

@@ -20,14 +20,14 @@ model quality or a production deployment.
 | First-person terrain walk | Implemented | Browser R3F/Rapier viewport | Software-rendered CI checks interaction contracts only |
 | Standalone HTML / GLTF export | Implemented | Browser export path | Validate exported assets in a target browser/engine |
 | REST API + progress WebSocket | Implemented | FastAPI on localhost | Expensive POST routes default to `10/minute` per client (`ECHOFORGE_GENERATION_RATE_LIMIT`); `/ws/progress?jobId=...` receives only that job, while legacy unfiltered clients receive the stream; no production auth |
-| Hermetic E2E | Implemented | Playwright + SwiftShader + fixture workers | No model downloads/network; not a CUDA/WebGPU quality test |
+| Hermetic E2E | Implemented | Playwright + SwiftShader + fixture workers + valid GLB fixture | Proves the generation bridge, loader, Scene tree, and inspector without model downloads; not a CUDA/WebGPU quality test |
 | First-run diagnostics and launcher | Implemented | `scripts/doctor.py`, `scripts/start_local.py` | Starts frontend/backend together; Hunyuan remains explicit because it is heavyweight and separately managed |
 | Provider readiness panel | Implemented | Live `/health` data in the workstation left drawer | Shows selected mesh provider, optional paths, browser workers, and explicit fallbacks without loading model weights |
 | Multi-user hosted deployment | Not in release scope | None | Authentication, durable jobs, tenancy, and public ingress are not implemented |
 
 ## Test baseline
 
-At the current checked-out baseline: **148 frontend unit tests across 32 files**,
-**89 backend tests passed**, and **21 hermetic Playwright journeys passed**. GPU-only backend assertions may skip on a
+At the current checked-out baseline: **158 frontend unit tests across 36 files**,
+**89 backend tests passed**, and **22 hermetic Playwright journeys passed**. GPU-only backend assertions may skip on a
 CPU-only runner. Keep historical milestone counts in planning documents as
 historical; update release-facing totals only from a fresh test run.
