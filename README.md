@@ -65,7 +65,7 @@ Play mode, physics, audio, NPC dialogue             Standalone export
 The current local verification baseline is:
 
 - **158 frontend unit tests** across 36 test files
-- **100 Python tests** using the project environment, including 89 core backend tests, 2 downloader tests, and 9 setup/launcher tests
+- **102 Python tests** using the project environment, including 89 core backend tests, 2 downloader tests, and 11 setup/launcher tests
 - **22/22 Playwright journeys** using the hermetic fixture-backed browser mode
 - TypeScript typecheck, ESLint, production build, YAML validation, and `git diff --check` passing
 - Real chair and bishop generation outputs previously validated for connected geometry, watertightness, grounding, normals, colors, and the 20,000-face application cap
