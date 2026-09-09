@@ -26,7 +26,7 @@ pytest==8.3.3
 # TripoSR pipeline (vendored in backend/vendor/tsr) runtime deps:
 einops==0.8.0
 omegaconf==2.3.0
-imageio==2.36.1
+imageio==2.37.4
 # Marching-cubes surface extraction: PyMCubes (C++ wheel) preferred; the
 # skimage fallback (scikit-image) is used only if PyMCubes is unavailable.
 PyMCubes==0.1.6
