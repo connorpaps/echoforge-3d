@@ -49,7 +49,9 @@ jobs:
           HF_HOME: ${{ runner.temp }}/hf-cache
           U2NET_HOME: ${{ runner.temp }}/u2net
           ECHOFORGE_DEVICE: cpu
-        run: .venv/bin/python -m pytest backend/tests -q
+        run: .venv/bin/python -m pytest backend/tests backend/scripts/test_download_models.py -q
+      - name: Run setup and launcher tests
+        run: python -m unittest scripts/test_setup_local.py scripts/test_start_local.py
 
   playwright:
     name: Hermetic Playwright (SwiftShader)

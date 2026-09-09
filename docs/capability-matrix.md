@@ -28,7 +28,7 @@ model quality or a production deployment.
 ## Test baseline
 
 At the current checked-out baseline: **158 frontend unit tests across 36 files**,
-**89 core backend tests plus 2 setup/downloader tests passed**, and **22
-hermetic Playwright journeys passed**. GPU-only backend assertions may skip on a
+**89 core backend tests, 2 downloader tests, and 9 setup/launcher tests passed**,
+and **22 hermetic Playwright journeys passed**. GPU-only backend assertions may skip on a
 CPU-only runner. Keep historical milestone counts in planning documents as
 historical; update release-facing totals only from a fresh test run.

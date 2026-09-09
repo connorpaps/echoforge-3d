@@ -1,3 +1,7 @@
+# This repository is a single pnpm package. Keep the workspace explicit so
+# pnpm 11 does not reject the file while reading build-script approvals.
+packages: []
+
 # pnpm 11 approved dependency build scripts (ERR_PNPM_IGNORED_BUILDS fix)
 allowBuilds:
   esbuild: true

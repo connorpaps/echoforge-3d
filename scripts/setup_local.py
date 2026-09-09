@@ -79,8 +79,15 @@ def model_cache_path(cache_root: Path, alias: str) -> Path:
     return cache_root / "hub" / f"models--{owner}--{repo}"
 
 
+def is_model_cached(cache_root: Path, alias: str) -> bool:
+    model_root = model_cache_path(cache_root, alias)
+    refs_main = model_root / "refs" / "main"
+    snapshots = model_root / "snapshots"
+    return refs_main.is_file() and any(snapshots.iterdir()) if snapshots.is_dir() else False
+
+
 def cache_status(cache_root: Path) -> dict[str, bool]:
-    return {alias: model_cache_path(cache_root, alias).exists() for alias in MODEL_SPECS}
+    return {alias: is_model_cached(cache_root, alias) for alias in MODEL_SPECS}
 
 
 def disk_space_gb(cache_root: Path) -> float:

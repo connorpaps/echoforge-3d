@@ -25,7 +25,10 @@ class SetupLocalTests(unittest.TestCase):
     def test_cache_status_distinguishes_present_and_missing_models(self):
         with tempfile.TemporaryDirectory() as directory:
             cache = Path(directory) / "hub"
-            (cache / "models--stabilityai--TripoSR").mkdir(parents=True)
+            model = cache / "models--stabilityai--TripoSR"
+            (model / "refs").mkdir(parents=True)
+            (model / "refs" / "main").write_text("snapshot", encoding="utf-8")
+            (model / "snapshots" / "snapshot").mkdir(parents=True)
             status = setup.cache_status(cache.parent)
 
         self.assertTrue(status["triposr"])
