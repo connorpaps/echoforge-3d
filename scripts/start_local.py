@@ -48,6 +48,15 @@ def _project_python() -> str:
 
 def _service_env() -> dict[str, str]:
     env = os.environ.copy()
+    local_env = ROOT / ".env.local"
+    if local_env.exists():
+        for line in local_env.read_text(encoding="utf-8").splitlines():
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            key, value = stripped.split("=", maxsplit=1)
+            if key in {"HF_HOME", "U2NET_HOME", "HUNYUAN_ROOT", "HUNYUAN_PORT", "HUNYUAN_PROFILE"}:
+                env.setdefault(key, value.strip().strip('"').strip("'"))
     env.setdefault("HF_HOME", "G:/hf-cache")
     env.setdefault("U2NET_HOME", "G:/hf-cache/u2net")
     return env

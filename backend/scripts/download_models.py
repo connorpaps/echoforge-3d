@@ -16,6 +16,7 @@ Models:
 
 Run:  .venv/Scripts/python.exe backend/scripts/download_models.py
 """
+import argparse
 import os
 from pathlib import Path
 
@@ -44,13 +45,36 @@ MODELS = [
         "allow_patterns": ["*.json", "*.safetensors", "*.txt"],
     },
 ]
+MODEL_ALIASES = {
+    "triposr": "stabilityai/TripoSR",
+    "sdxl": "stabilityai/sdxl-turbo",
+    "audiogen": "facebook/audiogen-medium",
+    "smolvlm": "HuggingFaceTB/SmolVLM-Instruct",
+}
 
 
-def download_all() -> None:
+def resolve_hub_cache(cache_dir: str | None = None) -> str:
+    if cache_dir:
+        return str(Path(cache_dir) / "hub")
+    if os.environ.get("HF_HUB_CACHE"):
+        return os.environ["HF_HUB_CACHE"]
+    return str(Path(os.environ["HF_HOME"]) / "hub")
+
+
+def download_all(selected: list[str] | None = None, cache_dir: str | None = None) -> None:
+    if cache_dir:
+        os.environ["HF_HOME"] = cache_dir
+        os.environ["HF_HUB_CACHE"] = str(Path(cache_dir) / "hub")
+    hub_cache = resolve_hub_cache(cache_dir)
+    selected_repos = {MODEL_ALIASES[name] for name in selected} if selected else None
+    models = [
+        model for model in MODELS
+        if selected_repos is None or model["repo_id"] in selected_repos
+    ]
     print("Starting EchoForge 3D model pre-caching...")
     results: list[tuple[str, str]] = []
 
-    for model in MODELS:
+    for model in models:
         repo_id = model["repo_id"]
         if model.get("gated") and not os.environ.get("HF_TOKEN"):
             print(f"[SKIP] {repo_id} is gated (needs accepted license + HF_TOKEN).")
@@ -62,6 +86,7 @@ def download_all() -> None:
             snapshot_download(
                 repo_id=repo_id,
                 allow_patterns=model.get("allow_patterns"),
+                cache_dir=hub_cache,
                 resume_download=True,
             )
             results.append((repo_id, "ok"))
@@ -80,4 +105,13 @@ def download_all() -> None:
 
 
 if __name__ == "__main__":
-    download_all()
+    parser = argparse.ArgumentParser(description="Cache EchoForge open-weight models")
+    parser.add_argument(
+        "--models",
+        nargs="+",
+        choices=[*MODEL_ALIASES],
+        help="model aliases to download; defaults to all",
+    )
+    parser.add_argument("--cache-dir", help="Hugging Face cache root")
+    args = parser.parse_args()
+    download_all(args.models, args.cache_dir)

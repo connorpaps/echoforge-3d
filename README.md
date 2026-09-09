@@ -111,7 +111,25 @@ The maintained matrix is in [`docs/capability-matrix.md`](docs/capability-matrix
 
 ## First-run onboarding
 
-The fastest safe path for a first-time user is:
+The fastest guided path on Windows is to double-click [`Setup EchoForge.bat`](Setup%20EchoForge.bat), or run:
+
+```bash
+python scripts/setup_local.py
+```
+
+The wizard checks prerequisites, provisions the project `.venv`, detects
+PyTorch/CUDA availability, persists relocated Hugging Face cache settings,
+checks free disk space, and offers explicit model-download choices. It never
+silently downloads multi-gigabyte weights or installs the separately managed
+Hunyuan3D-2GP sidecar. Use `--check` for a read-only report, `--dry-run` to
+preview actions without changing the machine, `--validate` to run the
+read-only provider probe, `--install --cuda` for the documented CUDA PyTorch
+wheels, or `--launch demo` for the no-model
+portfolio path.
+
+The manual equivalent remains available in [`docs/GETTING_STARTED.md`](docs/GETTING_STARTED.md).
+
+For the shortest safe manual path:
 
 ```bash
 python scripts/doctor.py
@@ -261,6 +279,7 @@ The source reference image is intentionally not redistributed because it contain
 
 - Built a Next.js and React Three Fiber 3D workstation that turns reference images into interactive GLB assets with terrain sketching, physics, spatial audio, NPC dialogue, and standalone export.
 - Integrated Hunyuan3D-2GP and TripoSR behind a FastAPI service with serialized VRAM management, provider fallback, watchdog deadlines, mesh sanitation, collision processing, and a 20,000-face application cap for an 8 GB GPU.
+- Built a guided local setup and model-management CLI that checks GPU/CUDA visibility, provisions the Python environment, configures relocated Hugging Face caches, downloads selected open-weight models with explicit consent, validates runtime providers, and launches the application.
 - Added versioned IndexedDB project persistence, worker-backed browser inference, validated upload/error states, safe API errors, configurable rate limiting, job-scoped WebSocket progress, CI, and 250+ automated tests across frontend, backend, and browser journeys.
 
 ## Limitations worth stating plainly

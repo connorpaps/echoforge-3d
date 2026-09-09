@@ -27,7 +27,51 @@ NVIDIA GPU.
 - A separate Hunyuan3D-2GP environment, prepared according to that project's
   current requirements and license terms
 
-## Install and diagnose
+## Guided setup, recommended
+
+The repository includes a guided Windows-friendly setup flow. It does not
+silently install large models or the separately managed Hunyuan3D sidecar.
+From the repository root, double-click **Setup EchoForge.bat**, or run:
+
+```bash
+python scripts/setup_local.py
+```
+
+The wizard checks Node.js, pnpm, Python 3.11, Git, the project virtual
+environment, NVIDIA tooling, PyTorch/CUDA visibility, cache storage, and the
+optional Hunyuan sidecar. It can create `.venv`, install the pinned backend
+requirements, persist `HF_HOME` and `U2NET_HOME` in `.env.local`, pre-cache
+selected open-weight models, and launch the app.
+
+Useful non-interactive forms are:
+
+```bash
+python scripts/setup_local.py --check
+python scripts/setup_local.py --dry-run
+python scripts/setup_local.py --install
+python scripts/setup_local.py --install --cuda
+python scripts/setup_local.py --download-models triposr
+python scripts/setup_local.py --download-models triposr sdxl --yes
+python scripts/setup_local.py --validate
+python scripts/setup_local.py --launch demo
+```
+
+`--yes` accepts installation and model-download prompts. Use it only when you
+have reviewed the requested disk usage. Model aliases are `triposr`, `sdxl`,
+`audiogen`, and `smolvlm`. The setup tool reports an approximate storage
+budget before downloading and uses resumable Hugging Face snapshots.
+
+`--dry-run` prints the current plan without writing `.env.local`, installing
+packages, downloading weights, or starting services. `--validate` delegates to
+the read-only doctor/provider probe, so use it after starting the local stack
+when you want service health and provider readiness checked as well.
+
+The setup flow never installs Hunyuan3D-2GP automatically. That model remains
+a separately prepared sidecar because its hardware, dependencies, model size,
+and license terms can change. Pass `--hunyuan-root` to validate a prepared
+checkout, then start it with `python scripts/start_local.py --with-hunyuan`.
+
+## Manual install and diagnose
 
 From the repository root:
 
