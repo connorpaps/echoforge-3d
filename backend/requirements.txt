@@ -5,7 +5,7 @@ fastapi==0.115.0
 uvicorn[standard]==0.32.0
 torch==2.5.0
 torchvision==0.20.0
-diffusers==0.31.0
+diffusers==0.40.0
 transformers==4.46.0
 # SmolVLM vision-NPC (Task 3.3 real path): the SmolVLM image processor depends
 # on qwen-vl-utils. Authorized install 2026-08-26; without it the service
