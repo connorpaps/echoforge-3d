@@ -14,7 +14,7 @@ qwen-vl-utils>=0.0.8
 accelerate==1.0.1
 trimesh==4.5.1
 pyvista==0.44.1
-slowapi==0.1.9
+slowapi==0.1.10
 pydantic==2.9.2
 huggingface_hub==0.26.1
 pytest==8.3.3
