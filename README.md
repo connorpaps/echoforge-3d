@@ -7,7 +7,7 @@
 Turn a reference image into a usable 3D asset, sketch terrain, add spatial interactions, and export a portable scene. EchoForge combines browser-based 3D rendering with a locally orchestrated GPU generation pipeline built for an 8 GB RTX 2070.
 
 [![CI](https://github.com/connorpaps/echoforge-3d/actions/workflows/ci.yml/badge.svg)](https://github.com/connorpaps/echoforge-3d/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-158%20frontend%20%7C%2089%20backend-0f766e)](https://github.com/connorpaps/echoforge-3d)
+[![Tests](https://img.shields.io/badge/tests-158%20frontend%20%7C%2091%20Python-0f766e)](https://github.com/connorpaps/echoforge-3d)
 [![License](https://img.shields.io/badge/license-MIT-10b981.svg)](LICENSE)
 
 </div>
@@ -65,7 +65,7 @@ Play mode, physics, audio, NPC dialogue             Standalone export
 The current local verification baseline is:
 
 - **158 frontend unit tests** across 36 test files
-- **89 backend tests** using the project Python environment
+- **91 Python tests** using the project environment, including 89 core backend tests and 2 setup/downloader tests
 - **22/22 Playwright journeys** using the hermetic fixture-backed browser mode
 - TypeScript typecheck, ESLint, production build, YAML validation, and `git diff --check` passing
 - Real chair and bishop generation outputs previously validated for connected geometry, watertightness, grounding, normals, colors, and the 20,000-face application cap
