@@ -24,7 +24,7 @@ pytest==8.3.3
 
 # --- Phase 2 additions (TripoSR + SDXL-Turbo runtime) ---------------------------
 # TripoSR pipeline (vendored in backend/vendor/tsr) runtime deps:
-einops==0.8.0
+einops==0.8.2
 omegaconf==2.3.0
 imageio==2.36.1
 # Marching-cubes surface extraction: PyMCubes (C++ wheel) preferred; the
