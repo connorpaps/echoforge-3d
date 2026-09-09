@@ -3,7 +3,7 @@
 
 fastapi==0.115.0
 uvicorn[standard]==0.32.0
-torch==2.5.0
+torch==2.14.0
 torchvision==0.20.0
 diffusers==0.31.0
 transformers==4.46.0
@@ -20,7 +20,7 @@ huggingface_hub==0.26.1
 pytest==8.3.3
 # PyPI publishes CPU and CUDA wheels with the same version; pip defaults to CPU.
 # Install CUDA builds with:
-#   pip install torch==2.5.0 torchvision==0.20.0 --index-url https://download.pytorch.org/whl/cu121
+#   pip install torch==2.14.0 torchvision==0.20.0 --index-url https://download.pytorch.org/whl/cu121
 
 # --- Phase 2 additions (TripoSR + SDXL-Turbo runtime) ---------------------------
 # TripoSR pipeline (vendored in backend/vendor/tsr) runtime deps:
